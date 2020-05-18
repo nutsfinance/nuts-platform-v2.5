@@ -10,6 +10,7 @@ import "Issuance.sol";
 abstract contract Instrument {
 
     using Counters for Counters.Counter;
+    
     Counters.Counter private _issuanceIds;
     mapping(uint256 => Issuance) private _issuances;
 
