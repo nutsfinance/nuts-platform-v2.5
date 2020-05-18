@@ -1,0 +1,423 @@
+{
+  "contractName": "Constant",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.8+commit.0bbfe453\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/util/Constant.sol\":\"Constant\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/util/Constant.sol\":{\"keccak256\":\"0xef30bad7152bfba994cc1a1e0f2916ca9bf8541aaef7e617a0f65e3e6dd928fe\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://cf963a1681aaa54989ab1dc3ba8d3d86c2fb48ba2b9534d967ad82390bcc4542\",\"dweb:/ipfs/QmfP4NLMNkMb3XmDjAVpz3r6u8QVrUpK5cLT2mdd5qVkGq\"]}},\"version\":1}",
+  "bytecode": "0x60566023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220a39204eef48588b771b9c30163e97e578ad38311cce8af1103c9d5c8fb72813664736f6c63430006080033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220a39204eef48588b771b9c30163e97e578ad38311cce8af1103c9d5c8fb72813664736f6c63430006080033",
+  "immutableReferences": {},
+  "sourceMap": "63:190:10:-:0;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
+  "deployedSourceMap": "63:190:10:-:0;;;;;;12:1:-1;9;2:12",
+  "source": "// SPDX-License-Identifier: Apache-2.0\npragma solidity 0.6.8;\n\nlibrary Constant {\n    /**\n     * @dev Defines a special address to represent ETH.\n     */\n    function getEthAddress() internal pure returns (address) {\n        return address(-1);\n    }\n\n}\n",
+  "sourcePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/util/Constant.sol",
+  "ast": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/util/Constant.sol",
+    "exportedSymbols": {
+      "Constant": [
+        867
+      ]
+    },
+    "id": 868,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 853,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:10"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 867,
+        "linearizedBaseContracts": [
+          867
+        ],
+        "name": "Constant",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 865,
+              "nodeType": "Block",
+              "src": "215:35:10",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 862,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "lValueRequested": false,
+                        "nodeType": "UnaryOperation",
+                        "operator": "-",
+                        "prefix": true,
+                        "src": "240:2:10",
+                        "subExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "31",
+                          "id": 861,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "241:1:10",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_1_by_1",
+                            "typeString": "int_const 1"
+                          },
+                          "value": "1"
+                        },
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_minus_1_by_1",
+                          "typeString": "int_const -1"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_rational_minus_1_by_1",
+                          "typeString": "int_const -1"
+                        }
+                      ],
+                      "id": 860,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "nodeType": "ElementaryTypeNameExpression",
+                      "src": "232:7:10",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_address_$",
+                        "typeString": "type(address)"
+                      },
+                      "typeName": {
+                        "id": 859,
+                        "name": "address",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "232:7:10",
+                        "typeDescriptions": {
+                          "typeIdentifier": null,
+                          "typeString": null
+                        }
+                      }
+                    },
+                    "id": 863,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "232:11:10",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "functionReturnParameters": 858,
+                  "id": 864,
+                  "nodeType": "Return",
+                  "src": "225:18:10"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 854,
+              "nodeType": "StructuredDocumentation",
+              "src": "86:67:10",
+              "text": "@dev Defines a special address to represent ETH."
+            },
+            "id": 866,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getEthAddress",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 855,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "180:2:10"
+            },
+            "returnParameters": {
+              "id": 858,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 857,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 866,
+                  "src": "206:7:10",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 856,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "206:7:10",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "205:9:10"
+            },
+            "scope": 867,
+            "src": "158:92:10",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 868,
+        "src": "63:190:10"
+      }
+    ],
+    "src": "39:215:10"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/util/Constant.sol",
+    "exportedSymbols": {
+      "Constant": [
+        867
+      ]
+    },
+    "id": 868,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 853,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:10"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 867,
+        "linearizedBaseContracts": [
+          867
+        ],
+        "name": "Constant",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 865,
+              "nodeType": "Block",
+              "src": "215:35:10",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 862,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "lValueRequested": false,
+                        "nodeType": "UnaryOperation",
+                        "operator": "-",
+                        "prefix": true,
+                        "src": "240:2:10",
+                        "subExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "31",
+                          "id": 861,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "241:1:10",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_1_by_1",
+                            "typeString": "int_const 1"
+                          },
+                          "value": "1"
+                        },
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_minus_1_by_1",
+                          "typeString": "int_const -1"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_rational_minus_1_by_1",
+                          "typeString": "int_const -1"
+                        }
+                      ],
+                      "id": 860,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "nodeType": "ElementaryTypeNameExpression",
+                      "src": "232:7:10",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_address_$",
+                        "typeString": "type(address)"
+                      },
+                      "typeName": {
+                        "id": 859,
+                        "name": "address",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "232:7:10",
+                        "typeDescriptions": {
+                          "typeIdentifier": null,
+                          "typeString": null
+                        }
+                      }
+                    },
+                    "id": 863,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "232:11:10",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "functionReturnParameters": 858,
+                  "id": 864,
+                  "nodeType": "Return",
+                  "src": "225:18:10"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 854,
+              "nodeType": "StructuredDocumentation",
+              "src": "86:67:10",
+              "text": "@dev Defines a special address to represent ETH."
+            },
+            "id": 866,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getEthAddress",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 855,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "180:2:10"
+            },
+            "returnParameters": {
+              "id": 858,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 857,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 866,
+                  "src": "206:7:10",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 856,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "206:7:10",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "205:9:10"
+            },
+            "scope": 867,
+            "src": "158:92:10",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 868,
+        "src": "63:190:10"
+      }
+    ],
+    "src": "39:215:10"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.8+commit.0bbfe453.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.1.0",
+  "updatedAt": "2020-05-18T21:01:13.085Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -1,0 +1,2613 @@
+{
+  "contractName": "IEscrow",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "BalanceDecreased",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "BalanceIncreased",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "getTokenBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "depositByAdmin",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositTokenByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawTokenByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "source",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "dest",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "source",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "dest",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferTokenByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.8+commit.0bbfe453\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"BalanceDecreased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"BalanceIncreased\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"depositByAdmin\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"depositTokenByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"getBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"getTokenBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"dest\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"dest\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferTokenByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawTokenByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Abstract contract is used instead of Interface for inheritance.\",\"methods\":{\"depositByAdmin(address)\":{\"details\":\"Deposits ETH from Escrow Admin into an account.\",\"params\":{\"account\":\"The account to deposit ETH.\"}},\"depositTokenByAdmin(address,address,uint256)\":{\"details\":\"Deposits ERC20 tokens from Escrow Admin into an account. Note: The owner, i.e. Escrow Admin must set the allowance before hand.\",\"params\":{\"account\":\"The account to deposit ERC20 tokens.\",\"amount\":\"The amount of ERC20 token to deposit.\",\"token\":\"The ERC20 token to deposit.\"}},\"getBalance(address)\":{\"details\":\"Get the current ETH balance of an account in the escrow.\",\"params\":{\"account\":\"The account to check ETH balance.\"},\"returns\":{\"_0\":\"Current ETH balance of the account.\"}},\"getTokenBalance(address,address)\":{\"details\":\"Get the balance of the requested IERC20 token in the escrow.\",\"params\":{\"account\":\"The address to check IERC20 balance.\",\"token\":\"The IERC20 token to check balance.\"},\"returns\":{\"_0\":\"The balance of the account.\"}},\"transferByAdmin(address,address,uint256)\":{\"details\":\"Transfer ETH from one account to another in the Escrow.\",\"params\":{\"amount\":\"The amount of ETH to transfer.\",\"dest\":\"The target account that will own the ETH.\",\"source\":\"The account that owns the ETH.\"}},\"transferTokenByAdmin(address,address,address,uint256)\":{\"details\":\"Transfer ERC20 token from one account to another in the Escrow.\",\"params\":{\"amount\":\"The amount of ERC20 token to transfer.\",\"dest\":\"The target account that will own the ERC20 token.\",\"source\":\"The account that owns the ERC20 token.\",\"token\":\"The ERC20 token address.\"}},\"withdrawByAdmin(address,uint256)\":{\"details\":\"Withdraw ETH from an account to Escrow Admin.\",\"params\":{\"account\":\"The account to withdraw ETH.\",\"amount\":\"The amount of ETH to withdraw.\"}},\"withdrawTokenByAdmin(address,address,uint256)\":{\"details\":\"Withdraw ERC20 token from an account to Escrow Admin. The transfer action is done inside this function.\",\"params\":{\"account\":\"The account to withdraw ERC20 token.\",\"amount\":\"The amount of ERC20 tokens to withdraw.\",\"token\":\"The ERC20 token to withdraw.\"}}},\"title\":\"Base interface for both instrument and issuance escrows.\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol\":\"IEscrow\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol\":{\"keccak256\":\"0x11cabc64c4696f413b4fd672db1a201affd302c0f0a0da683ea9c7573cac8014\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://f317e0adabe961144bc7270cefe8f39cdd6815743e02e3de6261df124699b90e\",\"dweb:/ipfs/QmRWqMVpV1ivG2TNKf3fSAekaJF1M72gvirGT4zkSLKaS7\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: Apache-2.0\npragma solidity 0.6.8;\n\n/**\n * @title Base interface for both instrument and issuance escrows.\n * @dev Abstract contract is used instead of Interface for inheritance.\n */\nabstract contract IEscrow {\n    /**\n     * Balance is increased.\n     */\n    event BalanceIncreased(address account, address token, uint256 amount);\n\n    /**\n     * Balance is decreased.\n     */\n    event BalanceDecreased(address account, address token, uint256 amount);\n\n    /**\n     * @dev Get the current ETH balance of an account in the escrow.\n     * @param account The account to check ETH balance.\n     * @return Current ETH balance of the account.\n     */\n    function getBalance(address account) public virtual view returns (uint256);\n\n    /**\n     * @dev Get the balance of the requested IERC20 token in the escrow.\n     * @param account The address to check IERC20 balance.\n     * @param token The IERC20 token to check balance.\n     * @return The balance of the account.\n     */\n    function getTokenBalance(address account, address token)\n        public\n        virtual\n        view\n        returns (uint256);\n\n    /**\n     * @dev Deposits ETH from Escrow Admin into an account.\n     * @param account The account to deposit ETH.\n     */\n    function depositByAdmin(address account) public virtual payable;\n\n    /**\n     * @dev Deposits ERC20 tokens from Escrow Admin into an account.\n     * Note: The owner, i.e. Escrow Admin must set the allowance before hand.\n     * @param account The account to deposit ERC20 tokens.\n     * @param token The ERC20 token to deposit.\n     * @param amount The amount of ERC20 token to deposit.\n     */\n    function depositTokenByAdmin(address account, address token, uint256 amount)\n        public virtual;\n\n    /**\n     * @dev Withdraw ETH from an account to Escrow Admin.\n     * @param account The account to withdraw ETH.\n     * @param amount The amount of ETH to withdraw.\n     */\n    function withdrawByAdmin(address account, uint256 amount) public virtual;\n\n    /**\n     * @dev Withdraw ERC20 token from an account to Escrow Admin.\n     * The transfer action is done inside this function.\n     * @param account The account to withdraw ERC20 token.\n     * @param token The ERC20 token to withdraw.\n     * @param amount The amount of ERC20 tokens to withdraw.\n     */\n    function withdrawTokenByAdmin(\n        address account,\n        address token,\n        uint256 amount\n    ) public virtual;\n\n    /**\n     * @dev Transfer ETH from one account to another in the Escrow.\n     * @param source The account that owns the ETH.\n     * @param dest The target account that will own the ETH.\n     * @param amount The amount of ETH to transfer.\n     */\n    function transferByAdmin(address source, address dest, uint256 amount) public virtual;\n\n    /**\n     * @dev Transfer ERC20 token from one account to another in the Escrow.\n     * @param source The account that owns the ERC20 token.\n     * @param dest The target account that will own the ERC20 token.\n     * @param token The ERC20 token address.\n     * @param amount The amount of ERC20 token to transfer.\n     */\n    function transferTokenByAdmin(address source, address dest, address token, uint256 amount) public virtual;\n}\n",
+  "sourcePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol",
+  "ast": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol",
+    "exportedSymbols": {
+      "IEscrow": [
+        583
+      ]
+    },
+    "id": 584,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 489,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:3"
+      },
+      {
+        "abstract": true,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 490,
+          "nodeType": "StructuredDocumentation",
+          "src": "63:146:3",
+          "text": "@title Base interface for both instrument and issuance escrows.\n@dev Abstract contract is used instead of Interface for inheritance."
+        },
+        "fullyImplemented": false,
+        "id": 583,
+        "linearizedBaseContracts": [
+          583
+        ],
+        "name": "IEscrow",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 491,
+              "nodeType": "StructuredDocumentation",
+              "src": "242:40:3",
+              "text": "Balance is increased."
+            },
+            "id": 499,
+            "name": "BalanceIncreased",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 498,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 493,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 499,
+                  "src": "310:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 492,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "310:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 495,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 499,
+                  "src": "327:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 494,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "327:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 497,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 499,
+                  "src": "342:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 496,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "342:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "309:48:3"
+            },
+            "src": "287:71:3"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 500,
+              "nodeType": "StructuredDocumentation",
+              "src": "364:40:3",
+              "text": "Balance is decreased."
+            },
+            "id": 508,
+            "name": "BalanceDecreased",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 507,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 502,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 508,
+                  "src": "432:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 501,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "432:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 504,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 508,
+                  "src": "449:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 503,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "449:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 506,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 508,
+                  "src": "464:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 505,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "464:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "431:48:3"
+            },
+            "src": "409:71:3"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 509,
+              "nodeType": "StructuredDocumentation",
+              "src": "486:187:3",
+              "text": "@dev Get the current ETH balance of an account in the escrow.\n@param account The account to check ETH balance.\n@return Current ETH balance of the account."
+            },
+            "functionSelector": "f8b2cb4f",
+            "id": 516,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getBalance",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 512,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 511,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 516,
+                  "src": "698:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 510,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "698:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "697:17:3"
+            },
+            "returnParameters": {
+              "id": 515,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 514,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 516,
+                  "src": "744:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 513,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "744:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "743:9:3"
+            },
+            "scope": 583,
+            "src": "678:75:3",
+            "stateMutability": "view",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 517,
+              "nodeType": "StructuredDocumentation",
+              "src": "759:241:3",
+              "text": "@dev Get the balance of the requested IERC20 token in the escrow.\n@param account The address to check IERC20 balance.\n@param token The IERC20 token to check balance.\n@return The balance of the account."
+            },
+            "functionSelector": "c489744b",
+            "id": 526,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenBalance",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 522,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 519,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 526,
+                  "src": "1030:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 518,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1030:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 521,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 526,
+                  "src": "1047:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 520,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1047:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1029:32:3"
+            },
+            "returnParameters": {
+              "id": 525,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 524,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 526,
+                  "src": "1123:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 523,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1123:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1122:9:3"
+            },
+            "scope": 583,
+            "src": "1005:127:3",
+            "stateMutability": "view",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 527,
+              "nodeType": "StructuredDocumentation",
+              "src": "1138:121:3",
+              "text": "@dev Deposits ETH from Escrow Admin into an account.\n@param account The account to deposit ETH."
+            },
+            "functionSelector": "70d97c34",
+            "id": 532,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 530,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 529,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 532,
+                  "src": "1288:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 528,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1288:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1287:17:3"
+            },
+            "returnParameters": {
+              "id": 531,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1327:0:3"
+            },
+            "scope": 583,
+            "src": "1264:64:3",
+            "stateMutability": "payable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 533,
+              "nodeType": "StructuredDocumentation",
+              "src": "1334:324:3",
+              "text": "@dev Deposits ERC20 tokens from Escrow Admin into an account.\nNote: The owner, i.e. Escrow Admin must set the allowance before hand.\n@param account The account to deposit ERC20 tokens.\n@param token The ERC20 token to deposit.\n@param amount The amount of ERC20 token to deposit."
+            },
+            "functionSelector": "810c0af8",
+            "id": 542,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositTokenByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 540,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 535,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 542,
+                  "src": "1692:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 534,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1692:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 537,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 542,
+                  "src": "1709:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 536,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1709:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 539,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 542,
+                  "src": "1724:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 538,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1724:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1691:48:3"
+            },
+            "returnParameters": {
+              "id": 541,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1762:0:3"
+            },
+            "scope": 583,
+            "src": "1663:100:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 543,
+              "nodeType": "StructuredDocumentation",
+              "src": "1769:172:3",
+              "text": "@dev Withdraw ETH from an account to Escrow Admin.\n@param account The account to withdraw ETH.\n@param amount The amount of ETH to withdraw."
+            },
+            "functionSelector": "487c3580",
+            "id": 550,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 548,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 545,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 550,
+                  "src": "1971:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 544,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1971:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 547,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 550,
+                  "src": "1988:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 546,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1988:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1970:33:3"
+            },
+            "returnParameters": {
+              "id": 549,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2018:0:3"
+            },
+            "scope": 583,
+            "src": "1946:73:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 551,
+              "nodeType": "StructuredDocumentation",
+              "src": "2025:303:3",
+              "text": "@dev Withdraw ERC20 token from an account to Escrow Admin.\nThe transfer action is done inside this function.\n@param account The account to withdraw ERC20 token.\n@param token The ERC20 token to withdraw.\n@param amount The amount of ERC20 tokens to withdraw."
+            },
+            "functionSelector": "3d4aa9a9",
+            "id": 560,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawTokenByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 558,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 553,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 560,
+                  "src": "2372:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 552,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2372:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 555,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 560,
+                  "src": "2397:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 554,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2397:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 557,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 560,
+                  "src": "2420:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 556,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2420:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2362:78:3"
+            },
+            "returnParameters": {
+              "id": 559,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2455:0:3"
+            },
+            "scope": 583,
+            "src": "2333:123:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 561,
+              "nodeType": "StructuredDocumentation",
+              "src": "2462:244:3",
+              "text": "@dev Transfer ETH from one account to another in the Escrow.\n@param source The account that owns the ETH.\n@param dest The target account that will own the ETH.\n@param amount The amount of ETH to transfer."
+            },
+            "functionSelector": "8eb17dfe",
+            "id": 570,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 568,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 563,
+                  "mutability": "mutable",
+                  "name": "source",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 570,
+                  "src": "2736:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 562,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2736:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 565,
+                  "mutability": "mutable",
+                  "name": "dest",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 570,
+                  "src": "2752:12:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 564,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2752:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 567,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 570,
+                  "src": "2766:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 566,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2766:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2735:46:3"
+            },
+            "returnParameters": {
+              "id": 569,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2796:0:3"
+            },
+            "scope": 583,
+            "src": "2711:86:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 571,
+              "nodeType": "StructuredDocumentation",
+              "src": "2803:321:3",
+              "text": "@dev Transfer ERC20 token from one account to another in the Escrow.\n@param source The account that owns the ERC20 token.\n@param dest The target account that will own the ERC20 token.\n@param token The ERC20 token address.\n@param amount The amount of ERC20 token to transfer."
+            },
+            "functionSelector": "233c3359",
+            "id": 582,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferTokenByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 580,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 573,
+                  "mutability": "mutable",
+                  "name": "source",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3159:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 572,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3159:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 575,
+                  "mutability": "mutable",
+                  "name": "dest",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3175:12:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 574,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3175:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 577,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3189:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 576,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3189:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 579,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3204:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 578,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3204:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3158:61:3"
+            },
+            "returnParameters": {
+              "id": 581,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3234:0:3"
+            },
+            "scope": 583,
+            "src": "3129:106:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          }
+        ],
+        "scope": 584,
+        "src": "210:3027:3"
+      }
+    ],
+    "src": "39:3199:3"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol",
+    "exportedSymbols": {
+      "IEscrow": [
+        583
+      ]
+    },
+    "id": 584,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 489,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:3"
+      },
+      {
+        "abstract": true,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 490,
+          "nodeType": "StructuredDocumentation",
+          "src": "63:146:3",
+          "text": "@title Base interface for both instrument and issuance escrows.\n@dev Abstract contract is used instead of Interface for inheritance."
+        },
+        "fullyImplemented": false,
+        "id": 583,
+        "linearizedBaseContracts": [
+          583
+        ],
+        "name": "IEscrow",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 491,
+              "nodeType": "StructuredDocumentation",
+              "src": "242:40:3",
+              "text": "Balance is increased."
+            },
+            "id": 499,
+            "name": "BalanceIncreased",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 498,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 493,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 499,
+                  "src": "310:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 492,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "310:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 495,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 499,
+                  "src": "327:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 494,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "327:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 497,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 499,
+                  "src": "342:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 496,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "342:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "309:48:3"
+            },
+            "src": "287:71:3"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 500,
+              "nodeType": "StructuredDocumentation",
+              "src": "364:40:3",
+              "text": "Balance is decreased."
+            },
+            "id": 508,
+            "name": "BalanceDecreased",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 507,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 502,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 508,
+                  "src": "432:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 501,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "432:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 504,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 508,
+                  "src": "449:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 503,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "449:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 506,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 508,
+                  "src": "464:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 505,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "464:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "431:48:3"
+            },
+            "src": "409:71:3"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 509,
+              "nodeType": "StructuredDocumentation",
+              "src": "486:187:3",
+              "text": "@dev Get the current ETH balance of an account in the escrow.\n@param account The account to check ETH balance.\n@return Current ETH balance of the account."
+            },
+            "functionSelector": "f8b2cb4f",
+            "id": 516,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getBalance",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 512,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 511,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 516,
+                  "src": "698:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 510,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "698:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "697:17:3"
+            },
+            "returnParameters": {
+              "id": 515,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 514,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 516,
+                  "src": "744:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 513,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "744:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "743:9:3"
+            },
+            "scope": 583,
+            "src": "678:75:3",
+            "stateMutability": "view",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 517,
+              "nodeType": "StructuredDocumentation",
+              "src": "759:241:3",
+              "text": "@dev Get the balance of the requested IERC20 token in the escrow.\n@param account The address to check IERC20 balance.\n@param token The IERC20 token to check balance.\n@return The balance of the account."
+            },
+            "functionSelector": "c489744b",
+            "id": 526,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenBalance",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 522,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 519,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 526,
+                  "src": "1030:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 518,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1030:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 521,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 526,
+                  "src": "1047:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 520,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1047:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1029:32:3"
+            },
+            "returnParameters": {
+              "id": 525,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 524,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 526,
+                  "src": "1123:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 523,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1123:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1122:9:3"
+            },
+            "scope": 583,
+            "src": "1005:127:3",
+            "stateMutability": "view",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 527,
+              "nodeType": "StructuredDocumentation",
+              "src": "1138:121:3",
+              "text": "@dev Deposits ETH from Escrow Admin into an account.\n@param account The account to deposit ETH."
+            },
+            "functionSelector": "70d97c34",
+            "id": 532,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 530,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 529,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 532,
+                  "src": "1288:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 528,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1288:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1287:17:3"
+            },
+            "returnParameters": {
+              "id": 531,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1327:0:3"
+            },
+            "scope": 583,
+            "src": "1264:64:3",
+            "stateMutability": "payable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 533,
+              "nodeType": "StructuredDocumentation",
+              "src": "1334:324:3",
+              "text": "@dev Deposits ERC20 tokens from Escrow Admin into an account.\nNote: The owner, i.e. Escrow Admin must set the allowance before hand.\n@param account The account to deposit ERC20 tokens.\n@param token The ERC20 token to deposit.\n@param amount The amount of ERC20 token to deposit."
+            },
+            "functionSelector": "810c0af8",
+            "id": 542,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositTokenByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 540,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 535,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 542,
+                  "src": "1692:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 534,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1692:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 537,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 542,
+                  "src": "1709:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 536,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1709:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 539,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 542,
+                  "src": "1724:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 538,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1724:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1691:48:3"
+            },
+            "returnParameters": {
+              "id": 541,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1762:0:3"
+            },
+            "scope": 583,
+            "src": "1663:100:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 543,
+              "nodeType": "StructuredDocumentation",
+              "src": "1769:172:3",
+              "text": "@dev Withdraw ETH from an account to Escrow Admin.\n@param account The account to withdraw ETH.\n@param amount The amount of ETH to withdraw."
+            },
+            "functionSelector": "487c3580",
+            "id": 550,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 548,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 545,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 550,
+                  "src": "1971:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 544,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1971:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 547,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 550,
+                  "src": "1988:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 546,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1988:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1970:33:3"
+            },
+            "returnParameters": {
+              "id": 549,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2018:0:3"
+            },
+            "scope": 583,
+            "src": "1946:73:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 551,
+              "nodeType": "StructuredDocumentation",
+              "src": "2025:303:3",
+              "text": "@dev Withdraw ERC20 token from an account to Escrow Admin.\nThe transfer action is done inside this function.\n@param account The account to withdraw ERC20 token.\n@param token The ERC20 token to withdraw.\n@param amount The amount of ERC20 tokens to withdraw."
+            },
+            "functionSelector": "3d4aa9a9",
+            "id": 560,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawTokenByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 558,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 553,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 560,
+                  "src": "2372:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 552,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2372:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 555,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 560,
+                  "src": "2397:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 554,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2397:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 557,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 560,
+                  "src": "2420:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 556,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2420:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2362:78:3"
+            },
+            "returnParameters": {
+              "id": 559,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2455:0:3"
+            },
+            "scope": 583,
+            "src": "2333:123:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 561,
+              "nodeType": "StructuredDocumentation",
+              "src": "2462:244:3",
+              "text": "@dev Transfer ETH from one account to another in the Escrow.\n@param source The account that owns the ETH.\n@param dest The target account that will own the ETH.\n@param amount The amount of ETH to transfer."
+            },
+            "functionSelector": "8eb17dfe",
+            "id": 570,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 568,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 563,
+                  "mutability": "mutable",
+                  "name": "source",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 570,
+                  "src": "2736:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 562,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2736:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 565,
+                  "mutability": "mutable",
+                  "name": "dest",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 570,
+                  "src": "2752:12:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 564,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2752:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 567,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 570,
+                  "src": "2766:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 566,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2766:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2735:46:3"
+            },
+            "returnParameters": {
+              "id": 569,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2796:0:3"
+            },
+            "scope": 583,
+            "src": "2711:86:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 571,
+              "nodeType": "StructuredDocumentation",
+              "src": "2803:321:3",
+              "text": "@dev Transfer ERC20 token from one account to another in the Escrow.\n@param source The account that owns the ERC20 token.\n@param dest The target account that will own the ERC20 token.\n@param token The ERC20 token address.\n@param amount The amount of ERC20 token to transfer."
+            },
+            "functionSelector": "233c3359",
+            "id": 582,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferTokenByAdmin",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 580,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 573,
+                  "mutability": "mutable",
+                  "name": "source",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3159:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 572,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3159:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 575,
+                  "mutability": "mutable",
+                  "name": "dest",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3175:12:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 574,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3175:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 577,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3189:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 576,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3189:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 579,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 582,
+                  "src": "3204:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 578,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3204:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3158:61:3"
+            },
+            "returnParameters": {
+              "id": 581,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3234:0:3"
+            },
+            "scope": 583,
+            "src": "3129:106:3",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          }
+        ],
+        "scope": 584,
+        "src": "210:3027:3"
+      }
+    ],
+    "src": "39:3199:3"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.8+commit.0bbfe453.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.1.0",
+  "updatedAt": "2020-05-18T21:01:13.071Z",
+  "devdoc": {
+    "details": "Abstract contract is used instead of Interface for inheritance.",
+    "methods": {
+      "depositByAdmin(address)": {
+        "details": "Deposits ETH from Escrow Admin into an account.",
+        "params": {
+          "account": "The account to deposit ETH."
+        }
+      },
+      "depositTokenByAdmin(address,address,uint256)": {
+        "details": "Deposits ERC20 tokens from Escrow Admin into an account. Note: The owner, i.e. Escrow Admin must set the allowance before hand.",
+        "params": {
+          "account": "The account to deposit ERC20 tokens.",
+          "amount": "The amount of ERC20 token to deposit.",
+          "token": "The ERC20 token to deposit."
+        }
+      },
+      "getBalance(address)": {
+        "details": "Get the current ETH balance of an account in the escrow.",
+        "params": {
+          "account": "The account to check ETH balance."
+        },
+        "returns": {
+          "_0": "Current ETH balance of the account."
+        }
+      },
+      "getTokenBalance(address,address)": {
+        "details": "Get the balance of the requested IERC20 token in the escrow.",
+        "params": {
+          "account": "The address to check IERC20 balance.",
+          "token": "The IERC20 token to check balance."
+        },
+        "returns": {
+          "_0": "The balance of the account."
+        }
+      },
+      "transferByAdmin(address,address,uint256)": {
+        "details": "Transfer ETH from one account to another in the Escrow.",
+        "params": {
+          "amount": "The amount of ETH to transfer.",
+          "dest": "The target account that will own the ETH.",
+          "source": "The account that owns the ETH."
+        }
+      },
+      "transferTokenByAdmin(address,address,address,uint256)": {
+        "details": "Transfer ERC20 token from one account to another in the Escrow.",
+        "params": {
+          "amount": "The amount of ERC20 token to transfer.",
+          "dest": "The target account that will own the ERC20 token.",
+          "source": "The account that owns the ERC20 token.",
+          "token": "The ERC20 token address."
+        }
+      },
+      "withdrawByAdmin(address,uint256)": {
+        "details": "Withdraw ETH from an account to Escrow Admin.",
+        "params": {
+          "account": "The account to withdraw ETH.",
+          "amount": "The amount of ETH to withdraw."
+        }
+      },
+      "withdrawTokenByAdmin(address,address,uint256)": {
+        "details": "Withdraw ERC20 token from an account to Escrow Admin. The transfer action is done inside this function.",
+        "params": {
+          "account": "The account to withdraw ERC20 token.",
+          "amount": "The amount of ERC20 tokens to withdraw.",
+          "token": "The ERC20 token to withdraw."
+        }
+      }
+    },
+    "title": "Base interface for both instrument and issuance escrows."
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

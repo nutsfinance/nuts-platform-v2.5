@@ -1,0 +1,472 @@
+{
+  "contractName": "IIssuanceEscrow",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "BalanceDecreased",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "BalanceIncreased",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "depositByAdmin",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositTokenByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "getTokenBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "source",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "dest",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "source",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "dest",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferTokenByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawTokenByAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.8+commit.0bbfe453\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"BalanceDecreased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"BalanceIncreased\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"depositByAdmin\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"depositTokenByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"getBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"getTokenBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"dest\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"dest\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferTokenByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawTokenByAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Interface for Issuance Escrow. Defines additional methods for Issuance Escrow.\",\"methods\":{\"depositByAdmin(address)\":{\"details\":\"Deposits ETH from Escrow Admin into an account.\",\"params\":{\"account\":\"The account to deposit ETH.\"}},\"depositTokenByAdmin(address,address,uint256)\":{\"details\":\"Deposits ERC20 tokens from Escrow Admin into an account. Note: The owner, i.e. Escrow Admin must set the allowance before hand.\",\"params\":{\"account\":\"The account to deposit ERC20 tokens.\",\"amount\":\"The amount of ERC20 token to deposit.\",\"token\":\"The ERC20 token to deposit.\"}},\"getBalance(address)\":{\"details\":\"Get the current ETH balance of an account in the escrow.\",\"params\":{\"account\":\"The account to check ETH balance.\"},\"returns\":{\"_0\":\"Current ETH balance of the account.\"}},\"getTokenBalance(address,address)\":{\"details\":\"Get the balance of the requested IERC20 token in the escrow.\",\"params\":{\"account\":\"The address to check IERC20 balance.\",\"token\":\"The IERC20 token to check balance.\"},\"returns\":{\"_0\":\"The balance of the account.\"}},\"transferByAdmin(address,address,uint256)\":{\"details\":\"Transfer ETH from one account to another in the Escrow.\",\"params\":{\"amount\":\"The amount of ETH to transfer.\",\"dest\":\"The target account that will own the ETH.\",\"source\":\"The account that owns the ETH.\"}},\"transferTokenByAdmin(address,address,address,uint256)\":{\"details\":\"Transfer ERC20 token from one account to another in the Escrow.\",\"params\":{\"amount\":\"The amount of ERC20 token to transfer.\",\"dest\":\"The target account that will own the ERC20 token.\",\"source\":\"The account that owns the ERC20 token.\",\"token\":\"The ERC20 token address.\"}},\"withdrawByAdmin(address,uint256)\":{\"details\":\"Withdraw ETH from an account to Escrow Admin.\",\"params\":{\"account\":\"The account to withdraw ETH.\",\"amount\":\"The amount of ETH to withdraw.\"}},\"withdrawTokenByAdmin(address,address,uint256)\":{\"details\":\"Withdraw ERC20 token from an account to Escrow Admin. The transfer action is done inside this function.\",\"params\":{\"account\":\"The account to withdraw ERC20 token.\",\"amount\":\"The amount of ERC20 tokens to withdraw.\",\"token\":\"The ERC20 token to withdraw.\"}}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IIssuanceEscrow.sol\":\"IIssuanceEscrow\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol\":{\"keccak256\":\"0x11cabc64c4696f413b4fd672db1a201affd302c0f0a0da683ea9c7573cac8014\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://f317e0adabe961144bc7270cefe8f39cdd6815743e02e3de6261df124699b90e\",\"dweb:/ipfs/QmRWqMVpV1ivG2TNKf3fSAekaJF1M72gvirGT4zkSLKaS7\"]},\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IIssuanceEscrow.sol\":{\"keccak256\":\"0x3087935a3a74aae86d25f2cc7890662e919f72988962869c99c1ba6026f01089\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://01a5cb9e07d6194e1dbd526f6c99e2c8aad6e4eccf49d73cc6b99e9bd901d851\",\"dweb:/ipfs/QmNT6EcizmMvFj4GuR5GNeGUPwhavi6WsW1fMtVysi4TiD\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: Apache-2.0\npragma solidity 0.6.8;\n\nimport \"./IEscrow.sol\";\n\n/**\n * @dev Interface for Issuance Escrow.\n * Defines additional methods for Issuance Escrow.\n */\nabstract contract IIssuanceEscrow is IEscrow {\n}\n",
+  "sourcePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IIssuanceEscrow.sol",
+  "ast": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IIssuanceEscrow.sol",
+    "exportedSymbols": {
+      "IIssuanceEscrow": [
+        655
+      ]
+    },
+    "id": 656,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 650,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:5"
+      },
+      {
+        "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol",
+        "file": "./IEscrow.sol",
+        "id": 651,
+        "nodeType": "ImportDirective",
+        "scope": 656,
+        "sourceUnit": 584,
+        "src": "63:23:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": true,
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 653,
+              "name": "IEscrow",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 583,
+              "src": "223:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IEscrow_$583",
+                "typeString": "contract IEscrow"
+              }
+            },
+            "id": 654,
+            "nodeType": "InheritanceSpecifier",
+            "src": "223:7:5"
+          }
+        ],
+        "contractDependencies": [
+          583
+        ],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 652,
+          "nodeType": "StructuredDocumentation",
+          "src": "88:97:5",
+          "text": "@dev Interface for Issuance Escrow.\nDefines additional methods for Issuance Escrow."
+        },
+        "fullyImplemented": false,
+        "id": 655,
+        "linearizedBaseContracts": [
+          655,
+          583
+        ],
+        "name": "IIssuanceEscrow",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 656,
+        "src": "186:48:5"
+      }
+    ],
+    "src": "39:196:5"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IIssuanceEscrow.sol",
+    "exportedSymbols": {
+      "IIssuanceEscrow": [
+        655
+      ]
+    },
+    "id": 656,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 650,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:5"
+      },
+      {
+        "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol",
+        "file": "./IEscrow.sol",
+        "id": 651,
+        "nodeType": "ImportDirective",
+        "scope": 656,
+        "sourceUnit": 584,
+        "src": "63:23:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": true,
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 653,
+              "name": "IEscrow",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 583,
+              "src": "223:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IEscrow_$583",
+                "typeString": "contract IEscrow"
+              }
+            },
+            "id": 654,
+            "nodeType": "InheritanceSpecifier",
+            "src": "223:7:5"
+          }
+        ],
+        "contractDependencies": [
+          583
+        ],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 652,
+          "nodeType": "StructuredDocumentation",
+          "src": "88:97:5",
+          "text": "@dev Interface for Issuance Escrow.\nDefines additional methods for Issuance Escrow."
+        },
+        "fullyImplemented": false,
+        "id": 655,
+        "linearizedBaseContracts": [
+          655,
+          583
+        ],
+        "name": "IIssuanceEscrow",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 656,
+        "src": "186:48:5"
+      }
+    ],
+    "src": "39:196:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.8+commit.0bbfe453.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.1.0",
+  "updatedAt": "2020-05-18T21:01:13.074Z",
+  "devdoc": {
+    "details": "Interface for Issuance Escrow. Defines additional methods for Issuance Escrow.",
+    "methods": {
+      "depositByAdmin(address)": {
+        "details": "Deposits ETH from Escrow Admin into an account.",
+        "params": {
+          "account": "The account to deposit ETH."
+        }
+      },
+      "depositTokenByAdmin(address,address,uint256)": {
+        "details": "Deposits ERC20 tokens from Escrow Admin into an account. Note: The owner, i.e. Escrow Admin must set the allowance before hand.",
+        "params": {
+          "account": "The account to deposit ERC20 tokens.",
+          "amount": "The amount of ERC20 token to deposit.",
+          "token": "The ERC20 token to deposit."
+        }
+      },
+      "getBalance(address)": {
+        "details": "Get the current ETH balance of an account in the escrow.",
+        "params": {
+          "account": "The account to check ETH balance."
+        },
+        "returns": {
+          "_0": "Current ETH balance of the account."
+        }
+      },
+      "getTokenBalance(address,address)": {
+        "details": "Get the balance of the requested IERC20 token in the escrow.",
+        "params": {
+          "account": "The address to check IERC20 balance.",
+          "token": "The IERC20 token to check balance."
+        },
+        "returns": {
+          "_0": "The balance of the account."
+        }
+      },
+      "transferByAdmin(address,address,uint256)": {
+        "details": "Transfer ETH from one account to another in the Escrow.",
+        "params": {
+          "amount": "The amount of ETH to transfer.",
+          "dest": "The target account that will own the ETH.",
+          "source": "The account that owns the ETH."
+        }
+      },
+      "transferTokenByAdmin(address,address,address,uint256)": {
+        "details": "Transfer ERC20 token from one account to another in the Escrow.",
+        "params": {
+          "amount": "The amount of ERC20 token to transfer.",
+          "dest": "The target account that will own the ERC20 token.",
+          "source": "The account that owns the ERC20 token.",
+          "token": "The ERC20 token address."
+        }
+      },
+      "withdrawByAdmin(address,uint256)": {
+        "details": "Withdraw ETH from an account to Escrow Admin.",
+        "params": {
+          "account": "The account to withdraw ETH.",
+          "amount": "The amount of ETH to withdraw."
+        }
+      },
+      "withdrawTokenByAdmin(address,address,uint256)": {
+        "details": "Withdraw ERC20 token from an account to Escrow Admin. The transfer action is done inside this function.",
+        "params": {
+          "account": "The account to withdraw ERC20 token.",
+          "amount": "The amount of ERC20 tokens to withdraw.",
+          "token": "The ERC20 token to withdraw."
+        }
+      }
+    }
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "contractName": "Instrument",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.8+commit.0bbfe453\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol\":\"Instrument\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol\":{\"keccak256\":\"0x243e6e07f2792422b93fcee382dbf837446c5b1b92ed36c1b718441409424cd9\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://e30b9d0b3100bc7b4832466ebd6f60630e80d87f79b0633a13ad4c784583b97b\",\"dweb:/ipfs/QmUSRtovRfQRDc8c11mjnaUzgDP6urxxTnFLTGkaRxEb6t\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x04d34b3cd5677bea25f8dfceb6dec0eaa071d4d4b789a43f13fe0c415ba4c296\",\"urls\":[\"bzz-raw://e7e8b526a6839e5ba14f0d23a830387fec47f7043ce01d42c9f285b709a9d080\",\"dweb:/ipfs/QmXmhhFmX5gcAvVzNiDPAGA35iHMPNaYtQkACswRHBVTNw\"]},\"@openzeppelin/contracts/utils/Counters.sol\":{\"keccak256\":\"0x4f3a00edb976e97943fe0a620ea2948955a75eff2a9231c202d50d1e062d8da5\",\"urls\":[\"bzz-raw://4d83aa87b7c75f666d57a0e5b779a19c00b453b14ee4ed88cfda6d056fdcf14c\",\"dweb:/ipfs/QmXpWwQVFo66hsrAZmHxoxNzwEwBDgNWvaUYqY4TJV38vk\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212203053e1a6b3e2dbef96b825f85a8c89b2ac2bd0c536ca903b67cb01f26fe9ae8b64736f6c63430006080033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212203053e1a6b3e2dbef96b825f85a8c89b2ac2bd0c536ca903b67cb01f26fe9ae8b64736f6c63430006080033",
+  "immutableReferences": {},
+  "sourceMap": "117:22:8:-:0;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;117:22:8;;;;;;;",
+  "deployedSourceMap": "117:22:8:-:0;;;12:1:-1;9;2:12",
+  "source": "// SPDX-License-Identifier: Apache-2.0\npragma solidity 0.6.8;\n\nimport \"@openzeppelin/contracts/utils/Counters.sol\";\n\ncontract Instrument {}",
+  "sourcePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol",
+  "ast": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol",
+    "exportedSymbols": {
+      "Instrument": [
+        836
+      ]
+    },
+    "id": 837,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 834,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:8"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/utils/Counters.sol",
+        "file": "@openzeppelin/contracts/utils/Counters.sol",
+        "id": 835,
+        "nodeType": "ImportDirective",
+        "scope": 837,
+        "sourceUnit": 1776,
+        "src": "63:52:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 836,
+        "linearizedBaseContracts": [
+          836
+        ],
+        "name": "Instrument",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 837,
+        "src": "117:22:8"
+      }
+    ],
+    "src": "39:100:8"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol",
+    "exportedSymbols": {
+      "Instrument": [
+        836
+      ]
+    },
+    "id": 837,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 834,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:8"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/utils/Counters.sol",
+        "file": "@openzeppelin/contracts/utils/Counters.sol",
+        "id": 835,
+        "nodeType": "ImportDirective",
+        "scope": 837,
+        "sourceUnit": 1776,
+        "src": "63:52:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 836,
+        "linearizedBaseContracts": [
+          836
+        ],
+        "name": "Instrument",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 837,
+        "src": "117:22:8"
+      }
+    ],
+    "src": "39:100:8"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.8+commit.0bbfe453.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.1.0",
+  "updatedAt": "2020-05-18T21:01:13.083Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

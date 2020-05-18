@@ -1,0 +1,451 @@
+{
+  "contractName": "IPriceOracle",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "baseTokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "quoteTokenAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "numerator",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "denominator",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.8+commit.0bbfe453\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"baseTokenAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"quoteTokenAddress\",\"type\":\"address\"}],\"name\":\"getRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"numerator\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"denominator\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"getRate(address,address)\":{\"details\":\"Get the exchange rate between two tokens.\",\"params\":{\"baseTokenAddress\":\"The address of base ERC20 token. ETH has a special address defined in Constants.getEthAddress()\",\"quoteTokenAddress\":\"The address of quote ERC20 token. ETH has a special address defined in Constants.getEthAddress()\"},\"returns\":{\"denominator\":\"The rate expressed as numerator/denominator.\",\"numerator\":\"The rate expressed as numerator/denominator.\"}}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/priceoracle/PriceOracleInterface.sol\":\"IPriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/priceoracle/PriceOracleInterface.sol\":{\"keccak256\":\"0x5f4bbfab12e8c739f5dbbcb5ba979ffe0d8d9380d9a693f1aefc41d96a82170e\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://9f449950098e0ce8508fdd607a34ce24fd925dfe11f3935f58ae27afb9dda0ba\",\"dweb:/ipfs/Qmd9515Dfdr9QeqTbZmCrFtxdUWMmqCdS9JjE6HeJizGEq\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: Apache-2.0\npragma solidity 0.6.8;\n\ninterface IPriceOracle {\n    /**\n     * @dev Get the exchange rate between two tokens.\n     * @param baseTokenAddress The address of base ERC20 token. ETH has a special address defined in Constants.getEthAddress()\n     * @param quoteTokenAddress The address of quote ERC20 token. ETH has a special address defined in Constants.getEthAddress()\n     * @return numerator The rate expressed as numerator/denominator.\n     * @return denominator The rate expressed as numerator/denominator.\n     */\n    function getRate(address baseTokenAddress, address quoteTokenAddress)\n        external\n        view\n        returns (uint256 numerator, uint256 denominator);\n}\n",
+  "sourcePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/priceoracle/PriceOracleInterface.sol",
+  "ast": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/priceoracle/PriceOracleInterface.sol",
+    "exportedSymbols": {
+      "IPriceOracle": [
+        851
+      ]
+    },
+    "id": 852,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 838,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:9"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 851,
+        "linearizedBaseContracts": [
+          851
+        ],
+        "name": "IPriceOracle",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": {
+              "id": 839,
+              "nodeType": "StructuredDocumentation",
+              "src": "92:463:9",
+              "text": "@dev Get the exchange rate between two tokens.\n@param baseTokenAddress The address of base ERC20 token. ETH has a special address defined in Constants.getEthAddress()\n@param quoteTokenAddress The address of quote ERC20 token. ETH has a special address defined in Constants.getEthAddress()\n@return numerator The rate expressed as numerator/denominator.\n@return denominator The rate expressed as numerator/denominator."
+            },
+            "functionSelector": "379b87ea",
+            "id": 850,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getRate",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 844,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 841,
+                  "mutability": "mutable",
+                  "name": "baseTokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "577:24:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 840,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "577:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 843,
+                  "mutability": "mutable",
+                  "name": "quoteTokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "603:25:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 842,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "603:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "576:53:9"
+            },
+            "returnParameters": {
+              "id": 849,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 846,
+                  "mutability": "mutable",
+                  "name": "numerator",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "677:17:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 845,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "677:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 848,
+                  "mutability": "mutable",
+                  "name": "denominator",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "696:19:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 847,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "696:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "676:40:9"
+            },
+            "scope": 851,
+            "src": "560:157:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 852,
+        "src": "63:656:9"
+      }
+    ],
+    "src": "39:681:9"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/priceoracle/PriceOracleInterface.sol",
+    "exportedSymbols": {
+      "IPriceOracle": [
+        851
+      ]
+    },
+    "id": 852,
+    "license": "Apache-2.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 838,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".8"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:9"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 851,
+        "linearizedBaseContracts": [
+          851
+        ],
+        "name": "IPriceOracle",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": {
+              "id": 839,
+              "nodeType": "StructuredDocumentation",
+              "src": "92:463:9",
+              "text": "@dev Get the exchange rate between two tokens.\n@param baseTokenAddress The address of base ERC20 token. ETH has a special address defined in Constants.getEthAddress()\n@param quoteTokenAddress The address of quote ERC20 token. ETH has a special address defined in Constants.getEthAddress()\n@return numerator The rate expressed as numerator/denominator.\n@return denominator The rate expressed as numerator/denominator."
+            },
+            "functionSelector": "379b87ea",
+            "id": 850,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getRate",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 844,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 841,
+                  "mutability": "mutable",
+                  "name": "baseTokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "577:24:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 840,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "577:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 843,
+                  "mutability": "mutable",
+                  "name": "quoteTokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "603:25:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 842,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "603:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "576:53:9"
+            },
+            "returnParameters": {
+              "id": 849,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 846,
+                  "mutability": "mutable",
+                  "name": "numerator",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "677:17:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 845,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "677:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 848,
+                  "mutability": "mutable",
+                  "name": "denominator",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 850,
+                  "src": "696:19:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 847,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "696:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "676:40:9"
+            },
+            "scope": 851,
+            "src": "560:157:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 852,
+        "src": "63:656:9"
+      }
+    ],
+    "src": "39:681:9"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.8+commit.0bbfe453.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.1.0",
+  "updatedAt": "2020-05-18T21:01:13.084Z",
+  "devdoc": {
+    "methods": {
+      "getRate(address,address)": {
+        "details": "Get the exchange rate between two tokens.",
+        "params": {
+          "baseTokenAddress": "The address of base ERC20 token. ETH has a special address defined in Constants.getEthAddress()",
+          "quoteTokenAddress": "The address of quote ERC20 token. ETH has a special address defined in Constants.getEthAddress()"
+        },
+        "returns": {
+          "denominator": "The rate expressed as numerator/denominator.",
+          "numerator": "The rate expressed as numerator/denominator."
+        }
+      }
+    }
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
