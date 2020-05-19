@@ -105,7 +105,7 @@ abstract contract EscrowBase is IEscrow, AccessControl {
         require(account != address(0x0), "EscrowBase: Account not set");
         require(token != address(0x0), "EscrowBase: Token not set");
         require(amount > 0, "EscrowBase: Amount not set");
-        require(getTokenBalance(account, token) >= amount, "EscrowBase: Insufficient Token Balance");
+        require(getTokenBalance(account, token) >= amount, "EscrowBase: Insufficient Balance");
 
         // Updates the balance
         _decreaseBalance(account, token, amount);

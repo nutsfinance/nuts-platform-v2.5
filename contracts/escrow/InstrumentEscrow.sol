@@ -4,7 +4,6 @@ pragma solidity 0.6.8;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-import "../lib/util/Constant.sol";
 import "../lib/token/WETH9.sol";
 import "./EscrowBase.sol";
 import "./IInstrumentEscrow.sol";
@@ -26,7 +25,11 @@ contract InstrumentEscrow is EscrowBase, IInstrumentEscrow {
     function deposit() public override payable {
         address account = msg.sender;
         uint256 amount = msg.value;
-        _increaseBalance(account, Constant.getEthAddress(), amount);
+
+        // Updates the balance of WETH
+        _increaseBalance(account, address(_weth), amount);
+        // Deposits to WETH
+        _weth.deposit.value(amount)();
 
         emit Deposited(account, amount);
     }
@@ -37,12 +40,13 @@ contract InstrumentEscrow is EscrowBase, IInstrumentEscrow {
      */
     function withdraw(uint256 amount) public override {
         address payable account = msg.sender;
-        require(
-            getBalance(account) >= amount,
-            "InstrumentEscrow: Insufficient balance."
-        );
-        _decreaseBalance(account, Constant.getEthAddress(), amount);
+        require(getBalance(account) >= amount, "InstrumentEscrow: Insufficient balance.");
 
+        // Updates the balance of WETH
+        _decreaseBalance(account, address(_weth), amount);
+
+        // Withdraws ETH from WETH
+        _weth.withdraw(amount);
         account.transfer(amount);
 
         emit Withdrawn(account, amount);
