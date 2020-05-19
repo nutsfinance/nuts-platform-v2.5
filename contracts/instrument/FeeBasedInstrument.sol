@@ -13,7 +13,7 @@ abstract contract FeebasedInstrument is Instrument {
     uint256 private _makerFeeAmount;
     uint256 private _takerFeeAmount;
 
-    constructor(address makerFeeToken, uint256 makerFeeAmount, address takerFeeToken, uint256 takerFeeAmount) public {
+    constructor(address makerFeeToken, uint256 makerFeeAmount, address takerFeeToken, uint256 takerFeeAmount) internal {
         _makerFeeToken = makerFeeToken;
         _makerFeeAmount = makerFeeAmount;
         _takerFeeToken = takerFeeToken;

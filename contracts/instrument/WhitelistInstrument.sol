@@ -13,7 +13,7 @@ abstract contract WhitelistInstrument is Instrument {
     mapping(address => bool) private _makerWhitelist;
     mapping(address => bool) private _takerWhitelist;
 
-    constructor(bool makerWhitelistEnabled, bool takerWhitelistEnabled) public {
+    constructor(bool makerWhitelistEnabled, bool takerWhitelistEnabled) internal {
         _makerWhitelistEnabled = makerWhitelistEnabled;
         _takerWhitelistEnabled = takerWhitelistEnabled;
     }
