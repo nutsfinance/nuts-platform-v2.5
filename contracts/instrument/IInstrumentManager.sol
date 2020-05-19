@@ -3,6 +3,7 @@ pragma solidity 0.6.8;
 
 import "../escrow/IInstrumentEscrow.sol";
 import "../escrow/IIssuanceEscrow.sol";
+import "../lib/data/Transfers.sol";
 import "./Issuance.sol";
 import "./Instrument.sol";
 
@@ -17,6 +18,12 @@ abstract contract IInstrumentManager {
      * @dev The instrument is deactivated.
      */
     event InstrumentDeactivated(uint256 indexed instrumentId);
+
+    /**
+     * @dev Token is transferred.
+     */
+    event TokenTransferred(uint256 indexed issuanceId, Transfers.TransferType transferType, address fromAddress,
+        address toAddress, address tokenAddress, uint256 amount, bytes32 action);
 
     /**
      * @dev Deactivates the instrument. Once deactivated, the instrument cannot create new issuance,

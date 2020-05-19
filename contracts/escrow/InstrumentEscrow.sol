@@ -29,7 +29,7 @@ contract InstrumentEscrow is EscrowBase, IInstrumentEscrow {
         // Updates the balance of WETH
         _increaseBalance(account, address(_weth), amount);
         // Deposits to WETH
-        _weth.deposit.value(amount)();
+        _weth.deposit{value: amount}();
 
         emit Deposited(account, amount);
     }
