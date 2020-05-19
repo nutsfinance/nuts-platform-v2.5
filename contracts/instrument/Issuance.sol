@@ -38,17 +38,12 @@ abstract contract Issuance {
     Transfers.Transfer[] internal _transfers;
 
     /**
-     * @dev Initializes the issuance.
      * @param instrumentAddress Address of the instrument contract.
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
-     * @param makerData Custom properties of the issuance.
      */
-    function initialize(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress,
-        address makerAddress, bytes memory makerData) public virtual {
-        
-        require(_instrumentAddress == address(0x0), "Issuance: Already initialized.");
+    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress) internal {
         require(instrumentAddress != address(0x0), "Issuance: Instrument must be set.");
         require(issuanceId != 0, "Issuance: ID not set.");
         require(issuanceEscrowAddress != address(0x0), "Issuance: Issuance Escrow not set.");

@@ -7,6 +7,19 @@ import "../Issuance.sol";
  * @title A base contract that provide admin access control.
  */
 contract LendingIssuance is Issuance {
+
+    /**
+     * @param instrumentAddress Address of the instrument contract.
+     * @param issuanceId ID of the issuance.
+     * @param issuanceEscrowAddress Address of the issuance escrow.
+     * @param makerAddress Address of the user who creates the issuance.
+     * @param makerData Custom properties of the issuance.
+     */
+    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
+        Issuance(instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress) public {
+
+    }
+
     /**
      * @dev Creates a new engagement for the issuance.
      * @param takerAddress Address of the user who engages the issuance.
