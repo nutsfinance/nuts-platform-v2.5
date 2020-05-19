@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import "../lib/util/Constant.sol";
+import "../lib/token/WETH9.sol";
 import "./EscrowBase.sol";
 import "./IInstrumentEscrow.sol";
 
@@ -12,6 +13,8 @@ import "./IInstrumentEscrow.sol";
  * @title Instrument Escrow that keeps assets that are not yet locked by issuances.
  */
 contract InstrumentEscrow is EscrowBase, IInstrumentEscrow {
+
+    constructor(WETH9 weth) EscrowBase(weth) public {}
 
     /**********************************************
      * APIs to deposit and withdraw Ether

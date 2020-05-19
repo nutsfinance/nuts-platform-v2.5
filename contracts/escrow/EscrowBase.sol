@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-import "../lib/util/Constant.sol";
+import "../lib/token/WETH9.sol";
 import "./IEscrow.sol";
 
 /**
@@ -20,6 +20,7 @@ abstract contract EscrowBase is IEscrow, AccessControl {
      * Mapping: Account address => (Token address => Token balance)
      */
     mapping(address => mapping(address => uint256)) private _accountBalances;
+    WETH9 internal _weth;
 
     // Creates a new role identifier for the owner role
     // Owners can grant/revoke admin roles, and owners can also
@@ -29,7 +30,8 @@ abstract contract EscrowBase is IEscrow, AccessControl {
     // Admins can deposit/withdraw ETH and ERC20 token to/from the escrow
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    constructor() public {
+    constructor(WETH9 weth) public {
+        _weth = weth;
         // Grant the owner role to the contract creator
         _setupRole(OWNER_ROLE, msg.sender);
         // Grant the admin role to the contract creator as well
@@ -57,8 +59,7 @@ abstract contract EscrowBase is IEscrow, AccessControl {
      * @return Current ETH balance of the account.
      */
     function getBalance(address account) public override view returns (uint256) {
-        return
-            _accountBalances[account][Constant.getEthAddress()];
+        return _accountBalances[account][address(_weth)];
     }
 
     /**
@@ -67,12 +68,7 @@ abstract contract EscrowBase is IEscrow, AccessControl {
      * @param token The IERC20 token to check balance.
      * @return The balance of the account.
      */
-    function getTokenBalance(address account, address token)
-        public
-        override
-        view
-        returns (uint256)
-    {
+    function getTokenBalance(address account, address token) public override view returns (uint256) {
         return _accountBalances[account][token];
     }
 
@@ -81,30 +77,13 @@ abstract contract EscrowBase is IEscrow, AccessControl {
      ***************************************************************/
 
     /**
-     * @dev Deposits ETH from Escrow Admin into an account.
-     * @param account The account to deposit ETH.
-     */
-    function depositByAdmin(address account) public override payable onlyAdmin {
-        uint256 amount = msg.value;
-        require(account != address(0x0), "EscrowBase: Account not set");
-        require(amount > 0, "EscrowBase: Amount not set");
-
-        // Updates the balance
-        _increaseBalance(account, Constant.getEthAddress(), amount);
-    }
-
-    /**
      * @dev Deposits ERC20 tokens from Escrow Admin into an account.
      * Note: The Escrow Admin must set the allowance before hand.
      * @param account The account to deposit ERC20 tokens.
      * @param token The ERC20 token to deposit.
      * @param amount The amount of ERC20 token to deposit.
      */
-    function depositTokenByAdmin(address account, address token, uint256 amount)
-        public
-        override
-        onlyAdmin
-    {
+    function depositByAdmin(address account, address token, uint256 amount) public override onlyAdmin {
         require(account != address(0x0), "EscrowBase: Account not set");
         require(token != address(0x0), "EscrowBase: Token not set");
         require(amount > 0, "EscrowBase: Amount not set");
@@ -116,58 +95,22 @@ abstract contract EscrowBase is IEscrow, AccessControl {
     }
 
     /**
-     * @dev Withdraws ETH from an account to Escrow Admin.
-     * @param account The account to withdraw ETH.
-     * @param amount The amount of ETH to withdraw.
-     */
-    function withdrawByAdmin(address account, uint256 amount) public override onlyAdmin {
-        require(account != address(0x0), "EscrowBase: Account not set");
-        require(amount > 0, "EscrowBase: Amount not set");
-        require(
-            getBalance(account) >= amount,
-            "EscrowBase: Insufficient ETH Balance"
-        );
-
-        // Updates the balance
-        _decreaseBalance(account, Constant.getEthAddress(), amount);
-        
-        msg.sender.transfer(amount);
-    }
-
-    /**
      * @dev Withdraws ERC20 token from an account to Escrow Admin.
      * The transfer action is done inside this function.
      * @param account The account to withdraw ERC20 token.
      * @param token The ERC20 token to withdraw.
      * @param amount The amount of ERC20 tokens to withdraw.
      */
-    function withdrawTokenByAdmin(
-        address account,
-        address token,
-        uint256 amount
-    ) public override onlyAdmin {
+    function withdrawByAdmin(address account, address token, uint256 amount) public override onlyAdmin {
         require(account != address(0x0), "EscrowBase: Account not set");
         require(token != address(0x0), "EscrowBase: Token not set");
         require(amount > 0, "EscrowBase: Amount not set");
-        require(
-            getTokenBalance(account, token) >= amount,
-            "EscrowBase: Insufficient Token Balance"
-        );
+        require(getTokenBalance(account, token) >= amount, "EscrowBase: Insufficient Token Balance");
 
         // Updates the balance
         _decreaseBalance(account, token, amount);
 
         IERC20(token).safeTransfer(msg.sender, amount);
-    }
-
-    /**
-     * @dev Transfer ETH from one account to another in the Escrow.
-     * @param source The account that owns the ETH.
-     * @param dest The target account that will own the ETH.
-     * @param amount The amount of ETH to transfer.
-     */
-    function transferByAdmin(address source, address dest, uint256 amount) public override onlyAdmin {
-        transferTokenByAdmin(source, dest, Constant.getEthAddress(), amount);
     }
 
     /**
@@ -177,7 +120,7 @@ abstract contract EscrowBase is IEscrow, AccessControl {
      * @param token The ERC20 token address.
      * @param amount The amount of ERC20 token to transfer.
      */
-    function transferTokenByAdmin(address source, address dest, address token, uint256 amount) public override onlyAdmin {
+    function transferByAdmin(address source, address dest, address token, uint256 amount) public override onlyAdmin {
         // Updates the balance
         _decreaseBalance(source, token, amount);
         _increaseBalance(dest, token, amount);

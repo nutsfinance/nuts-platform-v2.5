@@ -3,8 +3,9 @@ pragma solidity 0.6.8;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../escrow/InstrumentEscrow.sol";
-import "../escrow/IssuanceEscrow.sol";
+import "../escrow/IEscrowFactory.sol";
+import "../escrow/IInstrumentEscrow.sol";
+import "../escrow/IIssuanceEscrow.sol";
 import "../lib/data/Transfers.sol";
 import "./Issuance.sol";
 import "./IInstrumentManager.sol";
@@ -15,15 +16,16 @@ contract InstrumentManager is IInstrumentManager {
 
     struct IssuanceProperty {
         Issuance issuance;
-        IssuanceEscrow issuanceEscrow;
+        IIssuanceEscrow issuanceEscrow;
         uint256 creationTimestamp;
     }
 
     address private _instrumentAddress;
     address private _fspAddress;
+    address private _escrowFactoryAddress;
     address private _depositTokenAddress;
     uint256 private _instrumentId;
-    InstrumentEscrow private _instrumentEscrow;
+    IInstrumentEscrow private _instrumentEscrow;
     Counters.Counter private _issuanceIds;
     mapping(uint256 => IssuanceProperty) private _issuances;
 
@@ -55,7 +57,8 @@ contract InstrumentManager is IInstrumentManager {
         (_terminationTimestamp, _overrideTimestamp) = abi.decode(instrumentData, (uint256, uint256));
 
         // Creates the Instrument Escrow
-        _instrumentEscrow = new InstrumentEscrow();
+        _instrumentEscrow = IEscrowFactory(_escrowFactoryAddress).createInstrumentEscrow();
+        // _instrumentEscrow = new InstrumentEscrow();
 
         // Initializes the instrument.
         Instrument(_instrumentAddress).initialize(_instrumentId, _fspAddress, address(_instrumentEscrow));
@@ -98,9 +101,10 @@ contract InstrumentManager is IInstrumentManager {
         Instrument instrument = Instrument(_instrumentAddress);
 
         // Checks whether Issuance Escrow is supported.
-        IssuanceEscrow issuanceEscrow = IssuanceEscrow(0);
+        IIssuanceEscrow issuanceEscrow = IIssuanceEscrow(0);
         if (instrument.supportsIssuanceEscrow()) {
-            issuanceEscrow = new IssuanceEscrow();
+            issuanceEscrow = IEscrowFactory(_escrowFactoryAddress).createIssuanceEscrow();
+            // issuanceEscrow = new IssuanceEscrow();
         }
 
         // Creates and initializes the issuance instance.
@@ -125,7 +129,7 @@ contract InstrumentManager is IInstrumentManager {
      */
     function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256 engagementId) {
         Issuance issuance = _issuances[issuanceId].issuance;
-        uint256 engagementId = issuance.engage(msg.sender, takerData);
+        engagementId = issuance.engage(msg.sender, takerData);
 
         processTransfers(issuance);
 

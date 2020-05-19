@@ -36,27 +36,14 @@ abstract contract IEscrow {
         returns (uint256);
 
     /**
-     * @dev Deposits ETH from Escrow Admin into an account.
-     * @param account The account to deposit ETH.
-     */
-    function depositByAdmin(address account) public virtual payable;
-
-    /**
      * @dev Deposits ERC20 tokens from Escrow Admin into an account.
      * Note: The owner, i.e. Escrow Admin must set the allowance before hand.
      * @param account The account to deposit ERC20 tokens.
      * @param token The ERC20 token to deposit.
      * @param amount The amount of ERC20 token to deposit.
      */
-    function depositTokenByAdmin(address account, address token, uint256 amount)
+    function depositByAdmin(address account, address token, uint256 amount)
         public virtual;
-
-    /**
-     * @dev Withdraw ETH from an account to Escrow Admin.
-     * @param account The account to withdraw ETH.
-     * @param amount The amount of ETH to withdraw.
-     */
-    function withdrawByAdmin(address account, uint256 amount) public virtual;
 
     /**
      * @dev Withdraw ERC20 token from an account to Escrow Admin.
@@ -65,19 +52,7 @@ abstract contract IEscrow {
      * @param token The ERC20 token to withdraw.
      * @param amount The amount of ERC20 tokens to withdraw.
      */
-    function withdrawTokenByAdmin(
-        address account,
-        address token,
-        uint256 amount
-    ) public virtual;
-
-    /**
-     * @dev Transfer ETH from one account to another in the Escrow.
-     * @param source The account that owns the ETH.
-     * @param dest The target account that will own the ETH.
-     * @param amount The amount of ETH to transfer.
-     */
-    function transferByAdmin(address source, address dest, uint256 amount) public virtual;
+    function withdrawByAdmin(address account, address token, uint256 amount) public virtual;
 
     /**
      * @dev Transfer ERC20 token from one account to another in the Escrow.
@@ -86,5 +61,5 @@ abstract contract IEscrow {
      * @param token The ERC20 token address.
      * @param amount The amount of ERC20 token to transfer.
      */
-    function transferTokenByAdmin(address source, address dest, address token, uint256 amount) public virtual;
+    function transferByAdmin(address source, address dest, address token, uint256 amount) public virtual;
 }
