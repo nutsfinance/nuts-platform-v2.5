@@ -1,117 +1,3217 @@
 {
   "contractName": "Instrument",
-  "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.8+commit.0bbfe453\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol\":\"Instrument\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol\":{\"keccak256\":\"0x243e6e07f2792422b93fcee382dbf837446c5b1b92ed36c1b718441409424cd9\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://e30b9d0b3100bc7b4832466ebd6f60630e80d87f79b0633a13ad4c784583b97b\",\"dweb:/ipfs/QmUSRtovRfQRDc8c11mjnaUzgDP6urxxTnFLTGkaRxEb6t\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x04d34b3cd5677bea25f8dfceb6dec0eaa071d4d4b789a43f13fe0c415ba4c296\",\"urls\":[\"bzz-raw://e7e8b526a6839e5ba14f0d23a830387fec47f7043ce01d42c9f285b709a9d080\",\"dweb:/ipfs/QmXmhhFmX5gcAvVzNiDPAGA35iHMPNaYtQkACswRHBVTNw\"]},\"@openzeppelin/contracts/utils/Counters.sol\":{\"keccak256\":\"0x4f3a00edb976e97943fe0a620ea2948955a75eff2a9231c202d50d1e062d8da5\",\"urls\":[\"bzz-raw://4d83aa87b7c75f666d57a0e5b779a19c00b453b14ee4ed88cfda6d056fdcf14c\",\"dweb:/ipfs/QmXpWwQVFo66hsrAZmHxoxNzwEwBDgNWvaUYqY4TJV38vk\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212203053e1a6b3e2dbef96b825f85a8c89b2ac2bd0c536ca903b67cb01f26fe9ae8b64736f6c63430006080033",
-  "deployedBytecode": "0x6080604052600080fdfea26469706673582212203053e1a6b3e2dbef96b825f85a8c89b2ac2bd0c536ca903b67cb01f26fe9ae8b64736f6c63430006080033",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "supportsIssuanceEscrow",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "supportsIssuanceTransaction",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "instrumentId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "fspAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "instrumentEscrowAddress",
+          "type": "address"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "createIssuance",
+      "outputs": [
+        {
+          "internalType": "contract Issuance",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getInstrumentId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getFspAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getInstrumentEscrow",
+      "outputs": [
+        {
+          "internalType": "contract IInstrumentEscrow",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.8+commit.0bbfe453\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"createIssuance\",\"outputs\":[{\"internalType\":\"contract Issuance\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getFspAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getInstrumentEscrow\",\"outputs\":[{\"internalType\":\"contract IInstrumentEscrow\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getInstrumentId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"instrumentId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"fspAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"instrumentEscrowAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"supportsIssuanceEscrow\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"supportsIssuanceTransaction\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"createIssuance()\":{\"details\":\"Creates a new issuance instance.\",\"returns\":{\"_0\":\"The created issuance instance.\"}},\"getFspAddress()\":{\"details\":\"Returns the address of the FSP who activates the instrument.\",\"returns\":{\"_0\":\"Address of FSP.\"}},\"getInstrumentEscrow()\":{\"details\":\"Returns the Instrument Escrow of the instrument.\",\"returns\":{\"_0\":\"The Instrument Escrow for this Instrument.\"}},\"getInstrumentId()\":{\"details\":\"Returns the ID of the instrument.\",\"returns\":{\"_0\":\"Instrument ID.\"}},\"initialize(uint256,address,address)\":{\"details\":\"Initializes the instrument.\",\"params\":{\"fspAddress\":\"Address of the FSP who activates the instrument.\",\"instrumentEscrowAddress\":\"Address of the Instrument Escrow.\",\"instrumentId\":\"ID of the instrument.\"}},\"supportsIssuanceEscrow()\":{\"details\":\"Whether the instrument supports Issuance Escrow. If true, Instrument Manager creates a new Issuance Escrow for each new Issuance.\",\"returns\":{\"_0\":\"Whether Issuance Escrow is supported\"}},\"supportsIssuanceTransaction()\":{\"details\":\"Whether the issuance can withdraw from or deposit to the Issuance Escrow. If true, the issuance contract can withdraw from or deposit to the Issuance Escrow. If false, the issuance contract can only read from the Issuance Escrow. Only the Instrument Manager can withdraw from or deposit to the Issuance Escrow.\"}},\"title\":\"Base class for instrument.\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol\":\"Instrument\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IEscrow.sol\":{\"keccak256\":\"0x11cabc64c4696f413b4fd672db1a201affd302c0f0a0da683ea9c7573cac8014\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://f317e0adabe961144bc7270cefe8f39cdd6815743e02e3de6261df124699b90e\",\"dweb:/ipfs/QmRWqMVpV1ivG2TNKf3fSAekaJF1M72gvirGT4zkSLKaS7\"]},\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IInstrumentEscrow.sol\":{\"keccak256\":\"0x764c453c722aed3f3d7a59ed74dc7ddc5079bb0d59d732eb395bf35fa9e3eb2f\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://f44d28755eabf84ecf1c783055622cbc80aa5bd1d1d299a3d54318dc93e127df\",\"dweb:/ipfs/QmSy822digu17xBj6ZdkyyEHHnEpBnZqoWsMnvcMK2Far7\"]},\"/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IIssuanceEscrow.sol\":{\"keccak256\":\"0x3087935a3a74aae86d25f2cc7890662e919f72988962869c99c1ba6026f01089\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://01a5cb9e07d6194e1dbd526f6c99e2c8aad6e4eccf49d73cc6b99e9bd901d851\",\"dweb:/ipfs/QmNT6EcizmMvFj4GuR5GNeGUPwhavi6WsW1fMtVysi4TiD\"]},\"/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol\":{\"keccak256\":\"0x9e2166c4ce1a698f48e7b1d69e2a21a0e1fbf288b73c701aa8f37b107e982305\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://1f85d43676bcafa65dc3f27030b11864c9f1dd5112ac852d81843a1d4b02a591\",\"dweb:/ipfs/QmRHHVJnNSsckVUMmWfxyPzNGsD98Ls3ibYniv4TmKKZS7\"]},\"/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Issuance.sol\":{\"keccak256\":\"0x94235a6cf80a9c89c9cdb1e90eb90cd66cfa2664445b021ff7397bd53f7a6d1d\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://2b60f161962608cdc606ed214ea4744d136a0b7461bc2178f20245c6b77da728\",\"dweb:/ipfs/QmePwQyaJ7mqbTWSrhsHuXJdaRU7heNmy6xiCAUzmTJZbs\"]},\"/Users/shengdading/git/nuts-platform-v2.5/contracts/lib/data/Transfers.sol\":{\"keccak256\":\"0x31115a1d4efebb61b903c4b4408400510978c5151a8d2137116f683041fda2c3\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://46891e2e34b9bede68926292738d9e052644808c2a2ba7ba3108cbacb86559ea\",\"dweb:/ipfs/QmYqCyERMLzpXVoBV525Xqd9NccLr2MgT7XHRPmTYhswiH\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x04d34b3cd5677bea25f8dfceb6dec0eaa071d4d4b789a43f13fe0c415ba4c296\",\"urls\":[\"bzz-raw://e7e8b526a6839e5ba14f0d23a830387fec47f7043ce01d42c9f285b709a9d080\",\"dweb:/ipfs/QmXmhhFmX5gcAvVzNiDPAGA35iHMPNaYtQkACswRHBVTNw\"]},\"@openzeppelin/contracts/utils/Counters.sol\":{\"keccak256\":\"0x4f3a00edb976e97943fe0a620ea2948955a75eff2a9231c202d50d1e062d8da5\",\"urls\":[\"bzz-raw://4d83aa87b7c75f666d57a0e5b779a19c00b453b14ee4ed88cfda6d056fdcf14c\",\"dweb:/ipfs/QmXpWwQVFo66hsrAZmHxoxNzwEwBDgNWvaUYqY4TJV38vk\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
   "immutableReferences": {},
-  "sourceMap": "117:22:8:-:0;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;117:22:8;;;;;;;",
-  "deployedSourceMap": "117:22:8:-:0;;;12:1:-1;9;2:12",
-  "source": "// SPDX-License-Identifier: Apache-2.0\npragma solidity 0.6.8;\n\nimport \"@openzeppelin/contracts/utils/Counters.sol\";\n\ncontract Instrument {}",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: Apache-2.0\npragma solidity 0.6.8;\n\nimport \"@openzeppelin/contracts/utils/Counters.sol\";\nimport \"../escrow/IInstrumentEscrow.sol\";\nimport \"./Issuance.sol\";\n\n/**\n * @title Base class for instrument.\n */\nabstract contract Instrument {\n\n    uint256 internal _instrumentId;\n    address internal _fspAddress;\n    IInstrumentEscrow internal _instrumentEscrow;\n\n    /**\n     * @dev Whether the instrument supports Issuance Escrow.\n     * If true, Instrument Manager creates a new Issuance Escrow for each new Issuance.\n     * @return Whether Issuance Escrow is supported\n     */\n    function supportsIssuanceEscrow() public virtual pure returns (bool) {\n        return false;\n    }\n\n    /**\n     * @dev Whether the issuance can withdraw from or deposit to the Issuance Escrow.\n     * If true, the issuance contract can withdraw from or deposit to the Issuance Escrow.\n     * If false, the issuance contract can only read from the Issuance Escrow. Only the Instrument\n     * Manager can withdraw from or deposit to the Issuance Escrow.\n     */\n    function supportsIssuanceTransaction() public virtual pure returns (bool) {\n        return false;\n    }\n\n    /**\n     * @dev Initializes the instrument.\n     * @param instrumentId ID of the instrument.\n     * @param fspAddress Address of the FSP who activates the instrument.\n     * @param instrumentEscrowAddress Address of the Instrument Escrow.\n     */\n    function initialize(uint256 instrumentId, address fspAddress, address instrumentEscrowAddress) public virtual {\n        require(_instrumentId == 0, \"Instrument: Already initialized.\");\n        require(instrumentId != 0, \"Instrument: ID not set.\");\n        require(fspAddress != address(0x0), \"Instrument: FSP not set.\");\n        require(instrumentEscrowAddress != address(0x0), \"Instrument: Instrument Escrow not set.\");\n\n        _instrumentId = instrumentId;\n        _fspAddress = fspAddress;\n        _instrumentEscrow = IInstrumentEscrow(instrumentEscrowAddress);\n    }\n\n    /**\n     * @dev Creates a new issuance instance.\n     * @return The created issuance instance.\n     */\n    function createIssuance() public virtual returns (Issuance);\n\n    /**\n     * @dev Returns the ID of the instrument.\n     * @return Instrument ID.\n     */\n    function getInstrumentId() public view returns (uint256) {\n        return _instrumentId;\n    }\n\n    /**\n     * @dev Returns the address of the FSP who activates the instrument.\n     * @return Address of FSP.\n     */\n    function getFspAddress() public view returns (address) {\n        return _fspAddress;\n    }\n\n    /**\n     * @dev Returns the Instrument Escrow of the instrument.\n     * @return The Instrument Escrow for this Instrument.\n     */\n    function getInstrumentEscrow() public view returns (IInstrumentEscrow) {\n        return _instrumentEscrow;\n    }\n}",
   "sourcePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol",
   "ast": {
     "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol",
     "exportedSymbols": {
       "Instrument": [
-        836
+        1035
       ]
     },
-    "id": 837,
+    "id": 1036,
     "license": "Apache-2.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 834,
+        "id": 914,
         "literals": [
           "solidity",
           "0.6",
           ".8"
         ],
         "nodeType": "PragmaDirective",
-        "src": "39:22:8"
+        "src": "39:22:9"
       },
       {
         "absolutePath": "@openzeppelin/contracts/utils/Counters.sol",
         "file": "@openzeppelin/contracts/utils/Counters.sol",
-        "id": 835,
+        "id": 915,
         "nodeType": "ImportDirective",
-        "scope": 837,
-        "sourceUnit": 1776,
-        "src": "63:52:8",
+        "scope": 1036,
+        "sourceUnit": 2314,
+        "src": "63:52:9",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "abstract": false,
+        "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IInstrumentEscrow.sol",
+        "file": "../escrow/IInstrumentEscrow.sol",
+        "id": 916,
+        "nodeType": "ImportDirective",
+        "scope": 1036,
+        "sourceUnit": 649,
+        "src": "116:41:9",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Issuance.sol",
+        "file": "./Issuance.sol",
+        "id": 917,
+        "nodeType": "ImportDirective",
+        "scope": 1036,
+        "sourceUnit": 1353,
+        "src": "158:24:9",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": true,
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "contract",
-        "documentation": null,
-        "fullyImplemented": true,
-        "id": 836,
+        "documentation": {
+          "id": 918,
+          "nodeType": "StructuredDocumentation",
+          "src": "184:44:9",
+          "text": "@title Base class for instrument."
+        },
+        "fullyImplemented": false,
+        "id": 1035,
         "linearizedBaseContracts": [
-          836
+          1035
         ],
         "name": "Instrument",
         "nodeType": "ContractDefinition",
-        "nodes": [],
-        "scope": 837,
-        "src": "117:22:8"
+        "nodes": [
+          {
+            "constant": false,
+            "id": 920,
+            "mutability": "mutable",
+            "name": "_instrumentId",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1035,
+            "src": "265:30:9",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 919,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "265:7:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 922,
+            "mutability": "mutable",
+            "name": "_fspAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1035,
+            "src": "301:28:9",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 921,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "301:7:9",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 924,
+            "mutability": "mutable",
+            "name": "_instrumentEscrow",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1035,
+            "src": "335:44:9",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+              "typeString": "contract IInstrumentEscrow"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 923,
+              "name": "IInstrumentEscrow",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 648,
+              "src": "335:17:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                "typeString": "contract IInstrumentEscrow"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 932,
+              "nodeType": "Block",
+              "src": "672:29:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "66616c7365",
+                    "id": 930,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "689:5:9",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "false"
+                  },
+                  "functionReturnParameters": 929,
+                  "id": 931,
+                  "nodeType": "Return",
+                  "src": "682:12:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 925,
+              "nodeType": "StructuredDocumentation",
+              "src": "386:212:9",
+              "text": "@dev Whether the instrument supports Issuance Escrow.\nIf true, Instrument Manager creates a new Issuance Escrow for each new Issuance.\n@return Whether Issuance Escrow is supported"
+            },
+            "functionSelector": "c925ed7e",
+            "id": 933,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "supportsIssuanceEscrow",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 926,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "634:2:9"
+            },
+            "returnParameters": {
+              "id": 929,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 928,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 933,
+                  "src": "666:4:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 927,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "666:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "665:6:9"
+            },
+            "scope": 1035,
+            "src": "603:98:9",
+            "stateMutability": "pure",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 941,
+              "nodeType": "Block",
+              "src": "1141:29:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "66616c7365",
+                    "id": 939,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "1158:5:9",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "false"
+                  },
+                  "functionReturnParameters": 938,
+                  "id": 940,
+                  "nodeType": "Return",
+                  "src": "1151:12:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 934,
+              "nodeType": "StructuredDocumentation",
+              "src": "707:355:9",
+              "text": "@dev Whether the issuance can withdraw from or deposit to the Issuance Escrow.\nIf true, the issuance contract can withdraw from or deposit to the Issuance Escrow.\nIf false, the issuance contract can only read from the Issuance Escrow. Only the Instrument\nManager can withdraw from or deposit to the Issuance Escrow."
+            },
+            "functionSelector": "ca4ee97a",
+            "id": 942,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "supportsIssuanceTransaction",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 935,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1103:2:9"
+            },
+            "returnParameters": {
+              "id": 938,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 937,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 942,
+                  "src": "1135:4:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 936,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1135:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1134:6:9"
+            },
+            "scope": 1035,
+            "src": "1067:103:9",
+            "stateMutability": "pure",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1000,
+              "nodeType": "Block",
+              "src": "1537:461:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 955,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 953,
+                          "name": "_instrumentId",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 920,
+                          "src": "1555:13:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 954,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1572:1:9",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "1555:18:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a20416c726561647920696e697469616c697a65642e",
+                        "id": 956,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1575:34:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_2b24e745bfd05953db93e579a17d22174f054a62efbc73d39b983c780038154e",
+                          "typeString": "literal_string \"Instrument: Already initialized.\""
+                        },
+                        "value": "Instrument: Already initialized."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_2b24e745bfd05953db93e579a17d22174f054a62efbc73d39b983c780038154e",
+                          "typeString": "literal_string \"Instrument: Already initialized.\""
+                        }
+                      ],
+                      "id": 952,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1547:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 957,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1547:63:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 958,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1547:63:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 962,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 960,
+                          "name": "instrumentId",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 945,
+                          "src": "1628:12:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 961,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1644:1:9",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "1628:17:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a204944206e6f74207365742e",
+                        "id": 963,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1647:25:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_dc290779ff1eabae7f5b6cdd83379212755c33cb1313083ca308144a238449f1",
+                          "typeString": "literal_string \"Instrument: ID not set.\""
+                        },
+                        "value": "Instrument: ID not set."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_dc290779ff1eabae7f5b6cdd83379212755c33cb1313083ca308144a238449f1",
+                          "typeString": "literal_string \"Instrument: ID not set.\""
+                        }
+                      ],
+                      "id": 959,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1620:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 964,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1620:53:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 965,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1620:53:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 972,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 967,
+                          "name": "fspAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 947,
+                          "src": "1691:10:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "307830",
+                              "id": 970,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "1713:3:9",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0x0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 969,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1705:7:9",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 968,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "1705:7:9",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 971,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1705:12:9",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "1691:26:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a20465350206e6f74207365742e",
+                        "id": 973,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1719:26:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_8b37437931d48bf4e934fd8139a0ddf195d2b03230112d5da7020a3bbcfe1382",
+                          "typeString": "literal_string \"Instrument: FSP not set.\""
+                        },
+                        "value": "Instrument: FSP not set."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_8b37437931d48bf4e934fd8139a0ddf195d2b03230112d5da7020a3bbcfe1382",
+                          "typeString": "literal_string \"Instrument: FSP not set.\""
+                        }
+                      ],
+                      "id": 966,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1683:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 974,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1683:63:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 975,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1683:63:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 982,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 977,
+                          "name": "instrumentEscrowAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 949,
+                          "src": "1764:23:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "307830",
+                              "id": 980,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "1799:3:9",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0x0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 979,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1791:7:9",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 978,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "1791:7:9",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 981,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1791:12:9",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "1764:39:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a20496e737472756d656e7420457363726f77206e6f74207365742e",
+                        "id": 983,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1805:40:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_8c48f9f8671a925a37de502f691c59556bff41e6a89321023dbb8f38c8b74ace",
+                          "typeString": "literal_string \"Instrument: Instrument Escrow not set.\""
+                        },
+                        "value": "Instrument: Instrument Escrow not set."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_8c48f9f8671a925a37de502f691c59556bff41e6a89321023dbb8f38c8b74ace",
+                          "typeString": "literal_string \"Instrument: Instrument Escrow not set.\""
+                        }
+                      ],
+                      "id": 976,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1756:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 984,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1756:90:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 985,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1756:90:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 988,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 986,
+                      "name": "_instrumentId",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 920,
+                      "src": "1857:13:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 987,
+                      "name": "instrumentId",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 945,
+                      "src": "1873:12:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1857:28:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 989,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1857:28:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 992,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 990,
+                      "name": "_fspAddress",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 922,
+                      "src": "1895:11:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 991,
+                      "name": "fspAddress",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 947,
+                      "src": "1909:10:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "1895:24:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 993,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1895:24:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 998,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 994,
+                      "name": "_instrumentEscrow",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 924,
+                      "src": "1929:17:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                        "typeString": "contract IInstrumentEscrow"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 996,
+                          "name": "instrumentEscrowAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 949,
+                          "src": "1967:23:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        ],
+                        "id": 995,
+                        "name": "IInstrumentEscrow",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 648,
+                        "src": "1949:17:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_IInstrumentEscrow_$648_$",
+                          "typeString": "type(contract IInstrumentEscrow)"
+                        }
+                      },
+                      "id": 997,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "typeConversion",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "1949:42:9",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                        "typeString": "contract IInstrumentEscrow"
+                      }
+                    },
+                    "src": "1929:62:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                      "typeString": "contract IInstrumentEscrow"
+                    }
+                  },
+                  "id": 999,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1929:62:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 943,
+              "nodeType": "StructuredDocumentation",
+              "src": "1176:246:9",
+              "text": "@dev Initializes the instrument.\n@param instrumentId ID of the instrument.\n@param fspAddress Address of the FSP who activates the instrument.\n@param instrumentEscrowAddress Address of the Instrument Escrow."
+            },
+            "functionSelector": "b4988fd0",
+            "id": 1001,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "initialize",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 950,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 945,
+                  "mutability": "mutable",
+                  "name": "instrumentId",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1001,
+                  "src": "1447:20:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 944,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1447:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 947,
+                  "mutability": "mutable",
+                  "name": "fspAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1001,
+                  "src": "1469:18:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 946,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1469:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 949,
+                  "mutability": "mutable",
+                  "name": "instrumentEscrowAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1001,
+                  "src": "1489:31:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 948,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1489:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1446:75:9"
+            },
+            "returnParameters": {
+              "id": 951,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1537:0:9"
+            },
+            "scope": 1035,
+            "src": "1427:571:9",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 1002,
+              "nodeType": "StructuredDocumentation",
+              "src": "2004:102:9",
+              "text": "@dev Creates a new issuance instance.\n@return The created issuance instance."
+            },
+            "functionSelector": "ea302fc3",
+            "id": 1007,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createIssuance",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1003,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2134:2:9"
+            },
+            "returnParameters": {
+              "id": 1006,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1005,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1007,
+                  "src": "2161:8:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_Issuance_$1352",
+                    "typeString": "contract Issuance"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1004,
+                    "name": "Issuance",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 1352,
+                    "src": "2161:8:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_Issuance_$1352",
+                      "typeString": "contract Issuance"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2160:10:9"
+            },
+            "scope": 1035,
+            "src": "2111:60:9",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1015,
+              "nodeType": "Block",
+              "src": "2326:37:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1013,
+                    "name": "_instrumentId",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 920,
+                    "src": "2343:13:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 1012,
+                  "id": 1014,
+                  "nodeType": "Return",
+                  "src": "2336:20:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1008,
+              "nodeType": "StructuredDocumentation",
+              "src": "2177:87:9",
+              "text": "@dev Returns the ID of the instrument.\n@return Instrument ID."
+            },
+            "functionSelector": "11f22a84",
+            "id": 1016,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentId",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1009,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2293:2:9"
+            },
+            "returnParameters": {
+              "id": 1012,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1011,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1016,
+                  "src": "2317:7:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1010,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2317:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2316:9:9"
+            },
+            "scope": 1035,
+            "src": "2269:94:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1024,
+              "nodeType": "Block",
+              "src": "2544:35:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1022,
+                    "name": "_fspAddress",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 922,
+                    "src": "2561:11:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 1021,
+                  "id": 1023,
+                  "nodeType": "Return",
+                  "src": "2554:18:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1017,
+              "nodeType": "StructuredDocumentation",
+              "src": "2369:115:9",
+              "text": "@dev Returns the address of the FSP who activates the instrument.\n@return Address of FSP."
+            },
+            "functionSelector": "0e3dcd62",
+            "id": 1025,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getFspAddress",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1018,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2511:2:9"
+            },
+            "returnParameters": {
+              "id": 1021,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1020,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1025,
+                  "src": "2535:7:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1019,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2535:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2534:9:9"
+            },
+            "scope": 1035,
+            "src": "2489:90:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1033,
+              "nodeType": "Block",
+              "src": "2791:41:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1031,
+                    "name": "_instrumentEscrow",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 924,
+                    "src": "2808:17:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                      "typeString": "contract IInstrumentEscrow"
+                    }
+                  },
+                  "functionReturnParameters": 1030,
+                  "id": 1032,
+                  "nodeType": "Return",
+                  "src": "2801:24:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1026,
+              "nodeType": "StructuredDocumentation",
+              "src": "2585:130:9",
+              "text": "@dev Returns the Instrument Escrow of the instrument.\n@return The Instrument Escrow for this Instrument."
+            },
+            "functionSelector": "3579a197",
+            "id": 1034,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentEscrow",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1027,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2748:2:9"
+            },
+            "returnParameters": {
+              "id": 1030,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1029,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1034,
+                  "src": "2772:17:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                    "typeString": "contract IInstrumentEscrow"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1028,
+                    "name": "IInstrumentEscrow",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 648,
+                    "src": "2772:17:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                      "typeString": "contract IInstrumentEscrow"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2771:19:9"
+            },
+            "scope": 1035,
+            "src": "2720:112:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1036,
+        "src": "229:2605:9"
       }
     ],
-    "src": "39:100:8"
+    "src": "39:2795:9"
   },
   "legacyAST": {
     "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Instrument.sol",
     "exportedSymbols": {
       "Instrument": [
-        836
+        1035
       ]
     },
-    "id": 837,
+    "id": 1036,
     "license": "Apache-2.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 834,
+        "id": 914,
         "literals": [
           "solidity",
           "0.6",
           ".8"
         ],
         "nodeType": "PragmaDirective",
-        "src": "39:22:8"
+        "src": "39:22:9"
       },
       {
         "absolutePath": "@openzeppelin/contracts/utils/Counters.sol",
         "file": "@openzeppelin/contracts/utils/Counters.sol",
-        "id": 835,
+        "id": 915,
         "nodeType": "ImportDirective",
-        "scope": 837,
-        "sourceUnit": 1776,
-        "src": "63:52:8",
+        "scope": 1036,
+        "sourceUnit": 2314,
+        "src": "63:52:9",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "abstract": false,
+        "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/escrow/IInstrumentEscrow.sol",
+        "file": "../escrow/IInstrumentEscrow.sol",
+        "id": 916,
+        "nodeType": "ImportDirective",
+        "scope": 1036,
+        "sourceUnit": 649,
+        "src": "116:41:9",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/Users/shengdading/git/nuts-platform-v2.5/contracts/instrument/Issuance.sol",
+        "file": "./Issuance.sol",
+        "id": 917,
+        "nodeType": "ImportDirective",
+        "scope": 1036,
+        "sourceUnit": 1353,
+        "src": "158:24:9",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": true,
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "contract",
-        "documentation": null,
-        "fullyImplemented": true,
-        "id": 836,
+        "documentation": {
+          "id": 918,
+          "nodeType": "StructuredDocumentation",
+          "src": "184:44:9",
+          "text": "@title Base class for instrument."
+        },
+        "fullyImplemented": false,
+        "id": 1035,
         "linearizedBaseContracts": [
-          836
+          1035
         ],
         "name": "Instrument",
         "nodeType": "ContractDefinition",
-        "nodes": [],
-        "scope": 837,
-        "src": "117:22:8"
+        "nodes": [
+          {
+            "constant": false,
+            "id": 920,
+            "mutability": "mutable",
+            "name": "_instrumentId",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1035,
+            "src": "265:30:9",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 919,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "265:7:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 922,
+            "mutability": "mutable",
+            "name": "_fspAddress",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1035,
+            "src": "301:28:9",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 921,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "301:7:9",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 924,
+            "mutability": "mutable",
+            "name": "_instrumentEscrow",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1035,
+            "src": "335:44:9",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+              "typeString": "contract IInstrumentEscrow"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 923,
+              "name": "IInstrumentEscrow",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 648,
+              "src": "335:17:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                "typeString": "contract IInstrumentEscrow"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 932,
+              "nodeType": "Block",
+              "src": "672:29:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "66616c7365",
+                    "id": 930,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "689:5:9",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "false"
+                  },
+                  "functionReturnParameters": 929,
+                  "id": 931,
+                  "nodeType": "Return",
+                  "src": "682:12:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 925,
+              "nodeType": "StructuredDocumentation",
+              "src": "386:212:9",
+              "text": "@dev Whether the instrument supports Issuance Escrow.\nIf true, Instrument Manager creates a new Issuance Escrow for each new Issuance.\n@return Whether Issuance Escrow is supported"
+            },
+            "functionSelector": "c925ed7e",
+            "id": 933,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "supportsIssuanceEscrow",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 926,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "634:2:9"
+            },
+            "returnParameters": {
+              "id": 929,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 928,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 933,
+                  "src": "666:4:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 927,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "666:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "665:6:9"
+            },
+            "scope": 1035,
+            "src": "603:98:9",
+            "stateMutability": "pure",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 941,
+              "nodeType": "Block",
+              "src": "1141:29:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "66616c7365",
+                    "id": 939,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "1158:5:9",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "false"
+                  },
+                  "functionReturnParameters": 938,
+                  "id": 940,
+                  "nodeType": "Return",
+                  "src": "1151:12:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 934,
+              "nodeType": "StructuredDocumentation",
+              "src": "707:355:9",
+              "text": "@dev Whether the issuance can withdraw from or deposit to the Issuance Escrow.\nIf true, the issuance contract can withdraw from or deposit to the Issuance Escrow.\nIf false, the issuance contract can only read from the Issuance Escrow. Only the Instrument\nManager can withdraw from or deposit to the Issuance Escrow."
+            },
+            "functionSelector": "ca4ee97a",
+            "id": 942,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "supportsIssuanceTransaction",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 935,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1103:2:9"
+            },
+            "returnParameters": {
+              "id": 938,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 937,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 942,
+                  "src": "1135:4:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 936,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1135:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1134:6:9"
+            },
+            "scope": 1035,
+            "src": "1067:103:9",
+            "stateMutability": "pure",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1000,
+              "nodeType": "Block",
+              "src": "1537:461:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 955,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 953,
+                          "name": "_instrumentId",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 920,
+                          "src": "1555:13:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 954,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1572:1:9",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "1555:18:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a20416c726561647920696e697469616c697a65642e",
+                        "id": 956,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1575:34:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_2b24e745bfd05953db93e579a17d22174f054a62efbc73d39b983c780038154e",
+                          "typeString": "literal_string \"Instrument: Already initialized.\""
+                        },
+                        "value": "Instrument: Already initialized."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_2b24e745bfd05953db93e579a17d22174f054a62efbc73d39b983c780038154e",
+                          "typeString": "literal_string \"Instrument: Already initialized.\""
+                        }
+                      ],
+                      "id": 952,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1547:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 957,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1547:63:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 958,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1547:63:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 962,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 960,
+                          "name": "instrumentId",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 945,
+                          "src": "1628:12:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 961,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1644:1:9",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "1628:17:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a204944206e6f74207365742e",
+                        "id": 963,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1647:25:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_dc290779ff1eabae7f5b6cdd83379212755c33cb1313083ca308144a238449f1",
+                          "typeString": "literal_string \"Instrument: ID not set.\""
+                        },
+                        "value": "Instrument: ID not set."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_dc290779ff1eabae7f5b6cdd83379212755c33cb1313083ca308144a238449f1",
+                          "typeString": "literal_string \"Instrument: ID not set.\""
+                        }
+                      ],
+                      "id": 959,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1620:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 964,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1620:53:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 965,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1620:53:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 972,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 967,
+                          "name": "fspAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 947,
+                          "src": "1691:10:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "307830",
+                              "id": 970,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "1713:3:9",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0x0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 969,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1705:7:9",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 968,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "1705:7:9",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 971,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1705:12:9",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "1691:26:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a20465350206e6f74207365742e",
+                        "id": 973,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1719:26:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_8b37437931d48bf4e934fd8139a0ddf195d2b03230112d5da7020a3bbcfe1382",
+                          "typeString": "literal_string \"Instrument: FSP not set.\""
+                        },
+                        "value": "Instrument: FSP not set."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_8b37437931d48bf4e934fd8139a0ddf195d2b03230112d5da7020a3bbcfe1382",
+                          "typeString": "literal_string \"Instrument: FSP not set.\""
+                        }
+                      ],
+                      "id": 966,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1683:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 974,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1683:63:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 975,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1683:63:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 982,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 977,
+                          "name": "instrumentEscrowAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 949,
+                          "src": "1764:23:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "307830",
+                              "id": 980,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "1799:3:9",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0x0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 979,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1791:7:9",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 978,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "1791:7:9",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 981,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1791:12:9",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "1764:39:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "496e737472756d656e743a20496e737472756d656e7420457363726f77206e6f74207365742e",
+                        "id": 983,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1805:40:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_8c48f9f8671a925a37de502f691c59556bff41e6a89321023dbb8f38c8b74ace",
+                          "typeString": "literal_string \"Instrument: Instrument Escrow not set.\""
+                        },
+                        "value": "Instrument: Instrument Escrow not set."
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_8c48f9f8671a925a37de502f691c59556bff41e6a89321023dbb8f38c8b74ace",
+                          "typeString": "literal_string \"Instrument: Instrument Escrow not set.\""
+                        }
+                      ],
+                      "id": 976,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "1756:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 984,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1756:90:9",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 985,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1756:90:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 988,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 986,
+                      "name": "_instrumentId",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 920,
+                      "src": "1857:13:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 987,
+                      "name": "instrumentId",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 945,
+                      "src": "1873:12:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1857:28:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 989,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1857:28:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 992,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 990,
+                      "name": "_fspAddress",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 922,
+                      "src": "1895:11:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 991,
+                      "name": "fspAddress",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 947,
+                      "src": "1909:10:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "1895:24:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 993,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1895:24:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 998,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 994,
+                      "name": "_instrumentEscrow",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 924,
+                      "src": "1929:17:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                        "typeString": "contract IInstrumentEscrow"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 996,
+                          "name": "instrumentEscrowAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 949,
+                          "src": "1967:23:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        ],
+                        "id": 995,
+                        "name": "IInstrumentEscrow",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 648,
+                        "src": "1949:17:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_IInstrumentEscrow_$648_$",
+                          "typeString": "type(contract IInstrumentEscrow)"
+                        }
+                      },
+                      "id": 997,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "typeConversion",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "1949:42:9",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                        "typeString": "contract IInstrumentEscrow"
+                      }
+                    },
+                    "src": "1929:62:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                      "typeString": "contract IInstrumentEscrow"
+                    }
+                  },
+                  "id": 999,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1929:62:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 943,
+              "nodeType": "StructuredDocumentation",
+              "src": "1176:246:9",
+              "text": "@dev Initializes the instrument.\n@param instrumentId ID of the instrument.\n@param fspAddress Address of the FSP who activates the instrument.\n@param instrumentEscrowAddress Address of the Instrument Escrow."
+            },
+            "functionSelector": "b4988fd0",
+            "id": 1001,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "initialize",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 950,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 945,
+                  "mutability": "mutable",
+                  "name": "instrumentId",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1001,
+                  "src": "1447:20:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 944,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1447:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 947,
+                  "mutability": "mutable",
+                  "name": "fspAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1001,
+                  "src": "1469:18:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 946,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1469:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 949,
+                  "mutability": "mutable",
+                  "name": "instrumentEscrowAddress",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1001,
+                  "src": "1489:31:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 948,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1489:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1446:75:9"
+            },
+            "returnParameters": {
+              "id": 951,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1537:0:9"
+            },
+            "scope": 1035,
+            "src": "1427:571:9",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 1002,
+              "nodeType": "StructuredDocumentation",
+              "src": "2004:102:9",
+              "text": "@dev Creates a new issuance instance.\n@return The created issuance instance."
+            },
+            "functionSelector": "ea302fc3",
+            "id": 1007,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createIssuance",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1003,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2134:2:9"
+            },
+            "returnParameters": {
+              "id": 1006,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1005,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1007,
+                  "src": "2161:8:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_Issuance_$1352",
+                    "typeString": "contract Issuance"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1004,
+                    "name": "Issuance",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 1352,
+                    "src": "2161:8:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_Issuance_$1352",
+                      "typeString": "contract Issuance"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2160:10:9"
+            },
+            "scope": 1035,
+            "src": "2111:60:9",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1015,
+              "nodeType": "Block",
+              "src": "2326:37:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1013,
+                    "name": "_instrumentId",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 920,
+                    "src": "2343:13:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 1012,
+                  "id": 1014,
+                  "nodeType": "Return",
+                  "src": "2336:20:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1008,
+              "nodeType": "StructuredDocumentation",
+              "src": "2177:87:9",
+              "text": "@dev Returns the ID of the instrument.\n@return Instrument ID."
+            },
+            "functionSelector": "11f22a84",
+            "id": 1016,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentId",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1009,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2293:2:9"
+            },
+            "returnParameters": {
+              "id": 1012,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1011,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1016,
+                  "src": "2317:7:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1010,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2317:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2316:9:9"
+            },
+            "scope": 1035,
+            "src": "2269:94:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1024,
+              "nodeType": "Block",
+              "src": "2544:35:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1022,
+                    "name": "_fspAddress",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 922,
+                    "src": "2561:11:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 1021,
+                  "id": 1023,
+                  "nodeType": "Return",
+                  "src": "2554:18:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1017,
+              "nodeType": "StructuredDocumentation",
+              "src": "2369:115:9",
+              "text": "@dev Returns the address of the FSP who activates the instrument.\n@return Address of FSP."
+            },
+            "functionSelector": "0e3dcd62",
+            "id": 1025,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getFspAddress",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1018,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2511:2:9"
+            },
+            "returnParameters": {
+              "id": 1021,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1020,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1025,
+                  "src": "2535:7:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1019,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2535:7:9",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2534:9:9"
+            },
+            "scope": 1035,
+            "src": "2489:90:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1033,
+              "nodeType": "Block",
+              "src": "2791:41:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1031,
+                    "name": "_instrumentEscrow",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 924,
+                    "src": "2808:17:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                      "typeString": "contract IInstrumentEscrow"
+                    }
+                  },
+                  "functionReturnParameters": 1030,
+                  "id": 1032,
+                  "nodeType": "Return",
+                  "src": "2801:24:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1026,
+              "nodeType": "StructuredDocumentation",
+              "src": "2585:130:9",
+              "text": "@dev Returns the Instrument Escrow of the instrument.\n@return The Instrument Escrow for this Instrument."
+            },
+            "functionSelector": "3579a197",
+            "id": 1034,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentEscrow",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1027,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2748:2:9"
+            },
+            "returnParameters": {
+              "id": 1030,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1029,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1034,
+                  "src": "2772:17:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                    "typeString": "contract IInstrumentEscrow"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1028,
+                    "name": "IInstrumentEscrow",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 648,
+                    "src": "2772:17:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IInstrumentEscrow_$648",
+                      "typeString": "contract IInstrumentEscrow"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2771:19:9"
+            },
+            "scope": 1035,
+            "src": "2720:112:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1036,
+        "src": "229:2605:9"
       }
     ],
-    "src": "39:100:8"
+    "src": "39:2795:9"
   },
   "compiler": {
     "name": "solc",
@@ -119,9 +3219,52 @@
   },
   "networks": {},
   "schemaVersion": "3.1.0",
-  "updatedAt": "2020-05-18T21:01:13.083Z",
+  "updatedAt": "2020-05-19T05:47:25.451Z",
   "devdoc": {
-    "methods": {}
+    "methods": {
+      "createIssuance()": {
+        "details": "Creates a new issuance instance.",
+        "returns": {
+          "_0": "The created issuance instance."
+        }
+      },
+      "getFspAddress()": {
+        "details": "Returns the address of the FSP who activates the instrument.",
+        "returns": {
+          "_0": "Address of FSP."
+        }
+      },
+      "getInstrumentEscrow()": {
+        "details": "Returns the Instrument Escrow of the instrument.",
+        "returns": {
+          "_0": "The Instrument Escrow for this Instrument."
+        }
+      },
+      "getInstrumentId()": {
+        "details": "Returns the ID of the instrument.",
+        "returns": {
+          "_0": "Instrument ID."
+        }
+      },
+      "initialize(uint256,address,address)": {
+        "details": "Initializes the instrument.",
+        "params": {
+          "fspAddress": "Address of the FSP who activates the instrument.",
+          "instrumentEscrowAddress": "Address of the Instrument Escrow.",
+          "instrumentId": "ID of the instrument."
+        }
+      },
+      "supportsIssuanceEscrow()": {
+        "details": "Whether the instrument supports Issuance Escrow. If true, Instrument Manager creates a new Issuance Escrow for each new Issuance.",
+        "returns": {
+          "_0": "Whether Issuance Escrow is supported"
+        }
+      },
+      "supportsIssuanceTransaction()": {
+        "details": "Whether the issuance can withdraw from or deposit to the Issuance Escrow. If true, the issuance contract can withdraw from or deposit to the Issuance Escrow. If false, the issuance contract can only read from the Issuance Escrow. Only the Instrument Manager can withdraw from or deposit to the Issuance Escrow."
+      }
+    },
+    "title": "Base class for instrument."
   },
   "userdoc": {
     "methods": {}
