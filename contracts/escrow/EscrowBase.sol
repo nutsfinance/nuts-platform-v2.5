@@ -1,18 +1,20 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
+import "../lib/access/AdminAccess.sol";
 import "../lib/token/WETH9.sol";
 import "./IEscrow.sol";
 
 /**
  * @title Base contract for both instrument and issuance escrow.
+ * Note: Only admins can withdraw from or deposit to the Escrow directly.
+ * Only owner can grant admin roles.
  */
-abstract contract EscrowBase is IEscrow, AccessControl {
+abstract contract EscrowBase is IEscrow, AdminAccess {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -22,31 +24,8 @@ abstract contract EscrowBase is IEscrow, AccessControl {
     mapping(address => mapping(address => uint256)) private _accountBalances;
     WETH9 internal _weth;
 
-    // Creates a new role identifier for the owner role
-    // Owners can grant/revoke admin roles, and owners can also
-    // deposit/withdraw ETH and ERC20 tokens to/from the escrow
-    bytes32 public constant OWNER_ROLE = keccak256("OWNER_ROLE");
-    // Creates a new role identifier for the admin role
-    // Admins can deposit/withdraw ETH and ERC20 token to/from the escrow
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-
     constructor(address wethAddress) public {
         _weth = WETH9(wethAddress);
-        // Grant the owner role to the contract creator
-        _setupRole(OWNER_ROLE, msg.sender);
-        // Grant the admin role to the contract creator as well
-        // so that the escrow owner can also withdraw and deposit.
-        _setupRole(ADMIN_ROLE, msg.sender);
-        // Grant the admin of admin role to the contract creator
-        _setRoleAdmin(ADMIN_ROLE, OWNER_ROLE);
-    }
-
-    /**
-     * @dev Throws if called by any account that does not have admin role.
-     */
-    modifier onlyAdmin() {
-        require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin");
-        _;
     }
 
     /*******************************************************

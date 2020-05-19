@@ -2,13 +2,14 @@
 pragma solidity 0.6.8;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "../lib/access/AdminAccess.sol";
 import "../escrow/IInstrumentEscrow.sol";
 import "./Issuance.sol";
 
 /**
  * @title Base class for instrument.
  */
-abstract contract Instrument {
+abstract contract Instrument is AdminAccess {
 
     // Instrument common fields are marked as private so that it's not changeable
     // by child contracts.
