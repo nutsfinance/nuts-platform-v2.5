@@ -113,8 +113,7 @@ contract InstrumentManager is IInstrumentManager {
         }
 
         // Creates and initializes the issuance instance.
-        Issuance issuance = instrument.createIssuance();
-        issuance.initialize(_instrumentAddress, newIssuanceId, address(issuanceEscrow), msg.sender, makerData);
+        Issuance issuance = instrument.createIssuance(newIssuanceId, address(issuanceEscrow), msg.sender, makerData);
         processTransfers(newIssuanceId);
 
         _issuances[newIssuanceId] = IssuanceProperty({
