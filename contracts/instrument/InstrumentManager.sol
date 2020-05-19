@@ -3,10 +3,10 @@ pragma solidity 0.6.8;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../escrow/IEscrowFactory.sol";
-import "../escrow/IInstrumentEscrow.sol";
-import "../escrow/IIssuanceEscrow.sol";
+import "../escrow/InstrumentEscrow.sol";
+import "../escrow/IssuanceEscrow.sol";
 import "../lib/data/Transfers.sol";
+import "../lib/token/WETH9.sol";
 import "./Issuance.sol";
 import "./IInstrumentManager.sol";
 
@@ -16,16 +16,17 @@ contract InstrumentManager is IInstrumentManager {
 
     struct IssuanceProperty {
         Issuance issuance;
-        IIssuanceEscrow issuanceEscrow;
+        IssuanceEscrow issuanceEscrow;
         uint256 creationTimestamp;
     }
 
+    WETH9 private _weth;
     address private _instrumentAddress;
     address private _fspAddress;
     address private _escrowFactoryAddress;
     address private _depositTokenAddress;
     uint256 private _instrumentId;
-    IInstrumentEscrow private _instrumentEscrow;
+    InstrumentEscrow private _instrumentEscrow;
     Counters.Counter private _issuanceIds;
     mapping(uint256 => IssuanceProperty) private _issuances;
 
@@ -41,24 +42,25 @@ contract InstrumentManager is IInstrumentManager {
      * @param depositTokenAddress Address of the token used as deposit in activating instrument.
      * @param instrumentData Custom properties of the instrument.
      */
-    constructor(address instrumentAddress, uint256 instrumentId, address fspAddress, address depositTokenAddress,
-        bytes memory instrumentData) public {
+    constructor(address instrumentAddress, uint256 instrumentId, address fspAddress, address wethAddress,
+        address depositTokenAddress, bytes memory instrumentData) public {
         
         require(instrumentAddress != address(0x0), "InstrumentManager: Instrument not set.");
         require(instrumentId != 0, "InstrumentManager: ID not set.");
         require(fspAddress != address(0x0), "InstrumentManager: FSP not set.");
+        require(wethAddress != address(0x0), "InstrumentManager: WETH not set.");
         require(depositTokenAddress != address(0x0), "InstrumentManager: Deposit token not set.");
 
         _instrumentAddress = instrumentAddress;
         _instrumentId = instrumentId;
         _fspAddress = fspAddress;
+        _weth = WETH9(wethAddress);
         _depositTokenAddress = depositTokenAddress;
         _active = true;
         (_terminationTimestamp, _overrideTimestamp) = abi.decode(instrumentData, (uint256, uint256));
 
         // Creates the Instrument Escrow
-        _instrumentEscrow = IEscrowFactory(_escrowFactoryAddress).createInstrumentEscrow();
-        // _instrumentEscrow = new InstrumentEscrow();
+        _instrumentEscrow = new InstrumentEscrow(_weth);
 
         // Initializes the instrument.
         Instrument(_instrumentAddress).initialize(_instrumentId, _fspAddress, address(_instrumentEscrow));
@@ -101,10 +103,9 @@ contract InstrumentManager is IInstrumentManager {
         Instrument instrument = Instrument(_instrumentAddress);
 
         // Checks whether Issuance Escrow is supported.
-        IIssuanceEscrow issuanceEscrow = IIssuanceEscrow(0);
+        IssuanceEscrow issuanceEscrow = IssuanceEscrow(0);
         if (instrument.supportsIssuanceEscrow()) {
-            issuanceEscrow = IEscrowFactory(_escrowFactoryAddress).createIssuanceEscrow();
-            // issuanceEscrow = new IssuanceEscrow();
+            issuanceEscrow = new IssuanceEscrow(_weth);
         }
 
         // Creates and initializes the issuance instance.
