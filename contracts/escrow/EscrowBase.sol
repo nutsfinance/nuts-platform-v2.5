@@ -30,8 +30,8 @@ abstract contract EscrowBase is IEscrow, AccessControl {
     // Admins can deposit/withdraw ETH and ERC20 token to/from the escrow
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    constructor(WETH9 weth) public {
-        _weth = weth;
+    constructor(address wethAddress) public {
+        _weth = WETH9(wethAddress);
         // Grant the owner role to the contract creator
         _setupRole(OWNER_ROLE, msg.sender);
         // Grant the admin role to the contract creator as well

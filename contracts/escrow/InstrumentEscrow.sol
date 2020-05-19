@@ -4,7 +4,6 @@ pragma solidity 0.6.8;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-import "../lib/token/WETH9.sol";
 import "./EscrowBase.sol";
 import "./IInstrumentEscrow.sol";
 
@@ -13,7 +12,7 @@ import "./IInstrumentEscrow.sol";
  */
 contract InstrumentEscrow is EscrowBase, IInstrumentEscrow {
 
-    constructor(WETH9 weth) EscrowBase(weth) public {}
+    constructor(address wethAddress) EscrowBase(wethAddress) public {}
 
     /**********************************************
      * APIs to deposit and withdraw Ether

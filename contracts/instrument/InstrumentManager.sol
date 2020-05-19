@@ -9,6 +9,7 @@ import "../escrow/InstrumentEscrow.sol";
 import "../escrow/IssuanceEscrow.sol";
 import "../lib/data/Transfers.sol";
 import "../lib/token/WETH9.sol";
+import "../Config.sol";
 import "./Issuance.sol";
 import "./IInstrumentManager.sol";
 
@@ -23,10 +24,10 @@ contract InstrumentManager is IInstrumentManager {
         uint256 creationTimestamp;
     }
 
-    WETH9 private _weth;
+    address private _wethAddress;
+    address private _depositTokenAddress;
     address private _instrumentAddress;
     address private _fspAddress;
-    address private _depositTokenAddress;
     uint256 private _instrumentId;
     InstrumentEscrow private _instrumentEscrow;
     Counters.Counter private _issuanceIds;
@@ -41,28 +42,29 @@ contract InstrumentManager is IInstrumentManager {
      * @dev Constructor for Instrument Manager.
      * @param instrumentId ID of the instrument.
      * @param fspAddress Address of the FSP who activates the instrument.
-     * @param depositTokenAddress Address of the token used as deposit in activating instrument.
+     * @param configAddress Address of the config contract.
      * @param instrumentData Custom properties of the instrument.
      */
-    constructor(address instrumentAddress, uint256 instrumentId, address fspAddress, address wethAddress,
-        address depositTokenAddress, bytes memory instrumentData) public {
+    constructor(address instrumentAddress, uint256 instrumentId, address fspAddress, address configAddress,
+        bytes memory instrumentData) public {
         
         require(instrumentAddress != address(0x0), "InstrumentManager: Instrument not set.");
         require(instrumentId != 0, "InstrumentManager: ID not set.");
         require(fspAddress != address(0x0), "InstrumentManager: FSP not set.");
-        require(wethAddress != address(0x0), "InstrumentManager: WETH not set.");
-        require(depositTokenAddress != address(0x0), "InstrumentManager: Deposit token not set.");
+        require(configAddress != address(0x0), "InstrumentManager: Config not set.");
+        require(Config(configAddress).getWETH() != address(0x0), "Config: WETH not set.");
+        require(Config(configAddress).getDepositToken() != address(0x0), "Config: Deposit token not set.");
 
         _instrumentAddress = instrumentAddress;
         _instrumentId = instrumentId;
         _fspAddress = fspAddress;
-        _weth = WETH9(wethAddress);
-        _depositTokenAddress = depositTokenAddress;
+        _wethAddress = Config(configAddress).getWETH();
+        _depositTokenAddress = Config(configAddress).getDepositToken();
         _active = true;
         (_terminationTimestamp, _overrideTimestamp) = abi.decode(instrumentData, (uint256, uint256));
 
         // Creates the Instrument Escrow
-        _instrumentEscrow = new InstrumentEscrow(_weth);
+        _instrumentEscrow = new InstrumentEscrow(_wethAddress);
 
         // Initializes the instrument.
         Instrument(_instrumentAddress).initialize(_instrumentId, _fspAddress, address(_instrumentEscrow));
@@ -107,7 +109,7 @@ contract InstrumentManager is IInstrumentManager {
         // Checks whether Issuance Escrow is supported.
         IssuanceEscrow issuanceEscrow = IssuanceEscrow(0);
         if (instrument.supportsIssuanceEscrow()) {
-            issuanceEscrow = new IssuanceEscrow(_weth);
+            issuanceEscrow = new IssuanceEscrow(_wethAddress);
         }
 
         // Creates and initializes the issuance instance.
