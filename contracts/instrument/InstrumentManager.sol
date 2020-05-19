@@ -210,6 +210,10 @@ contract InstrumentManager is IInstrumentManager {
         return _issuances[issuanceId].issuanceEscrow;
     }
 
+    /**
+     * @dev Processes the transfers for an issuance.
+     * @param issuanceId The ID of the issuance to process transfers.
+     */
     function processTransfers(uint256 issuanceId) private {
         Issuance issuance = _issuances[issuanceId].issuance;
         IssuanceEscrow issuanceEscrow = _issuances[issuanceId].issuanceEscrow;
