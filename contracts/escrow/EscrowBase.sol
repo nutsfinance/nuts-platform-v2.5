@@ -32,6 +32,9 @@ abstract contract EscrowBase is IEscrow, AccessControl {
     constructor() public {
         // Grant the owner role to the contract creator
         _setupRole(OWNER_ROLE, msg.sender);
+        // Grant the admin role to the contract creator as well
+        // so that the escrow owner can also withdraw and deposit.
+        _setupRole(ADMIN_ROLE, msg.sender);
         // Grant the admin of admin role to the contract creator
         _setRoleAdmin(ADMIN_ROLE, OWNER_ROLE);
     }
@@ -40,7 +43,7 @@ abstract contract EscrowBase is IEscrow, AccessControl {
      * @dev Throws if called by any account that does not have admin role.
      */
     modifier onlyAdmin() {
-        require(hasRole(OWNER_ROLE, msg.sender) || hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin");
+        require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin");
         _;
     }
 
