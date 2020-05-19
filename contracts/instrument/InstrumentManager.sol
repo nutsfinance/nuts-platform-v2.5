@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
+import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "../escrow/InstrumentEscrow.sol";
 import "../escrow/IssuanceEscrow.sol";
+import "../lib/data/Transfers.sol";
 import "./Issuance.sol";
 import "./IInstrumentManager.sol";
 
@@ -14,6 +16,7 @@ contract InstrumentManager is IInstrumentManager {
     struct IssuanceProperty {
         Issuance issuance;
         IssuanceEscrow issuanceEscrow;
+        uint256 creationTimestamp;
     }
 
     address private _instrumentAddress;
@@ -63,7 +66,20 @@ contract InstrumentManager is IInstrumentManager {
      * but existing active issuances are not affected.
      */
     function deactivate() public override {
+        require(_active, "InstrumentManager: Already deactivated.");
+        require((now >= _overrideTimestamp && msg.sender == _fspAddress) || now >= _terminationTimestamp,
+            "InstrumentManager: Cannot deactivate.");
 
+        // Checks whether this instrument has any deposit.
+        ERC20Burnable depositToken = ERC20Burnable(_depositTokenAddress);
+        uint256 depositAmount = depositToken.balanceOf(address(this));
+        if (depositAmount > 0) {
+            // Burns the deposited token.
+            depositToken.burn(depositAmount);
+        }
+
+        _active = false;
+        emit InstrumentDeactivated(_instrumentId);
     }
 
     /**
@@ -71,7 +87,35 @@ contract InstrumentManager is IInstrumentManager {
      * @param makerData Custom properties of the issuance.
      * @return issuanceId ID of the created issuance.
      */
-    function createIssuance(bytes memory makerData) public override returns (uint256 issuanceId) {}
+    function createIssuance(bytes memory makerData) public override returns (uint256 issuanceId) {
+        // Makers can create new issuance if:
+        // 1. The instrument is active, i.e. is not deactivated by FSP,
+        // 2. And the instrument has not reached its termination timestamp.
+        require(_active && (now <= _terminationTimestamp), "Instrument deactivated");
+
+        _issuanceIds.increment();
+        uint256 newIssuanceId = _issuanceIds.current();
+        Instrument instrument = Instrument(_instrumentAddress);
+
+        // Checks whether Issuance Escrow is supported.
+        IssuanceEscrow issuanceEscrow = IssuanceEscrow(0);
+        if (instrument.supportsIssuanceEscrow()) {
+            issuanceEscrow = new IssuanceEscrow();
+        }
+
+        // Creates and initializes the issuance instance.
+        Issuance issuance = instrument.createIssuance();
+        issuance.initialize(_instrumentAddress, newIssuanceId, address(issuanceEscrow), msg.sender, makerData);
+        processTransfers(issuance);
+
+        _issuances[newIssuanceId] = IssuanceProperty({
+            issuance: issuance,
+            issuanceEscrow: issuanceEscrow,
+            creationTimestamp: now
+        });
+
+        return newIssuanceId;
+    }
 
     /**
      * @dev Engages an existing issuance.
@@ -79,7 +123,14 @@ contract InstrumentManager is IInstrumentManager {
      * @param takerData Custom properties of the engagement.
      * @return engagementId ID of the engagement.
      */
-    function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256 engagementId) {}
+    function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256 engagementId) {
+        Issuance issuance = _issuances[issuanceId].issuance;
+        uint256 engagementId = issuance.engage(msg.sender, takerData);
+
+        processTransfers(issuance);
+
+        return engagementId;
+    }
 
     /**
      * @dev Process a custom event on the issuance or the engagement.
@@ -88,7 +139,11 @@ contract InstrumentManager is IInstrumentManager {
      * @param eventName Name of the custom event.
      * @param eventData Data of the custom event.
      */
-    function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {}
+    function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {
+        Issuance issuance = _issuances[issuanceId].issuance;
+        issuance.processEvent(engagementId, msg.sender, eventName, eventData);
+        processTransfers(issuance);
+    }
 
     /**
      * @dev Returns the instrument contract address.
@@ -146,5 +201,9 @@ contract InstrumentManager is IInstrumentManager {
      */
     function getIssuanceEscrow(uint256 issuanceId) public override view returns (IIssuanceEscrow issuanceEscrow) {
         return _issuances[issuanceId].issuanceEscrow;
+    }
+
+    function processTransfers(Issuance issuance) private {
+
     }
 }
