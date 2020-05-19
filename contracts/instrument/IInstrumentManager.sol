@@ -4,8 +4,19 @@ pragma solidity 0.6.8;
 import "../escrow/IInstrumentEscrow.sol";
 import "../escrow/IIssuanceEscrow.sol";
 import "./Issuance.sol";
+import "./Instrument.sol";
 
 abstract contract IInstrumentManager {
+    /**
+     * @dev The instrument is activated.
+     */
+    event InstrumentActivated(uint256 indexed instrumentId, address indexed instrumentAddress,
+        address fspAddress, address instrumentEscrowAddress);
+
+    /**
+     * @dev The instrument is deactivated.
+     */
+    event InstrumentDeactivated(uint256 indexed instrumentId);
 
     /**
      * @dev Deactivates the instrument. Once deactivated, the instrument cannot create new issuance,
@@ -36,6 +47,12 @@ abstract contract IInstrumentManager {
      * @param eventData Data of the custom event.
      */
     function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public virtual;
+
+    /**
+     * @dev Returns the address of the instrument contract.
+     * @return The instrument contract address.
+     */
+    function getInstrumentAddress() public virtual view returns (address);
 
     /**
      * @dev Returns the address of the FSP which activates the instrument.

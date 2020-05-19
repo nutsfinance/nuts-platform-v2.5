@@ -16,6 +16,7 @@ contract InstrumentManager is IInstrumentManager {
         IssuanceEscrow issuanceEscrow;
     }
 
+    address private _instrumentAddress;
     address private _fspAddress;
     address private _depositTokenAddress;
     uint256 private _instrumentId;
@@ -23,17 +24,38 @@ contract InstrumentManager is IInstrumentManager {
     Counters.Counter private _issuanceIds;
     mapping(uint256 => IssuanceProperty) private _issuances;
 
+    // Instrument expiration
+    bool internal _active;
+    uint256 internal _terminationTimestamp;         // When the instrument is auto-terminated.
+    uint256 internal _overrideTimestamp;            // When the instrument can be manually terminated.
+
     /**
      * @dev Constructor for Instrument Manager.
      * @param instrumentId ID of the instrument.
      * @param fspAddress Address of the FSP who activates the instrument.
      * @param depositTokenAddress Address of the token used as deposit in activating instrument.
-     * @param depositAmount Amount of token to deposit.
      * @param instrumentData Custom properties of the instrument.
      */
-    constructor(uint256 instrumentId, address fspAddress, address depositTokenAddress, uint256 depositAmount,
+    constructor(address instrumentAddress, uint256 instrumentId, address fspAddress, address depositTokenAddress,
         bytes memory instrumentData) public {
+        
+        require(instrumentAddress != address(0x0), "InstrumentManager: Instrument not set.");
+        require(instrumentId != 0, "InstrumentManager: ID not set.");
+        require(fspAddress != address(0x0), "InstrumentManager: FSP not set.");
+        require(depositTokenAddress != address(0x0), "InstrumentManager: Deposit token not set.");
 
+        _instrumentAddress = instrumentAddress;
+        _instrumentId = instrumentId;
+        _fspAddress = fspAddress;
+        _depositTokenAddress = depositTokenAddress;
+        _active = true;
+        (_terminationTimestamp, _overrideTimestamp) = abi.decode(instrumentData, (uint256, uint256));
+
+        // Creates the Instrument Escrow
+        _instrumentEscrow = new InstrumentEscrow();
+
+        // Initializes the instrument.
+        Instrument(_instrumentAddress).initialize(_instrumentId, _fspAddress, address(_instrumentEscrow));
     }
 
     /**
@@ -67,6 +89,14 @@ contract InstrumentManager is IInstrumentManager {
      * @param eventData Data of the custom event.
      */
     function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {}
+
+    /**
+     * @dev Returns the instrument contract address.
+     * @return The instrument contract address.
+     */
+    function getInstrumentAddress() public override view returns (address) {
+        return _instrumentAddress;
+    }
 
     /**
      * @dev Returns the address of the FSP which activates the instrument.

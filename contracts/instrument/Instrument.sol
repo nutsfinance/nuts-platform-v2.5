@@ -10,17 +10,20 @@ import "./Issuance.sol";
  */
 abstract contract Instrument {
 
-    uint256 internal _instrumentId;
-    address internal _fspAddress;
-    IInstrumentEscrow internal _instrumentEscrow;
+    // Instrument common fields are marked as private so that it's not changeable
+    // by child contracts.
+    uint256 private _instrumentId;
+    address private _fspAddress;
+    IInstrumentEscrow private _instrumentEscrow;
 
     /**
      * @dev Whether the instrument supports Issuance Escrow.
      * If true, Instrument Manager creates a new Issuance Escrow for each new Issuance.
+     * Instrument by default supports Issuance Escrow as most Instrument requires a per-issuance custodian.
      * @return Whether Issuance Escrow is supported
      */
     function supportsIssuanceEscrow() public virtual pure returns (bool) {
-        return false;
+        return true;
     }
 
     /**
@@ -28,6 +31,8 @@ abstract contract Instrument {
      * If true, the issuance contract can withdraw from or deposit to the Issuance Escrow.
      * If false, the issuance contract can only read from the Issuance Escrow. Only the Instrument
      * Manager can withdraw from or deposit to the Issuance Escrow.
+     * Instrument by default does not support issuance transaction for high security.
+     * @return Whether issuance transaction is supported.
      */
     function supportsIssuanceTransaction() public virtual pure returns (bool) {
         return false;
