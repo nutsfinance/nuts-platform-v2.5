@@ -8,6 +8,7 @@ contract Config is Ownable {
     address private _wethAddress;
     address private _depositTokenAddress;
     uint256 private _depositAmount;
+    mapping(bytes32 => address) private _instrumentManagerFactories;
 
     constructor(address wethAddress, address depositTokenAddress, uint256 depositAmount) public {
         _wethAddress = wethAddress;
@@ -37,5 +38,13 @@ contract Config is Ownable {
 
     function setDepositAmount(uint256 depositAmount) public onlyOwner {
         _depositAmount = depositAmount;
+    }
+
+    function getInstrumentManagerFactory(bytes32 version) public view returns (address) {
+        return _instrumentManagerFactories[version];
+    }
+
+    function setInstrumentManagerFactory(bytes32 version, address instrumentManagerFactoryAddress) public onlyOwner {
+        _instrumentManagerFactories[version] = instrumentManagerFactoryAddress;
     }
 }
