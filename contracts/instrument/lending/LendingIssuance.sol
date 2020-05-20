@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "../../lib/escrow/IInstrumentEscrow.sol";
+import "../../escrow/IInstrumentEscrow.sol";
 import "../Issuance.sol";
+import "./LendingInstrument.sol";
 
 /**
  * @title A base contract that provide admin access control.
@@ -44,26 +45,27 @@ contract LendingIssuance is Issuance {
         
         (_lendingToken, _collateralToken, _lendingAmount, _tenorDays, _collateralRatio, _interestRate) = abi.decode(makerData,
             (address, address, uint256, uint256, uint256, uint256));
-        require(_state == IssuanceProperties.State.Initiated, "LendingIssuance: Not in Initiated.");
+        require(_state == IssuanceState.Initiated, "LendingIssuance: Not in Initiated.");
         // Validates parameters.
         require(_collateralToken != address(0x0), "LendingIssuance: Collateral token not set.");
         require(_lendingToken != address(0x0), "LendingIssuance: Lending token not set.");
-        require(makerParameters.lendingAmount > 0, "Lending amount not set");
-        require(tenorDays >= TENOR_DAYS_MIN && tenorDays <= TENOR_DAYS_MAX, "LendingIssuance: Invalid tenor days.");
-        require(collateralRatio >= COLLATERAL_RATIO_MIN && collateralRatio <= COLLATERAL_RATIO_MAX,
+        require(_lendingAmount > 0, "Lending amount not set");
+        require(_tenorDays >= TENOR_DAYS_MIN && _tenorDays <= TENOR_DAYS_MAX, "LendingIssuance: Invalid tenor days.");
+        require(_collateralRatio >= COLLATERAL_RATIO_MIN && _collateralRatio <= COLLATERAL_RATIO_MAX,
             "LendingIssuance: Invalid collateral ratio.");
-        require(interestRate >= INTEREST_RATE_MIN && interestRate <= INTEREST_RATE_MAX,
+        require(_interestRate >= INTEREST_RATE_MIN && _interestRate <= INTEREST_RATE_MAX,
             "LendingIssuance: Invalid interest rate.");
 
         // Validate principal token balance
-        uint256 principalBalance = _instrumentEscrow.getTokenBalance(_makerAddress, _lendingToken);
+        IInstrumentEscrow instrumentEscrow = LendingInstrument(_instrumentAddress).getInstrumentEscrow();
+        uint256 principalBalance = instrumentEscrow.getTokenBalance(_makerAddress, _lendingToken);
         require(principalBalance >= _lendingAmount, "LendingIssuance: Insufficient principal balance.");
 
         // Sets common properties
         _engagementDueTimestamp = now.add(ENGAGEMENT_DUE_DAYS);
 
         // Sets lending properties
-        _interestAmount = _lendingAmount.mul(_tenorDays).mul(interestRate).div(INTEREST_RATE_DECIMALS);
+        _interestAmount = _lendingAmount.mul(_tenorDays).mul(_interestRate).div(INTEREST_RATE_DECIMALS);
 
         // Updates to Engageable state
         _state = IssuanceState.Engageable;
@@ -75,32 +77,18 @@ contract LendingIssuance is Issuance {
         emit IssuanceCreated(_issuanceId, _makerAddress, now);
 
         // Transfers principal token
-        Transfers.Data memory transfers = Transfers.Data(
-            new Transfer.Data[](2)
-        );
-        // Principal token inbound transfer: Maker
-        transfers.actions[0] = _createInboundTransfer(
-            _makerAddress,
-            _lendingTokenAddress,
-            _lendingAmount
-        );
-        // Principal token intra-issuance transfer: Maker --> Custodian
-        transfers.actions[1] = _createIntraIssuanceTransfer(
-            _makerAddress,
-            Constants.getCustodianAddress(),
-            _lendingTokenAddress,
-            _lendingAmount
-        );
-        transfersData = Transfers.encode(transfers);
+        // Principal token inbound transfer: Maker --> Maker
+        Transfers.Transfer memory transfer = Transfers.Transfer({
+            transferType: Transfers.TransferType.Inbound,
+            fromAddress: _makerAddress,
+            toAddress: _makerAddress,
+            tokenAddress: _lendingToken,
+            amount: _lendingAmount,
+            action: "Principal in"
+        });
+        _transfers.push(transfer);
         // Create payable 1: Custodian --> Maker
-        _createNewPayable(
-            1,
-            Constants.getCustodianAddress(),
-            _makerAddress,
-            _lendingTokenAddress,
-            _lendingAmount,
-            _engagementDueTimestamp
-        );
+        _createPayable(1, address(_issuanceEscrow), _makerAddress, _lendingToken, _lendingAmount, _engagementDueTimestamp);
     }
 
     /**

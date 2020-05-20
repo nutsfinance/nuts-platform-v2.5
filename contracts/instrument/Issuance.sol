@@ -3,9 +3,11 @@ pragma solidity 0.6.8;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/EnumerableSet.sol";
+
 import "../escrow/IIssuanceEscrow.sol";
 import "../lib/data/Transfers.sol";
-import "../lib/data/SupplementalLineItems.sol";
+import "../lib/data/Payables.sol";
 import "./Instrument.sol";
 
 /**
@@ -13,6 +15,7 @@ import "./Instrument.sol";
  */
 abstract contract Issuance {
     using Counters for Counters.Counter;
+    using EnumerableSet for EnumerableSet.UintSet;
 
     /**
      * @dev The event used to schedule contract events after specific time.
@@ -53,36 +56,39 @@ abstract contract Issuance {
     event EngagementDelinquent(uint256 indexed issuanceId, uint256 indexed engagementId);
 
     /**
-     * @dev The event used to track the creation of a new supplemental line item.
+     * @dev The event used to track the creation of a new payable.
      * @param issuanceId The id of the issuance
-     * @param itemId The id of the supplemental line item
-     * @param itemType Type of the supplemental line item
-     * @param obligatorAddress The obligator of the supplemental line item
-     * @param claimorAddress The claimor of the supplemental line item
-     * @param tokenAddress The asset type of the supplemental line item
-     * @param amount The asset amount of the supplemental line item
-     * @param dueTimestamp When is the supplemental line item due
+     * @param itemId The id of the payable
+     * @param obligatorAddress The obligator of the payable
+     * @param claimorAddress The claimor of the payable
+     * @param tokenAddress The asset type of the payable
+     * @param amount The asset amount of the payable
+     * @param dueTimestamp When is the payable due
      */
-    event SupplementalLineItemCreated(uint256 indexed issuanceId, uint256 indexed itemId, SupplementalLineItem.Type itemType,
-        address obligatorAddress, address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp);
+    event PayableCreated(uint256 indexed issuanceId, uint256 indexed itemId, address obligatorAddress,
+        address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp);
 
     /**
-     * @dev The event used to track the update of an existing supplemental line item
+     * @dev The event used to track the payment of a payable
      * @param issuanceId The id of the issuance
-     * @param itemId The id of the supplemental line item
-     * @param state The new state of the supplemental line item
-     * @param reinitiatedTo The target supplemental line item if the current one is reinitiated
+     * @param itemId The id of the payable
      */
-    event SupplementalLineItemPaid(uint256 indexed issuanceId, uint256 indexed itemId);
+    event PayablePaid(uint256 indexed issuanceId, uint256 indexed itemId);
 
     /**
-     * @dev The event used to track the update of an existing supplemental line item
+     * @dev The event used to track the due of a payable
      * @param issuanceId The id of the issuance
-     * @param itemId The id of the supplemental line item
-     * @param state The new state of the supplemental line item
-     * @param reinitiatedTo The target supplemental line item if the current one is reinitiated
+     * @param itemId The id of the payable
      */
-    event SupplementalLineItemReinitiated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 reinitiatedTo);
+    event PayableDue(uint256 indexed issuanceId, uint256 indexed itemId);
+
+    /**
+     * @dev The event used to track the update of an existing payable
+     * @param issuanceId The id of the issuance
+     * @param itemId The id of the payable
+     * @param reinitiatedTo The target payable if the current one is reinitiated
+     */
+    event PayableReinitiated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 reinitiatedTo);
 
     /**
      * @dev States in issuance lifecycle.
@@ -98,6 +104,14 @@ abstract contract Issuance {
         Initiated, Active, Cancelled, Complete, Delinquent
     }
 
+    // Common scheduled events
+    bytes32 internal constant ISSUANCE_DUE_EVENT = "issuance_due";
+    bytes32 internal constant ENGAGEMENT_DUE_EVENT = "engagement_due";
+
+    // Common custom events
+    bytes32 internal constant CANCEL_ISSUANCE_EVENT = "cancel_issuance";
+    bytes32 internal constant CANCEL_ENGAGEMENT_EVENT = "cancel_engagement";
+
     address internal _instrumentAddress;
     uint256 internal _issuanceId;
     IIssuanceEscrow internal _issuanceEscrow;
@@ -107,7 +121,9 @@ abstract contract Issuance {
 
     Counters.Counter internal _engagementIds;
     Transfers.Transfer[] internal _transfers;
-    mapping(uint256 => SupplementalLineItems.Item) internal _supplementalLineItems;
+
+    EnumerableSet.UintSet private _payableSet;
+    mapping(uint256 => Payables.Payable) internal _payables;
 
     /**
      * @param instrumentAddress Address of the instrument contract.
@@ -154,6 +170,68 @@ abstract contract Issuance {
     function getTransfer(uint256 index) public view returns (Transfers.TransferType transferType, address fromAddress,
         address toAddress, address tokenAddress, uint256 amount, bytes32 action) {
         Transfers.Transfer storage transfer = _transfers[index];
+
         return (transfer.transferType, transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount, transfer.action);
+    }
+
+    function getPayableCount() public view returns (uint256) {
+        return _payableSet.length();
+    }
+
+    function getPayable(uint256 index) public view returns (uint256 id, Payables.PayableState state, address obligatorAddress,
+        address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp, uint256 reinitiatedTo) {
+        Payables.Payable storage payablee = _payables[_payableSet.at(index)];
+
+        return (payablee.id, payablee.state, payablee.obligatorAddress, payablee.claimorAddress, payablee.tokenAddress,
+            payablee.amount, payablee.dueTimestamp, payablee.reinitiatedTo);
+    }
+
+    /**
+     * @dev Create new payable for the issuance.
+     */
+    function _createPayable(uint256 id, address obligatorAddress, address claimorAddress, address tokenAddress,
+        uint256 amount, uint256 dueTimestamp) internal {
+        require(!_payableSet.contains(id), "Issuance: Payable exists.");
+        _payableSet.add(id);
+        _payables[id] = Payables.Payable({
+            id: id,
+            state: Payables.PayableState.Unpaid,
+            obligatorAddress: obligatorAddress,
+            claimorAddress: claimorAddress,
+            tokenAddress: tokenAddress,
+            amount: amount,
+            dueTimestamp: dueTimestamp,
+            reinitiatedTo: 0
+        });
+        emit PayableCreated(_issuanceId, id, obligatorAddress, claimorAddress, tokenAddress, amount, dueTimestamp);
+    }
+
+    /**
+     * @dev Updates the existing payable as paid
+     */
+    function _markPayableAsPaid(uint256 id) internal {
+        require(_payableSet.contains(id), "Issuance: Payable not exists.");
+        _payables[id].state = Payables.PayableState.Paid;
+        emit PayablePaid(_issuanceId, id);
+    }
+
+    /**
+     * @dev Updates the existing payable as due
+     */
+    function _markPayableAsDue(uint256 id) internal {
+        require(_payableSet.contains(id), "Issuance: Payable not exists.");
+        _payables[id].state = Payables.PayableState.Due;
+        emit PayableDue(_issuanceId, id);
+    }
+
+    /**
+     * @dev Updates the existing payable as due
+     */
+    function _reinitiatePayable(uint256 source, uint256 target) internal {
+        require(_payableSet.contains(source), "Issuance: Source payable not exists.");
+        require(_payableSet.contains(target), "Issuance: Target payable not exists.");
+        _payables[source].state = Payables.PayableState.Reinitiated;
+        _payables[source].reinitiatedTo = target;
+        emit PayableReinitiated(_issuanceId, source, target);
     }
 }

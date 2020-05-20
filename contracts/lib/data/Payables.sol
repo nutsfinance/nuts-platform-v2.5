@@ -2,26 +2,27 @@
 pragma solidity 0.6.8;
 
 /**
- * @title Defines the supplemental line items.
+ * @title Defines the payables.
  */
-library SupplementalLineItems {
+library Payables {
     /**
-     * @dev Type of line item.
+     * @dev State of the payables
      */
-    enum ItemType {
-        Payable
+    enum PayableState {
+        Unpaid, Paid, Due, Reinitiated
     }
 
     /**
-     * @dev Represents one supplemental line item.
+     * @dev Represents one payable.
      */
-    struct Item {
+    struct Payable {
         uint256 id;
-        ItemType itemType;
+        PayableState state;
         address obligatorAddress;
         address claimorAddress;
         address tokenAddress;
         uint256 amount;
         uint256 dueTimestamp;
+        uint256 reinitiatedTo;
     }
 }
