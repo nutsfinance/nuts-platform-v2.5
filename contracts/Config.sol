@@ -6,12 +6,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Config is Ownable {
 
     address private _wethAddress;
+    address private _escrowFactoryAddress;
     address private _depositTokenAddress;
     uint256 private _depositAmount;
     mapping(bytes32 => address) private _instrumentManagerFactories;
 
-    constructor(address wethAddress, address depositTokenAddress, uint256 depositAmount) public {
+    constructor(address wethAddress, address escrowFactoryAddress, address depositTokenAddress, uint256 depositAmount) public {
+        require(wethAddress != address(0x0), "Config: WETH not set.");
+        require(escrowFactoryAddress != address(0x0), "Config: Escrow Factory not set.");
+        require(depositTokenAddress != address(0x0), "Config: Deposit token not set.");
+
         _wethAddress = wethAddress;
+        _escrowFactoryAddress = _escrowFactoryAddress;
         _depositTokenAddress = depositTokenAddress;
         _depositAmount = depositAmount;
     }
@@ -21,7 +27,17 @@ contract Config is Ownable {
     }
 
     function setWETH(address wethAddress) public onlyOwner {
+        require(wethAddress != address(0x0), "Config: WETH not set.");
         _wethAddress = wethAddress;
+    }
+
+    function getEscrowFactory() public view returns (address) {
+        return _escrowFactoryAddress;
+    }
+
+    function setEscrowFactory(address escrowFactoryAddress) public onlyOwner {
+        require(escrowFactoryAddress != address(0x0), "Config: Escrow Factory not set.");
+        _escrowFactoryAddress = escrowFactoryAddress;
     }
 
     function getDepositToken() public view returns (address) {
@@ -29,6 +45,7 @@ contract Config is Ownable {
     }
 
     function setDepositToken(address depositTokenAddress) public onlyOwner {
+        require(depositTokenAddress != address(0x0), "Config: Deposit token not set.");
         _depositTokenAddress = depositTokenAddress;
     }
 
@@ -45,6 +62,7 @@ contract Config is Ownable {
     }
 
     function setInstrumentManagerFactory(bytes32 version, address instrumentManagerFactoryAddress) public onlyOwner {
+        require(instrumentManagerFactoryAddress != address(0x0), "Config: Instrument Manager Factory not set.");
         _instrumentManagerFactories[version] = instrumentManagerFactoryAddress;
     }
 }

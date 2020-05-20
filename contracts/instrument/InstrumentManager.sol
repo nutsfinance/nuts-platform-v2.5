@@ -5,8 +5,9 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../escrow/InstrumentEscrow.sol";
-import "../escrow/IssuanceEscrow.sol";
+import "../escrow/IEscrowFactory.sol";
+import "../escrow/IInstrumentEscrow.sol";
+import "../escrow/IIssuanceEscrow.sol";
 import "../lib/token/WETH9.sol";
 import "../lib/protobuf/Transfers.sol";
 import "../Config.sol";
@@ -20,16 +21,17 @@ contract InstrumentManager is IInstrumentManager {
 
     struct IssuanceProperty {
         Issuance issuance;
-        IssuanceEscrow issuanceEscrow;
+        IIssuanceEscrow issuanceEscrow;
         uint256 creationTimestamp;
     }
 
     address private _wethAddress;
+    address private _escrowFactoryAddress;
     address private _depositTokenAddress;
     address private _instrumentAddress;
     address private _fspAddress;
     uint256 private _instrumentId;
-    InstrumentEscrow private _instrumentEscrow;
+    IInstrumentEscrow private _instrumentEscrow;
     Counters.Counter private _issuanceIds;
     mapping(uint256 => IssuanceProperty) private _issuances;
 
@@ -52,19 +54,18 @@ contract InstrumentManager is IInstrumentManager {
         require(instrumentId != 0, "InstrumentManager: ID not set.");
         require(fspAddress != address(0x0), "InstrumentManager: FSP not set.");
         require(configAddress != address(0x0), "InstrumentManager: Config not set.");
-        require(Config(configAddress).getWETH() != address(0x0), "Config: WETH not set.");
-        require(Config(configAddress).getDepositToken() != address(0x0), "Config: Deposit token not set.");
 
         _instrumentAddress = instrumentAddress;
         _instrumentId = instrumentId;
         _fspAddress = fspAddress;
         _wethAddress = Config(configAddress).getWETH();
+        _escrowFactoryAddress = Config(configAddress).getEscrowFactory();
         _depositTokenAddress = Config(configAddress).getDepositToken();
         _active = true;
         (_terminationTimestamp, _overrideTimestamp) = abi.decode(instrumentData, (uint256, uint256));
 
         // Creates the Instrument Escrow
-        _instrumentEscrow = new InstrumentEscrow(_wethAddress);
+        _instrumentEscrow = IEscrowFactory(_escrowFactoryAddress).createInstrumentEscrow(_wethAddress);
 
         // Initializes the instrument.
         Instrument(_instrumentAddress).initialize(_instrumentId, _fspAddress, address(_instrumentEscrow));
@@ -107,9 +108,9 @@ contract InstrumentManager is IInstrumentManager {
         Instrument instrument = Instrument(_instrumentAddress);
 
         // Checks whether Issuance Escrow is supported.
-        IssuanceEscrow issuanceEscrow = IssuanceEscrow(0);
+        IIssuanceEscrow issuanceEscrow = IIssuanceEscrow(0);
         if (instrument.supportsIssuanceEscrow()) {
-            issuanceEscrow = new IssuanceEscrow(_wethAddress);
+            issuanceEscrow = IEscrowFactory(_escrowFactoryAddress).createIssuanceEscrow(_wethAddress);
         }
 
         // Creates and initializes the issuance instance.
@@ -217,7 +218,7 @@ contract InstrumentManager is IInstrumentManager {
      * @param issuanceId The ID of the issuance to process transfers.
      */
     function processTransfers(uint256 issuanceId, bytes memory transfersData) private {
-        IssuanceEscrow issuanceEscrow = _issuances[issuanceId].issuanceEscrow;
+        IIssuanceEscrow issuanceEscrow = _issuances[issuanceId].issuanceEscrow;
         Transfers.Data memory transfers = Transfers.decode(transfersData);
         for (uint256 i = 0; i < transfers.actions.length; i++) {
             // (Transfers.TransferType transferType, address fromAddress, address toAddress, address tokenAddress,
