@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
 import "../escrow/IIssuanceEscrow.sol";
 import "../lib/protobuf/Transfers.sol";
-import "../lib/data/Payables.sol";
+import "../lib/protobuf/Payables.sol";
 import "./Instrument.sol";
 
 /**
@@ -59,13 +59,14 @@ abstract contract Issuance {
      * @dev The event used to track the creation of a new payable.
      * @param issuanceId The id of the issuance
      * @param itemId The id of the payable
+     * @param engagementId The id of the engagement
      * @param obligatorAddress The obligator of the payable
      * @param claimorAddress The claimor of the payable
      * @param tokenAddress The asset type of the payable
      * @param amount The asset amount of the payable
      * @param dueTimestamp When is the payable due
      */
-    event PayableCreated(uint256 indexed issuanceId, uint256 indexed itemId, address obligatorAddress,
+    event PayableCreated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 indexed engagementId, address obligatorAddress,
         address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp);
 
     /**
@@ -123,7 +124,7 @@ abstract contract Issuance {
     // Transfers.Transfer[] internal _transfers;
 
     EnumerableSet.UintSet private _payableSet;
-    mapping(uint256 => Payables.Payable) internal _payables;
+    mapping(uint256 => Payable.Data) internal _payables;
 
     /**
      * @param instrumentAddress Address of the instrument contract.
@@ -169,48 +170,23 @@ abstract contract Issuance {
      */
     function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData) public virtual;
 
-
-    // function getTransferCount() public view returns (uint256) {
-    //     return _transfers.length;
-    // }
-
-    // function getTransfer(uint256 index) public view returns (Transfers.TransferType transferType, address fromAddress,
-    //     address toAddress, address tokenAddress, uint256 amount, bytes32 action) {
-    //     Transfers.Transfer storage transfer = _transfers[index];
-
-    //     return (transfer.transferType, transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount, transfer.action);
-    // }
-
-    function getPayableCount() public view returns (uint256) {
-        return _payableSet.length();
-    }
-
-    function getPayable(uint256 index) public view returns (uint256 id, Payables.PayableState state, address obligatorAddress,
-        address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp, uint256 reinitiatedTo) {
-        Payables.Payable storage payablee = _payables[_payableSet.at(index)];
-
-        return (payablee.id, payablee.state, payablee.obligatorAddress, payablee.claimorAddress, payablee.tokenAddress,
-            payablee.amount, payablee.dueTimestamp, payablee.reinitiatedTo);
-    }
-
     /**
      * @dev Create new payable for the issuance.
      */
-    function _createPayable(uint256 id, address obligatorAddress, address claimorAddress, address tokenAddress,
+    function _createPayable(uint256 id, uint256 engagementId, address obligatorAddress, address claimorAddress, address tokenAddress,
         uint256 amount, uint256 dueTimestamp) internal {
         require(!_payableSet.contains(id), "Issuance: Payable exists.");
         _payableSet.add(id);
-        _payables[id] = Payables.Payable({
+        _payables[id] = Payable.Data({
             id: id,
-            state: Payables.PayableState.Unpaid,
+            engagementId: engagementId,
             obligatorAddress: obligatorAddress,
             claimorAddress: claimorAddress,
             tokenAddress: tokenAddress,
             amount: amount,
-            dueTimestamp: dueTimestamp,
-            reinitiatedTo: 0
+            dueTimestamp: dueTimestamp
         });
-        emit PayableCreated(_issuanceId, id, obligatorAddress, claimorAddress, tokenAddress, amount, dueTimestamp);
+        emit PayableCreated(_issuanceId, id, engagementId, obligatorAddress, claimorAddress, tokenAddress, amount, dueTimestamp);
     }
 
     /**
@@ -218,7 +194,9 @@ abstract contract Issuance {
      */
     function _markPayableAsPaid(uint256 id) internal {
         require(_payableSet.contains(id), "Issuance: Payable not exists.");
-        _payables[id].state = Payables.PayableState.Paid;
+        // Removes the payable with id
+        _payableSet.remove(id);
+        delete _payables[id];
         emit PayablePaid(_issuanceId, id);
     }
 
@@ -227,18 +205,21 @@ abstract contract Issuance {
      */
     function _markPayableAsDue(uint256 id) internal {
         require(_payableSet.contains(id), "Issuance: Payable not exists.");
-        _payables[id].state = Payables.PayableState.Due;
+        // Removes the payable with id
+        _payableSet.remove(id);
+        delete _payables[id];
         emit PayableDue(_issuanceId, id);
     }
 
     /**
      * @dev Updates the existing payable as due
      */
-    function _reinitiatePayable(uint256 source, uint256 target) internal {
-        require(_payableSet.contains(source), "Issuance: Source payable not exists.");
-        require(_payableSet.contains(target), "Issuance: Target payable not exists.");
-        _payables[source].state = Payables.PayableState.Reinitiated;
-        _payables[source].reinitiatedTo = target;
-        emit PayableReinitiated(_issuanceId, source, target);
+    function _reinitiatePayable(uint256 id, uint256 reinitiatedTo) internal {
+        require(_payableSet.contains(id), "Issuance: Source payable not exists.");
+        require(_payableSet.contains(reinitiatedTo), "Issuance: Target payable not exists.");
+        // Removes the payable with id
+        _payableSet.remove(id);
+        delete _payables[id];
+        emit PayableReinitiated(_issuanceId, id, reinitiatedTo);
     }
 }

@@ -13,6 +13,7 @@ contract LendingIssuance is Issuance {
     using SafeMath for uint256;
 
     // Constants
+    uint256 internal constant ENGAGEMENT_ID = 1;
     uint256 internal constant ENGAGEMENT_DUE_DAYS = 14 days; // Time available for taker to engage
     uint256 internal constant TENOR_DAYS_MIN = 2; // Minimum tenor is 2 days
     uint256 internal constant TENOR_DAYS_MAX = 90; // Maximum tenor is 90 days
@@ -98,17 +99,9 @@ contract LendingIssuance is Issuance {
             action: "Principal in"
         });
         transfersData = Transfers.encode(transfers);
-        // Transfers.Transfer memory transfer = Transfers.Transfer({
-        //     transferType: Transfers.TransferType.Inbound,
-        //     fromAddress: _makerAddress,
-        //     toAddress: _makerAddress,
-        //     tokenAddress: _lendingToken,
-        //     amount: _lendingAmount,
-        //     action: "Principal in"
-        // });
-        // _transfers.push(transfer);
+
         // Create payable 1: Custodian --> Maker
-        _createPayable(1, address(_issuanceEscrow), _makerAddress, _lendingToken, _lendingAmount, _engagementDueTimestamp);
+        _createPayable(1, ENGAGEMENT_ID, address(_issuanceEscrow), _makerAddress, _lendingToken, _lendingAmount, _engagementDueTimestamp);
     }
 
     /**
