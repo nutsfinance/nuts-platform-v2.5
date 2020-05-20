@@ -22,7 +22,7 @@ contract LendingIssuance is Issuance {
     uint256 internal constant INTEREST_RATE_MIN = 10; // Mimimum interest rate is 0.0010%
     uint256 internal constant INTEREST_RATE_MAX = 50000; // Maximum interest rate is 5.0000%
 
-    // Lending parameters
+    // Lending issuance properties
     address private _lendingToken;
     address private _collateralToken;
     uint256 private _lendingAmount;
@@ -32,6 +32,8 @@ contract LendingIssuance is Issuance {
     uint256 private _interestRate;
     uint256 private _interestAmount;
     uint256 private _engagementDueTimestamp;
+
+    // Lending engagement properties
 
     /**
      * @param instrumentAddress Address of the instrument contract.
