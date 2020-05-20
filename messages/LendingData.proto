@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "SolidityTypes.proto";
+import "Payables.proto";
+
+message LendingIssuanceProperty {
+    .solidity.address lendingToken = 1;
+    .solidity.address collateralToken = 2;
+    .solidity.uint256 lendingAmount = 3;
+    .solidity.uint256 collateralRatio = 4;
+    .solidity.uint256 interestRate = 5;
+    .solidity.uint256 interestAmount = 6;
+    .solidity.uint256 tenorDays = 7;
+}
+
+message LendingEngagementProperty {
+    .solidity.uint256 collateralAmount = 1;
+}

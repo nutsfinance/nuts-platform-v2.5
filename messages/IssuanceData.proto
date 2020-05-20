@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+import "SolidityTypes.proto";
+import "Payables.proto";
+
+message IssuanceProperty {
+
+    enum IssuanceState {
+        IssuanceStateUnknown = 0;
+        Initiated = 1;
+        Engageable = 2;
+        Cancelled = 3;
+        PartialComplete = 4;
+        Complete = 5;
+    }
+
+    .solidity.uint256 issuanceId = 1;
+    .solidity.uint256 instrumentId = 2;
+    .solidity.address makerAddress = 3;
+    .solidity.uint256 issuanceCreation = 4;     // Timestamp when issuance is created
+    .solidity.uint256 issuanceDue = 5;          // Timestamp when issuance is due (closed for new engagement)
+    IssuanceState issuanceState = 6;
+    bytes issuanceCustomProperty = 7;
+    repeated EngagementProperty engagements = 8;
+    repeated Payable payables = 9;
+}
+
+message EngagementProperty {
+
+    enum EngagementState {
+        EngagementStateUnknown = 0;
+        Initiated = 1;
+        Active = 2;
+        Cancelled = 3;
+        Complete = 4;
+        Delinquent = 5;
+    }
+
+    .solidity.uint256 engagementId = 1;
+    .solidity.address takerAddress = 2;
+    .solidity.uint256 engagementCreation = 3;   // Timestamp when engagement is created
+    .solidity.uint256 engagementDue = 4;        // Timestamp when engaegment is due
+    EngagementState engagementState = 5;
+    bytes engagementCustomProperty = 6;
+}

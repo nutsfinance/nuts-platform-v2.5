@@ -3,11 +3,11 @@ syntax = "proto3";
 import "SolidityTypes.proto";
 
 message Payable {
-    .solidity.uint256 id = 1;
-    .solidity.uint256 engagementId = 2;
+    .solidity.uint256 payableId = 1;
+    .solidity.uint256 engagementId = 2;     // ID of the engagement to which the payable belongs. 0 if this payable does not apply to any engagement.
     .solidity.address obligatorAddress = 3;
     .solidity.address claimorAddress = 4;
     .solidity.address tokenAddress = 5;
     .solidity.uint256 amount = 6;
-    .solidity.uint256 dueTimestamp = 7;
+    .solidity.uint256 payableDue = 7;       // Timestamp when the payable is due
 }
