@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
+import "../../lib/protobuf/Transfers.sol";
 import "../../escrow/IInstrumentEscrow.sol";
 import "../Issuance.sol";
 import "./LendingInstrument.sol";
@@ -40,11 +41,16 @@ contract LendingIssuance is Issuance {
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
-     * @param makerData Custom properties of the issuance.
      */
-    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
-        Issuance(instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress) public {
-        
+    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress)
+        Issuance(instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress) public {}
+
+    /**
+     * @dev Initializes the issuance.
+     * @param makerData Custom properties of the issuance.
+     * @return transfersData Asset transfer actions.
+     */
+    function initialize(bytes memory makerData) public override returns (bytes memory transfersData) {
         (_lendingToken, _collateralToken, _lendingAmount, _tenorDays, _collateralRatio, _interestRate) = abi.decode(makerData,
             (address, address, uint256, uint256, uint256, uint256));
         require(_state == IssuanceState.Initiated, "LendingIssuance: Not in Initiated.");
@@ -80,15 +86,27 @@ contract LendingIssuance is Issuance {
 
         // Transfers principal token
         // Principal token inbound transfer: Maker --> Maker
-        Transfers.Transfer memory transfer = Transfers.Transfer({
-            transferType: Transfers.TransferType.Inbound,
+        Transfers.Data memory transfers = Transfers.Data(
+            new Transfer.Data[](1)
+        );
+        transfers.actions[0] = Transfer.Data({
+            transferType: Transfer.TransferType.Inbound,
             fromAddress: _makerAddress,
             toAddress: _makerAddress,
             tokenAddress: _lendingToken,
             amount: _lendingAmount,
             action: "Principal in"
         });
-        _transfers.push(transfer);
+        transfersData = Transfers.encode(transfers);
+        // Transfers.Transfer memory transfer = Transfers.Transfer({
+        //     transferType: Transfers.TransferType.Inbound,
+        //     fromAddress: _makerAddress,
+        //     toAddress: _makerAddress,
+        //     tokenAddress: _lendingToken,
+        //     amount: _lendingAmount,
+        //     action: "Principal in"
+        // });
+        // _transfers.push(transfer);
         // Create payable 1: Custodian --> Maker
         _createPayable(1, address(_issuanceEscrow), _makerAddress, _lendingToken, _lendingAmount, _engagementDueTimestamp);
     }

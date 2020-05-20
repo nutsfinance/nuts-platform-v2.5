@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "SolidityTypes.proto";
+
+/**
+ * Represent a single token transfer action triggerred from issuance.
+ * As it's triggered from Instrument, the transfer is either from Issuance Escrow
+ * to Instrument Escrow, or inside the same Issuance Escrow. 
+ */
+message Transfer {
+    enum TransferType {
+        Unknown = 0;
+        Inbound = 1;            // Instrument Escrow -->  Issuance Escrow
+        Outbound = 2;           // Issuance Escrow   -->  Instrument Escrow
+        IntraIssuance = 3;      // Inside Issuance Escrow
+        IntraInstrument = 4;    // Inside Instrument Escrow
+    }
+    
+    TransferType transferType = 1;
+    // Where the token is transferred from.
+    .solidity.address fromAddress = 2;
+    // Where the token is transferred to. Valid only if transfer type is IntraIssuance.
+    .solidity.address toAddress = 3;
+    .solidity.address tokenAddress = 4;
+    .solidity.uint256 amount = 5;
+    .solidity.bytes32 action = 6;
+}
+
+/**
+ * Represents a series of token transfer actions.
+ * Unlike Token Balance, two Transfer actions might have the same token address.
+ */
+message Transfers {
+    repeated Transfer actions = 1;
+}

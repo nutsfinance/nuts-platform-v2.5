@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "../escrow/InstrumentEscrow.sol";
 import "../escrow/IssuanceEscrow.sol";
-import "../lib/data/Transfers.sol";
 import "../lib/token/WETH9.sol";
+import "../lib/protobuf/Transfers.sol";
 import "../Config.sol";
 import "./Issuance.sol";
 import "./IInstrumentManager.sol";
@@ -113,8 +113,9 @@ contract InstrumentManager is IInstrumentManager {
         }
 
         // Creates and initializes the issuance instance.
-        Issuance issuance = instrument.createIssuance(newIssuanceId, address(issuanceEscrow), msg.sender, makerData);
-        processTransfers(newIssuanceId);
+        Issuance issuance = instrument.createIssuance(newIssuanceId, address(issuanceEscrow), msg.sender);
+        bytes memory transferData = issuance.initialize(makerData);
+        processTransfers(newIssuanceId, transferData);
 
         _issuances[newIssuanceId] = IssuanceProperty({
             issuance: issuance,
@@ -135,7 +136,7 @@ contract InstrumentManager is IInstrumentManager {
         Issuance issuance = _issuances[issuanceId].issuance;
         engagementId = issuance.engage(msg.sender, takerData);
 
-        processTransfers(issuanceId);
+        // processTransfers(issuanceId);
 
         return engagementId;
     }
@@ -150,7 +151,7 @@ contract InstrumentManager is IInstrumentManager {
     function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {
         Issuance issuance = _issuances[issuanceId].issuance;
         issuance.processEvent(engagementId, msg.sender, eventName, eventData);
-        processTransfers(issuanceId);
+        // processTransfers(issuanceId);
     }
 
     /**
@@ -215,34 +216,36 @@ contract InstrumentManager is IInstrumentManager {
      * @dev Processes the transfers for an issuance.
      * @param issuanceId The ID of the issuance to process transfers.
      */
-    function processTransfers(uint256 issuanceId) private {
-        Issuance issuance = _issuances[issuanceId].issuance;
+    function processTransfers(uint256 issuanceId, bytes memory transfersData) private {
         IssuanceEscrow issuanceEscrow = _issuances[issuanceId].issuanceEscrow;
-        for (uint256 i = 0; i < issuance.getTransferCount(); i++) {
-            (Transfers.TransferType transferType, address fromAddress, address toAddress, address tokenAddress,
-                uint256 amount, bytes32 action) = issuance.getTransfer(i);
+        Transfers.Data memory transfers = Transfers.decode(transfersData);
+        for (uint256 i = 0; i < transfers.actions.length; i++) {
+            // (Transfers.TransferType transferType, address fromAddress, address toAddress, address tokenAddress,
+            //     uint256 amount, bytes32 action) = issuance.getTransfer(i);
+            Transfer.Data memory transfer = transfers.actions[i];
 
-            if (transferType == Transfers.TransferType.Inbound) {
+            if (transfer.transferType == Transfer.TransferType.Inbound) {
                 // Withdraw ERC20 token from Instrument Escrow
-                _instrumentEscrow.withdrawByAdmin(fromAddress, tokenAddress, amount);
+                _instrumentEscrow.withdrawByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
                 // IMPORTANT: Set allowance before deposit
-                IERC20(tokenAddress).safeApprove(address(issuanceEscrow), amount);
+                IERC20(transfer.tokenAddress).safeApprove(address(issuanceEscrow), transfer.amount);
                 // Deposit ERC20 token to Issuance Escrow
-                issuanceEscrow.depositByAdmin(fromAddress, tokenAddress, amount);
-            } else if (transferType == Transfers.TransferType.Outbound) {
+                issuanceEscrow.depositByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
+            } else if (transfer.transferType == Transfer.TransferType.Outbound) {
                 // First withdraw ERC20 token from Issuance Escrow to owner
-                issuanceEscrow.withdrawByAdmin(fromAddress, tokenAddress, amount);
+                issuanceEscrow.withdrawByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
                 // (Important!!!)Then set allowance for Instrument Escrow
-                IERC20(tokenAddress).safeApprove(address(_instrumentEscrow), amount);
+                IERC20(transfer.tokenAddress).safeApprove(address(_instrumentEscrow), transfer.amount);
                 // Then deposit the ERC20 token from owner to Instrument Escrow
-                _instrumentEscrow.depositByAdmin(fromAddress, tokenAddress, amount);
-            } else if (transferType == Transfers.TransferType.IntraInstrument) {
-                _instrumentEscrow.transferByAdmin(fromAddress, toAddress, tokenAddress, amount);
+                _instrumentEscrow.depositByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
+            } else if (transfer.transferType == Transfer.TransferType.IntraInstrument) {
+                _instrumentEscrow.transferByAdmin(transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount);
             } else {
-                issuanceEscrow.transferByAdmin(fromAddress, toAddress, tokenAddress, amount);
+                issuanceEscrow.transferByAdmin(transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount);
             }
 
-            emit TokenTransferred(issuanceId, transferType, fromAddress, toAddress, tokenAddress, amount, action);
+            emit TokenTransferred(issuanceId, transfer.transferType, transfer.fromAddress, transfer.toAddress,
+                transfer.tokenAddress, transfer.amount, transfer.action);
         }
     }
 }

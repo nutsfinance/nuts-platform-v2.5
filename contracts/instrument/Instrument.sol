@@ -61,10 +61,9 @@ abstract contract Instrument is AdminAccess {
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
-     * @param makerData Custom properties of the issuance.
      * @return The created issuance instance.
      */
-    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
+    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress, address makerAddress)
         public virtual returns (Issuance);
 
     /**

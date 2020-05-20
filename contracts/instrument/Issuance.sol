@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
 import "../escrow/IIssuanceEscrow.sol";
-import "../lib/data/Transfers.sol";
+import "../lib/protobuf/Transfers.sol";
 import "../lib/data/Payables.sol";
 import "./Instrument.sol";
 
@@ -120,7 +120,7 @@ abstract contract Issuance {
     uint256 internal _creationTimestamp;
 
     Counters.Counter internal _engagementIds;
-    Transfers.Transfer[] internal _transfers;
+    // Transfers.Transfer[] internal _transfers;
 
     EnumerableSet.UintSet private _payableSet;
     mapping(uint256 => Payables.Payable) internal _payables;
@@ -146,6 +146,13 @@ abstract contract Issuance {
     }
 
     /**
+     * @dev Initializes the issuance.
+     * @param makerData Custom properties of the issuance.
+     * @return transferData Asset transfer actions.
+     */
+    function initialize(bytes memory makerData) public virtual returns (bytes memory transferData);
+
+    /**
      * @dev Creates a new engagement for the issuance.
      * @param takerAddress Address of the user who engages the issuance.
      * @param takerData Custom properties of the engagemnet.
@@ -163,16 +170,16 @@ abstract contract Issuance {
     function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData) public virtual;
 
 
-    function getTransferCount() public view returns (uint256) {
-        return _transfers.length;
-    }
+    // function getTransferCount() public view returns (uint256) {
+    //     return _transfers.length;
+    // }
 
-    function getTransfer(uint256 index) public view returns (Transfers.TransferType transferType, address fromAddress,
-        address toAddress, address tokenAddress, uint256 amount, bytes32 action) {
-        Transfers.Transfer storage transfer = _transfers[index];
+    // function getTransfer(uint256 index) public view returns (Transfers.TransferType transferType, address fromAddress,
+    //     address toAddress, address tokenAddress, uint256 amount, bytes32 action) {
+    //     Transfers.Transfer storage transfer = _transfers[index];
 
-        return (transfer.transferType, transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount, transfer.action);
-    }
+    //     return (transfer.transferType, transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount, transfer.action);
+    // }
 
     function getPayableCount() public view returns (uint256) {
         return _payableSet.length();
