@@ -494,7 +494,7 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
   /**
    * @dev Test whether a struct is empty
    * @param x The struct to be tested
-   * @return True if it is empty
+   * @return r True if it is empty
    */
   function isNil(Data memory x) internal pure returns (bool r) {
     assembly {
