@@ -2,6 +2,7 @@
 pragma solidity 0.6.8;
 
 import "../../lib/protobuf/Transfers.sol";
+import "../../lib/protobuf/LendingData.sol";
 import "../../escrow/IInstrumentEscrow.sol";
 import "../Issuance.sol";
 import "./LendingInstrument.sol";
@@ -30,12 +31,13 @@ contract LendingIssuance is Issuance {
     uint256 private _lendingAmount;
     uint256 private _tenorDays;
     uint256 private _collateralRatio;
-    uint256 private _collateralAmount;
     uint256 private _interestRate;
     uint256 private _interestAmount;
     uint256 private _engagementDueTimestamp;
 
     // Lending engagement properties
+    uint256 private _collateralAmount;
+    LendingEngagementProperty.LoanState private _loanState = LendingEngagementProperty.LoanState.LoanStateUnknown;
 
     /**
      * @param instrumentAddress Address of the instrument contract.
@@ -129,14 +131,28 @@ contract LendingIssuance is Issuance {
      * @dev Returns the issuance-specific data about the issuance.
      */
     function _getIssuanceCustomProperty() internal override view returns (bytes memory) {
+        LendingIssuanceProperty.Data memory issuanceProperty = LendingIssuanceProperty.Data({
+            lendingTokenAddress: _lendingToken,
+            collateralTokenAddress: _collateralToken,
+            lendingAmount: _lendingAmount,
+            collateralRatio: _collateralRatio,
+            interestRate: _interestRate,
+            interestAmount: _interestAmount,
+            tenorDays: _tenorDays
+        });
 
+        return LendingIssuanceProperty.encode(issuanceProperty);
     }
 
     /**
      * @dev Returns the issuance-specific data about the engagement.
-     * @param engagementId ID of the engagement
      */
-    function _getEngagementCustomProperty(uint256 engagementId) internal override view returns (bytes memory) {
-        
+    function _getEngagementCustomProperty(uint256 /** engagementId */) internal override view returns (bytes memory) {
+        LendingEngagementProperty.Data memory engagementProperty = LendingEngagementProperty.Data({
+            collateralAmount: _collateralAmount,
+            loanState: _loanState
+        });
+
+        return LendingEngagementProperty.encode(engagementProperty);
     }
 }

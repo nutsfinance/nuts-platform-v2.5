@@ -2,7 +2,6 @@
 pragma solidity 0.6.8;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
 import "../escrow/IIssuanceEscrow.sol";
@@ -15,7 +14,6 @@ import "./Instrument.sol";
  * @title Base class for issuance.
  */
 abstract contract Issuance {
-    using Counters for Counters.Counter;
     using EnumerableSet for EnumerableSet.UintSet;
 
     /**
@@ -111,7 +109,6 @@ abstract contract Issuance {
     uint256 internal _completeTimestamp;
     uint256 internal _completionRatio;
 
-    Counters.Counter internal _engagementIds;
     EnumerableSet.UintSet private _engagementSet;       // We provide engagement ids in Issuance.
     mapping(uint256 => EngagementProperty.Data) _engagements;
 
@@ -164,6 +161,7 @@ abstract contract Issuance {
 
     /**
      * @dev Returns property of this issuance.
+     * This is the key method to read on-chain issuance status.
      */
     function getIssuanceProperty() public view returns (bytes memory) {
         // Construct paybles data
