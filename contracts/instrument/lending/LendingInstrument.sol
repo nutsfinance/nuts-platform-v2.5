@@ -19,6 +19,10 @@ contract LendingInstrument is WhitelistInstrument {
         _priceOracle = IPriceOracle(priceOracleAddress);
     }
 
+    function getPriceOracle() public view returns (IPriceOracle) {
+        return _priceOracle;
+    }
+
     /**
      * @dev Creates a new lending issuance instance.
      * @param issuanceId ID of the issuance.

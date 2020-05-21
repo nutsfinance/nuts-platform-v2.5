@@ -133,11 +133,11 @@ contract InstrumentManager is IInstrumentManager {
      * @param takerData Custom properties of the engagement.
      * @return engagementId ID of the engagement.
      */
-    function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256 engagementId) {
+    function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256) {
         Issuance issuance = _issuances[issuanceId].issuance;
-        engagementId = issuance.engage(msg.sender, takerData);
+        (uint256 engagementId, bytes memory transfersData) = issuance.engage(msg.sender, takerData);
 
-        // processTransfers(issuanceId);
+        processTransfers(issuanceId, transfersData);
 
         return engagementId;
     }
@@ -151,8 +151,8 @@ contract InstrumentManager is IInstrumentManager {
      */
     function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {
         Issuance issuance = _issuances[issuanceId].issuance;
-        issuance.processEvent(engagementId, msg.sender, eventName, eventData);
-        // processTransfers(issuanceId);
+        bytes memory transfersData = issuance.processEvent(engagementId, msg.sender, eventName, eventData);
+        processTransfers(issuanceId, transfersData);
     }
 
     /**

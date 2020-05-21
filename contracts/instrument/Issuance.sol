@@ -38,21 +38,24 @@ abstract contract Issuance {
     event EventBlockScheduled(uint256 indexed issuanceId, uint256 indexed engagementId, uint256 blockNumber,
         bytes32 eventName, bytes eventPayload);
 
-    event IssuanceCreated(uint256 indexed issuanceId, address indexed makerAddress, uint256 creationTimestamp);
+    event IssuanceCreated(uint256 indexed issuanceId, address indexed makerAddress, uint256 issuanceDueTimestamp);
 
     event IssuanceCancelled(uint256 indexed issuanceId);
 
-    event IssuancePartialComplete(uint256 indexed issuanceId);
-
     event IssuanceComplete(uint256 indexed issuanceId);
 
-    event EngagementCreated (uint256 indexed issuanceId, uint256 indexed engagementId, address indexed takerAddress, uint256 engagementTimestamp);
+    event EngagementCreated (uint256 indexed issuanceId, uint256 indexed engagementId, address indexed takerAddress);
 
     event EngagementCancelled(uint256 indexed issuanceId, uint256 indexed engagementId);
 
     event EngagementComplete(uint256 indexed issuanceId, uint256 indexed engagementId);
 
-    event EngagementDelinquent(uint256 indexed issuanceId, uint256 indexed engagementId);
+
+    /**
+     * @dev Asset is transferred.
+     */
+    event AssetTransferred(uint256 indexed issuanceId, uint256 indexed engagementId, Transfer.TransferType transferType,
+        address fromAddress, address toAddress, address tokenAddress, uint256 amount, bytes32 action);
 
     /**
      * @dev The event used to track the creation of a new payable.
@@ -109,8 +112,8 @@ abstract contract Issuance {
     uint256 internal _completeTimestamp;
     uint256 internal _completionRatio;
 
-    EnumerableSet.UintSet private _engagementSet;       // We provide engagement ids in Issuance.
-    mapping(uint256 => EngagementProperty.Data) _engagements;
+    EnumerableSet.UintSet internal _engagementSet;       // We provide engagement ids in Issuance.
+    mapping(uint256 => EngagementProperty.Data) internal _engagements;
 
     EnumerableSet.UintSet private _payableSet;
     mapping(uint256 => Payable.Data) internal _payables;
@@ -147,8 +150,10 @@ abstract contract Issuance {
      * @param takerAddress Address of the user who engages the issuance.
      * @param takerData Custom properties of the engagemnet.
      * @return engagementId ID of the engagement.
+     * @return transfersData Asset transfer actions.
      */
-    function engage(address takerAddress, bytes memory takerData) public virtual returns (uint256 engagementId);
+    function engage(address takerAddress, bytes memory takerData)
+        public virtual returns (uint256 engagementId, bytes memory transfersData);
 
     /**
      * @dev Process a custom event. This event could be targeted at an engagement or the whole issuance.
@@ -156,8 +161,10 @@ abstract contract Issuance {
      * @param notifierAddress Address that notifies the custom event.
      * @param eventName Name of the custom event.
      * @param eventData Custom properties of the custom event.
+     * @return transfersData Asset transfer actions.
      */
-    function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData) public virtual;
+    function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData)
+        public virtual returns (bytes memory transfersData);
 
     /**
      * @dev Returns property of this issuance.
