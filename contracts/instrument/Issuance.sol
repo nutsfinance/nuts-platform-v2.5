@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "../escrow/IIssuanceEscrow.sol";
 import "../lib/protobuf/Transfers.sol";
 import "../lib/protobuf/Payables.sol";
+import "../lib/protobuf/IssuanceData.sol";
 import "./Instrument.sol";
 
 /**
@@ -91,20 +92,6 @@ abstract contract Issuance {
      */
     event PayableReinitiated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 reinitiatedTo);
 
-    /**
-     * @dev States in issuance lifecycle.
-     */
-    enum IssuanceState {
-        Initiated, Engageable, Cancelled, PartialComplete, Complete
-    }
-
-    /**
-     * @dev States in engagement lifecycle.
-     */
-    enum EngagementState {
-        Initiated, Active, Cancelled, Complete, Delinquent
-    }
-
     // Common scheduled events
     bytes32 internal constant ISSUANCE_DUE_EVENT = "issuance_due";
     bytes32 internal constant ENGAGEMENT_DUE_EVENT = "engagement_due";
@@ -117,11 +104,16 @@ abstract contract Issuance {
     uint256 internal _issuanceId;
     IIssuanceEscrow internal _issuanceEscrow;
     address internal _makerAddress;
-    IssuanceState internal _state;
+    IssuanceProperty.IssuanceState internal _state;
     uint256 internal _creationTimestamp;
+    uint256 internal _cancelTimestamp;
+    uint256 internal _dueTimestamp;
+    uint256 internal _completeTimestamp;
+    uint256 internal _completionRatio;
 
     Counters.Counter internal _engagementIds;
-    // Transfers.Transfer[] internal _transfers;
+    EnumerableSet.UintSet private _engagementSet;       // We provide engagement ids in Issuance.
+    mapping(uint256 => EngagementProperty.Data) _engagements;
 
     EnumerableSet.UintSet private _payableSet;
     mapping(uint256 => Payable.Data) internal _payables;
@@ -142,7 +134,7 @@ abstract contract Issuance {
         _issuanceId = issuanceId;
         _issuanceEscrow = IIssuanceEscrow(issuanceEscrowAddress);
         _makerAddress = makerAddress;
-        _state = IssuanceState.Initiated;
+        _state = IssuanceProperty.IssuanceState.Initiated;
         _creationTimestamp = now;
     }
 
@@ -171,6 +163,53 @@ abstract contract Issuance {
     function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData) public virtual;
 
     /**
+     * @dev Returns property of this issuance.
+     */
+    function getIssuanceProperty() public view returns (bytes memory) {
+        // Construct paybles data
+        Payable.Data[] memory payables = new Payable.Data[](_payableSet.length());
+        for (uint256 i = 0; i < _payableSet.length(); i++) {
+            payables[i] = _payables[_payableSet.at(i)];
+        }
+
+        // Construct engagements data
+        EngagementProperty.Data[] memory engagements = new EngagementProperty.Data[](_engagementSet.length());
+        for (uint256 i = 0; i < _engagementSet.length(); i++) {
+            engagements[i] = _engagements[_engagementSet.at(i)];
+            engagements[i].engagementCustomProperty = _getEngagementCustomProperty(_engagementSet.at(i));
+        }
+
+        // Construct issuance data
+        IssuanceProperty.Data memory issuanceProperty = IssuanceProperty.Data({
+            issuanceId: _issuanceId,
+            instrumentId: Instrument(_instrumentAddress).getInstrumentId(),
+            makerAddress: _makerAddress,
+            issuanceCreationTimestamp: _creationTimestamp,
+            issuanceDueTimestamp: _dueTimestamp,
+            issuanceCancelTimestamp: _cancelTimestamp,
+            issuanceCompleteTimestamp: _completeTimestamp,
+            completionRatio: _completionRatio,
+            issuanceState: _state,
+            issuanceCustomProperty: _getIssuanceCustomProperty(),
+            engagements: engagements,
+            payables: payables
+        });
+
+        return IssuanceProperty.encode(issuanceProperty);
+    }
+
+    /**
+     * @dev Returns the issuance-specific data about the issuance.
+     */
+    function _getIssuanceCustomProperty() internal virtual view returns (bytes memory);
+
+    /**
+     * @dev Returns the issuance-specific data about the engagement.
+     * @param engagementId ID of the engagement
+     */
+    function _getEngagementCustomProperty(uint256 engagementId) internal virtual view returns (bytes memory);
+
+    /**
      * @dev Create new payable for the issuance.
      */
     function _createPayable(uint256 id, uint256 engagementId, address obligatorAddress, address claimorAddress, address tokenAddress,
@@ -178,13 +217,13 @@ abstract contract Issuance {
         require(!_payableSet.contains(id), "Issuance: Payable exists.");
         _payableSet.add(id);
         _payables[id] = Payable.Data({
-            id: id,
+            payableId: id,
             engagementId: engagementId,
             obligatorAddress: obligatorAddress,
             claimorAddress: claimorAddress,
             tokenAddress: tokenAddress,
             amount: amount,
-            dueTimestamp: dueTimestamp
+            payableDueTimestamp: dueTimestamp
         });
         emit PayableCreated(_issuanceId, id, engagementId, obligatorAddress, claimorAddress, tokenAddress, amount, dueTimestamp);
     }

@@ -1,11 +1,10 @@
 syntax = "proto3";
 
 import "SolidityTypes.proto";
-import "Payables.proto";
 
 message LendingIssuanceProperty {
-    .solidity.address lendingToken = 1;
-    .solidity.address collateralToken = 2;
+    .solidity.address lendingTokenAddress = 1;
+    .solidity.address collateralTokenAddress = 2;
     .solidity.uint256 lendingAmount = 3;
     .solidity.uint256 collateralRatio = 4;
     .solidity.uint256 interestRate = 5;
@@ -14,5 +13,13 @@ message LendingIssuanceProperty {
 }
 
 message LendingEngagementProperty {
+    enum LoanState {
+        LoanStateUnknown = 0;
+        Unpaid = 1;
+        Repaid = 2;
+        Delinquent = 3;
+    }
+
     .solidity.uint256 collateralAmount = 1;
+    LoanState loanState = 2; 
 }

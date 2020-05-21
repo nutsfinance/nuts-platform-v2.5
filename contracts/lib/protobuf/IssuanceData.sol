@@ -3,7 +3,7 @@ pragma solidity 0.6.8;
 import "./ProtoBufRuntime.sol";
 import "./Payables.sol";
 
-library IssuanceData {
+library IssuanceProperty {
 
   //enum definition
 // Solidity enum definitions
@@ -12,7 +12,6 @@ enum IssuanceState {
     Initiated,
     Engageable,
     Cancelled,
-    PartialComplete,
     Complete
   }
 
@@ -36,12 +35,8 @@ function encode_IssuanceState(IssuanceState x) internal pure returns (int64) {
     return 3;
   }
 
-  if (x == IssuanceState.PartialComplete) {
-    return 4;
-  }
-
   if (x == IssuanceState.Complete) {
-    return 5;
+    return 4;
   }
   revert();
 }
@@ -67,10 +62,6 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
   }
 
   if (x == 4) {
-    return IssuanceState.PartialComplete;
-  }
-
-  if (x == 5) {
     return IssuanceState.Complete;
   }
   revert();
@@ -82,11 +73,14 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     uint256 issuanceId;
     uint256 instrumentId;
     address makerAddress;
-    uint256 issuanceCreation;
-    uint256 issuanceDue;
-    IssuanceData.IssuanceState issuanceState;
-    bytes issuanceProperties;
-    EngagementData.Data[] engagements;
+    uint256 issuanceCreationTimestamp;
+    uint256 issuanceDueTimestamp;
+    uint256 issuanceCancelTimestamp;
+    uint256 issuanceCompleteTimestamp;
+    uint256 completionRatio;
+    IssuanceProperty.IssuanceState issuanceState;
+    bytes issuanceCustomProperty;
+    EngagementProperty.Data[] engagements;
     Payable.Data[] payables;
   }
 
@@ -127,7 +121,7 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     returns (Data memory, uint) 
   {
     Data memory r;
-    uint[10] memory counters;
+    uint[13] memory counters;
     uint256 fieldId;
     ProtoBufRuntime.WireType wireType;
     uint256 bytesRead;
@@ -146,21 +140,30 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
         pointer += _read_makerAddress(pointer, bs, r, counters);
       }
       else if (fieldId == 4) {
-        pointer += _read_issuanceCreation(pointer, bs, r, counters);
+        pointer += _read_issuanceCreationTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 5) {
-        pointer += _read_issuanceDue(pointer, bs, r, counters);
+        pointer += _read_issuanceDueTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 6) {
-        pointer += _read_issuanceState(pointer, bs, r, counters);
+        pointer += _read_issuanceCancelTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 7) {
-        pointer += _read_issuanceProperties(pointer, bs, r, counters);
+        pointer += _read_issuanceCompleteTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 8) {
-        pointer += _read_engagements(pointer, bs, nil(), counters);
+        pointer += _read_completionRatio(pointer, bs, r, counters);
       }
       else if (fieldId == 9) {
+        pointer += _read_issuanceState(pointer, bs, r, counters);
+      }
+      else if (fieldId == 10) {
+        pointer += _read_issuanceCustomProperty(pointer, bs, r, counters);
+      }
+      else if (fieldId == 11) {
+        pointer += _read_engagements(pointer, bs, nil(), counters);
+      }
+      else if (fieldId == 12) {
         pointer += _read_payables(pointer, bs, nil(), counters);
       }
       
@@ -189,8 +192,8 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
 
     }
     pointer = offset;
-    r.engagements = new EngagementData.Data[](counters[8]);
-    r.payables = new Payable.Data[](counters[9]);
+    r.engagements = new EngagementProperty.Data[](counters[11]);
+    r.payables = new Payable.Data[](counters[12]);
 
     while (pointer < offset + sz) {
       (fieldId, wireType, bytesRead) = ProtoBufRuntime._decode_key(pointer, bs);
@@ -205,21 +208,30 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
         pointer += _read_makerAddress(pointer, bs, nil(), counters);
       }
       else if (fieldId == 4) {
-        pointer += _read_issuanceCreation(pointer, bs, nil(), counters);
+        pointer += _read_issuanceCreationTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 5) {
-        pointer += _read_issuanceDue(pointer, bs, nil(), counters);
+        pointer += _read_issuanceDueTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 6) {
-        pointer += _read_issuanceState(pointer, bs, nil(), counters);
+        pointer += _read_issuanceCancelTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 7) {
-        pointer += _read_issuanceProperties(pointer, bs, nil(), counters);
+        pointer += _read_issuanceCompleteTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 8) {
-        pointer += _read_engagements(pointer, bs, r, counters);
+        pointer += _read_completionRatio(pointer, bs, nil(), counters);
       }
       else if (fieldId == 9) {
+        pointer += _read_issuanceState(pointer, bs, nil(), counters);
+      }
+      else if (fieldId == 10) {
+        pointer += _read_issuanceCustomProperty(pointer, bs, nil(), counters);
+      }
+      else if (fieldId == 11) {
+        pointer += _read_engagements(pointer, bs, r, counters);
+      }
+      else if (fieldId == 12) {
         pointer += _read_payables(pointer, bs, r, counters);
       }
       else {
@@ -262,7 +274,7 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -289,7 +301,7 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -316,7 +328,7 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -339,11 +351,11 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_issuanceCreation(
+  function _read_issuanceCreationTimestamp(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -352,7 +364,7 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     if (isNil(r)) {
       counters[4] += 1;
     } else {
-      r.issuanceCreation = x;
+      r.issuanceCreationTimestamp = x;
       if (counters[4] > 0) counters[4] -= 1;
     }
     return sz;
@@ -366,11 +378,11 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_issuanceDue(
+  function _read_issuanceDueTimestamp(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -379,8 +391,89 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     if (isNil(r)) {
       counters[5] += 1;
     } else {
-      r.issuanceDue = x;
+      r.issuanceDueTimestamp = x;
       if (counters[5] > 0) counters[5] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
+  function _read_issuanceCancelTimestamp(
+    uint256 p, 
+    bytes memory bs, 
+    Data memory r, 
+    uint[13] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
+    if (isNil(r)) {
+      counters[6] += 1;
+    } else {
+      r.issuanceCancelTimestamp = x;
+      if (counters[6] > 0) counters[6] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
+  function _read_issuanceCompleteTimestamp(
+    uint256 p, 
+    bytes memory bs, 
+    Data memory r, 
+    uint[13] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
+    if (isNil(r)) {
+      counters[7] += 1;
+    } else {
+      r.issuanceCompleteTimestamp = x;
+      if (counters[7] > 0) counters[7] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
+  function _read_completionRatio(
+    uint256 p, 
+    bytes memory bs, 
+    Data memory r, 
+    uint[13] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
+    if (isNil(r)) {
+      counters[8] += 1;
+    } else {
+      r.completionRatio = x;
+      if (counters[8] > 0) counters[8] -= 1;
     }
     return sz;
   }
@@ -397,18 +490,18 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (int64 tmp, uint256 sz) = ProtoBufRuntime._decode_enum(p, bs);
-    IssuanceData.IssuanceState x = decode_IssuanceState(tmp);
+    IssuanceProperty.IssuanceState x = decode_IssuanceState(tmp);
     if (isNil(r)) {
-      counters[6] += 1;
+      counters[9] += 1;
     } else {
       r.issuanceState = x;
-      if(counters[6] > 0) counters[6] -= 1;
+      if(counters[9] > 0) counters[9] -= 1;
     }
     return sz;
   }
@@ -421,21 +514,21 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_issuanceProperties(
+  function _read_issuanceCustomProperty(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (bytes memory x, uint256 sz) = ProtoBufRuntime._decode_bytes(p, bs);
     if (isNil(r)) {
-      counters[7] += 1;
+      counters[10] += 1;
     } else {
-      r.issuanceProperties = x;
-      if (counters[7] > 0) counters[7] -= 1;
+      r.issuanceCustomProperty = x;
+      if (counters[10] > 0) counters[10] -= 1;
     }
     return sz;
   }
@@ -452,17 +545,17 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
-    (EngagementData.Data memory x, uint256 sz) = _decode_EngagementData(p, bs);
+    (EngagementProperty.Data memory x, uint256 sz) = _decode_EngagementProperty(p, bs);
     if (isNil(r)) {
-      counters[8] += 1;
+      counters[11] += 1;
     } else {
-      r.engagements[r.engagements.length - counters[8]] = x;
-      if (counters[8] > 0) counters[8] -= 1;
+      r.engagements[r.engagements.length - counters[11]] = x;
+      if (counters[11] > 0) counters[11] -= 1;
     }
     return sz;
   }
@@ -479,17 +572,17 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[10] memory counters
+    uint[13] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (Payable.Data memory x, uint256 sz) = _decode_Payable(p, bs);
     if (isNil(r)) {
-      counters[9] += 1;
+      counters[12] += 1;
     } else {
-      r.payables[r.payables.length - counters[9]] = x;
-      if (counters[9] > 0) counters[9] -= 1;
+      r.payables[r.payables.length - counters[12]] = x;
+      if (counters[12] > 0) counters[12] -= 1;
     }
     return sz;
   }
@@ -502,15 +595,15 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The decoded inner-struct
    * @return The number of bytes used to decode
    */
-  function _decode_EngagementData(uint256 p, bytes memory bs)
+  function _decode_EngagementProperty(uint256 p, bytes memory bs)
     internal 
     pure 
-    returns (EngagementData.Data memory, uint) 
+    returns (EngagementProperty.Data memory, uint) 
   {
     uint256 pointer = p;
     (uint256 sz, uint256 bytesRead) = ProtoBufRuntime._decode_varint(pointer, bs);
     pointer += bytesRead;
-    (EngagementData.Data memory r, ) = EngagementData._decode(pointer, bs, sz);
+    (EngagementProperty.Data memory r, ) = EngagementProperty._decode(pointer, bs, sz);
     return (r, sz + bytesRead);
   }
 
@@ -593,16 +686,37 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCreation, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCreationTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       5, 
       ProtoBufRuntime.WireType.LengthDelim, 
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceDue, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceDueTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       6, 
+      ProtoBufRuntime.WireType.LengthDelim, 
+      pointer, 
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCancelTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      7, 
+      ProtoBufRuntime.WireType.LengthDelim, 
+      pointer, 
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCompleteTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      8, 
+      ProtoBufRuntime.WireType.LengthDelim, 
+      pointer, 
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.completionRatio, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      9, 
       ProtoBufRuntime.WireType.Varint, 
       pointer, 
       bs
@@ -610,24 +724,24 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     int64 _enum_issuanceState = encode_IssuanceState(r.issuanceState);
     pointer += ProtoBufRuntime._encode_enum(_enum_issuanceState, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      7, 
+      10, 
       ProtoBufRuntime.WireType.LengthDelim, 
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_bytes(r.issuanceProperties, pointer, bs);
+    pointer += ProtoBufRuntime._encode_bytes(r.issuanceCustomProperty, pointer, bs);
     for(i = 0; i < r.engagements.length; i++) {
       pointer += ProtoBufRuntime._encode_key(
-        8, 
+        11, 
         ProtoBufRuntime.WireType.LengthDelim, 
         pointer, 
         bs)
       ;
-      pointer += EngagementData._encode_nested(r.engagements[i], pointer, bs);
+      pointer += EngagementProperty._encode_nested(r.engagements[i], pointer, bs);
     }
     for(i = 0; i < r.payables.length; i++) {
       pointer += ProtoBufRuntime._encode_key(
-        9, 
+        12, 
         ProtoBufRuntime.WireType.LengthDelim, 
         pointer, 
         bs)
@@ -682,10 +796,13 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     e += 1 + 23;
     e += 1 + 35;
     e += 1 + 35;
+    e += 1 + 35;
+    e += 1 + 35;
+    e += 1 + 35;
     e += 1 + ProtoBufRuntime._sz_enum(encode_IssuanceState(r.issuanceState));
-    e += 1 + ProtoBufRuntime._sz_lendelim(r.issuanceProperties.length);
+    e += 1 + ProtoBufRuntime._sz_lendelim(r.issuanceCustomProperty.length);
     for(i = 0; i < r.engagements.length; i++) {
-      e += 1 + ProtoBufRuntime._sz_lendelim(EngagementData._estimate(r.engagements[i]));
+      e += 1 + ProtoBufRuntime._sz_lendelim(EngagementProperty._estimate(r.engagements[i]));
     }
     for(i = 0; i < r.payables.length; i++) {
       e += 1 + ProtoBufRuntime._sz_lendelim(Payable._estimate(r.payables[i]));
@@ -703,20 +820,23 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     // output.issuanceId = input.issuanceId;
     // output.instrumentId = input.instrumentId;
     // output.makerAddress = input.makerAddress;
-    // output.issuanceCreation = input.issuanceCreation;
-    // output.issuanceDue = input.issuanceDue;
+    // output.issuanceCreationTimestamp = input.issuanceCreationTimestamp;
+    // output.issuanceDueTimestamp = input.issuanceDueTimestamp;
+    // output.issuanceCancelTimestamp = input.issuanceCancelTimestamp;
+    // output.issuanceCompleteTimestamp = input.issuanceCompleteTimestamp;
+    // output.completionRatio = input.completionRatio;
     // output.issuanceState = input.issuanceState;
-    // output.issuanceProperties = input.issuanceProperties;
+    // output.issuanceCustomProperty = input.issuanceCustomProperty;
 
     // output.engagements.length = input.engagements.length;
-    // for(uint256 i8 = 0; i8 < input.engagements.length; i8++) {
-    //   EngagementData.store(input.engagements[i8], output.engagements[i8]);
+    // for(uint256 i11 = 0; i11 < input.engagements.length; i11++) {
+    //   EngagementProperty.store(input.engagements[i11], output.engagements[i11]);
     // }
     
 
     // output.payables.length = input.payables.length;
-    // for(uint256 i9 = 0; i9 < input.payables.length; i9++) {
-    //   Payable.store(input.payables[i9], output.payables[i9]);
+    // for(uint256 i12 = 0; i12 < input.payables.length; i12++) {
+    //   Payable.store(input.payables[i12], output.payables[i12]);
     // }
     
 
@@ -729,11 +849,11 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @param self The in-memory struct
    * @param value The value to add
    */
-  function addEngagements(Data memory self, EngagementData.Data memory value) internal pure {
+  function addEngagements(Data memory self, EngagementProperty.Data memory value) internal pure {
     /**
      * First resize the array. Then add the new element to the end.
      */
-    EngagementData.Data[] memory tmp = new EngagementData.Data[](self.engagements.length + 1);
+    EngagementProperty.Data[] memory tmp = new EngagementProperty.Data[](self.engagements.length + 1);
     for (uint256 i = 0; i < self.engagements.length; i++) {
       tmp[i] = self.engagements[i];
     }
@@ -782,9 +902,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     }
   }
 }
-//library IssuanceData
+//library IssuanceProperty
 
-library EngagementData {
+library EngagementProperty {
 
   //enum definition
 // Solidity enum definitions
@@ -793,8 +913,7 @@ enum EngagementState {
     Initiated,
     Active,
     Cancelled,
-    Complete,
-    Delinquent
+    Complete
   }
 
 
@@ -819,10 +938,6 @@ function encode_EngagementState(EngagementState x) internal pure returns (int64)
 
   if (x == EngagementState.Complete) {
     return 4;
-  }
-
-  if (x == EngagementState.Delinquent) {
-    return 5;
   }
   revert();
 }
@@ -850,10 +965,6 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
   if (x == 4) {
     return EngagementState.Complete;
   }
-
-  if (x == 5) {
-    return EngagementState.Delinquent;
-  }
   revert();
 }
 
@@ -862,10 +973,12 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
   struct Data {
     uint256 engagementId;
     address takerAddress;
-    uint256 engagementCreation;
-    uint256 engagementDue;
-    EngagementData.EngagementState engagementState;
-    bytes customProperties;
+    uint256 engagementCreationTimestamp;
+    uint256 engagementDueTimestamp;
+    uint256 engagementCancelTimestamp;
+    uint256 engagementCompleteTimestamp;
+    EngagementProperty.EngagementState engagementState;
+    bytes engagementCustomProperty;
   }
 
   // Decoder section
@@ -905,7 +1018,7 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     returns (Data memory, uint) 
   {
     Data memory r;
-    uint[7] memory counters;
+    uint[9] memory counters;
     uint256 fieldId;
     ProtoBufRuntime.WireType wireType;
     uint256 bytesRead;
@@ -921,16 +1034,22 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
         pointer += _read_takerAddress(pointer, bs, r, counters);
       }
       else if (fieldId == 3) {
-        pointer += _read_engagementCreation(pointer, bs, r, counters);
+        pointer += _read_engagementCreationTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 4) {
-        pointer += _read_engagementDue(pointer, bs, r, counters);
+        pointer += _read_engagementDueTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 5) {
-        pointer += _read_engagementState(pointer, bs, r, counters);
+        pointer += _read_engagementCancelTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 6) {
-        pointer += _read_customProperties(pointer, bs, r, counters);
+        pointer += _read_engagementCompleteTimestamp(pointer, bs, r, counters);
+      }
+      else if (fieldId == 7) {
+        pointer += _read_engagementState(pointer, bs, r, counters);
+      }
+      else if (fieldId == 8) {
+        pointer += _read_engagementCustomProperty(pointer, bs, r, counters);
       }
       
       else {
@@ -974,7 +1093,7 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[9] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -1001,7 +1120,7 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[9] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -1024,11 +1143,11 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_engagementCreation(
+  function _read_engagementCreationTimestamp(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[9] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -1037,7 +1156,7 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     if (isNil(r)) {
       counters[3] += 1;
     } else {
-      r.engagementCreation = x;
+      r.engagementCreationTimestamp = x;
       if (counters[3] > 0) counters[3] -= 1;
     }
     return sz;
@@ -1051,11 +1170,11 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_engagementDue(
+  function _read_engagementDueTimestamp(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[9] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -1064,8 +1183,62 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     if (isNil(r)) {
       counters[4] += 1;
     } else {
-      r.engagementDue = x;
+      r.engagementDueTimestamp = x;
       if (counters[4] > 0) counters[4] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
+  function _read_engagementCancelTimestamp(
+    uint256 p, 
+    bytes memory bs, 
+    Data memory r, 
+    uint[9] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
+    if (isNil(r)) {
+      counters[5] += 1;
+    } else {
+      r.engagementCancelTimestamp = x;
+      if (counters[5] > 0) counters[5] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
+  function _read_engagementCompleteTimestamp(
+    uint256 p, 
+    bytes memory bs, 
+    Data memory r, 
+    uint[9] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
+    if (isNil(r)) {
+      counters[6] += 1;
+    } else {
+      r.engagementCompleteTimestamp = x;
+      if (counters[6] > 0) counters[6] -= 1;
     }
     return sz;
   }
@@ -1082,18 +1255,18 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[9] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (int64 tmp, uint256 sz) = ProtoBufRuntime._decode_enum(p, bs);
-    EngagementData.EngagementState x = decode_EngagementState(tmp);
+    EngagementProperty.EngagementState x = decode_EngagementState(tmp);
     if (isNil(r)) {
-      counters[5] += 1;
+      counters[7] += 1;
     } else {
       r.engagementState = x;
-      if(counters[5] > 0) counters[5] -= 1;
+      if(counters[7] > 0) counters[7] -= 1;
     }
     return sz;
   }
@@ -1106,21 +1279,21 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_customProperties(
+  function _read_engagementCustomProperty(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[9] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (bytes memory x, uint256 sz) = ProtoBufRuntime._decode_bytes(p, bs);
     if (isNil(r)) {
-      counters[6] += 1;
+      counters[8] += 1;
     } else {
-      r.customProperties = x;
-      if (counters[6] > 0) counters[6] -= 1;
+      r.engagementCustomProperty = x;
+      if (counters[8] > 0) counters[8] -= 1;
     }
     return sz;
   }
@@ -1178,16 +1351,30 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementCreation, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementCreationTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       4, 
       ProtoBufRuntime.WireType.LengthDelim, 
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementDue, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementDueTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       5, 
+      ProtoBufRuntime.WireType.LengthDelim, 
+      pointer, 
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementCancelTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      6, 
+      ProtoBufRuntime.WireType.LengthDelim, 
+      pointer, 
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementCompleteTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      7, 
       ProtoBufRuntime.WireType.Varint, 
       pointer, 
       bs
@@ -1195,12 +1382,12 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     int64 _enum_engagementState = encode_EngagementState(r.engagementState);
     pointer += ProtoBufRuntime._encode_enum(_enum_engagementState, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      6, 
+      8, 
       ProtoBufRuntime.WireType.LengthDelim, 
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_bytes(r.customProperties, pointer, bs);
+    pointer += ProtoBufRuntime._encode_bytes(r.engagementCustomProperty, pointer, bs);
     return pointer - offset;
   }
   // nested encoder
@@ -1248,8 +1435,10 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     e += 1 + 23;
     e += 1 + 35;
     e += 1 + 35;
+    e += 1 + 35;
+    e += 1 + 35;
     e += 1 + ProtoBufRuntime._sz_enum(encode_EngagementState(r.engagementState));
-    e += 1 + ProtoBufRuntime._sz_lendelim(r.customProperties.length);
+    e += 1 + ProtoBufRuntime._sz_lendelim(r.engagementCustomProperty.length);
     return e;
   }
 
@@ -1262,10 +1451,12 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
   function store(Data memory input, Data storage output) internal {
     output.engagementId = input.engagementId;
     output.takerAddress = input.takerAddress;
-    output.engagementCreation = input.engagementCreation;
-    output.engagementDue = input.engagementDue;
+    output.engagementCreationTimestamp = input.engagementCreationTimestamp;
+    output.engagementDueTimestamp = input.engagementDueTimestamp;
+    output.engagementCancelTimestamp = input.engagementCancelTimestamp;
+    output.engagementCompleteTimestamp = input.engagementCompleteTimestamp;
     output.engagementState = input.engagementState;
-    output.customProperties = input.customProperties;
+    output.engagementCustomProperty = input.engagementCustomProperty;
 
   }
 
@@ -1293,4 +1484,4 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
     }
   }
 }
-//library EngagementData
+//library EngagementProperty

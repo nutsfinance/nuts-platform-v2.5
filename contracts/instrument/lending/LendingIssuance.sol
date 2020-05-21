@@ -54,7 +54,7 @@ contract LendingIssuance is Issuance {
     function initialize(bytes memory makerData) public override returns (bytes memory transfersData) {
         (_lendingToken, _collateralToken, _lendingAmount, _tenorDays, _collateralRatio, _interestRate) = abi.decode(makerData,
             (address, address, uint256, uint256, uint256, uint256));
-        require(_state == IssuanceState.Initiated, "LendingIssuance: Not in Initiated.");
+        require(_state == IssuanceProperty.IssuanceState.Initiated, "LendingIssuance: Not in Initiated.");
         // Validates parameters.
         require(_collateralToken != address(0x0), "LendingIssuance: Collateral token not set.");
         require(_lendingToken != address(0x0), "LendingIssuance: Lending token not set.");
@@ -77,7 +77,7 @@ contract LendingIssuance is Issuance {
         _interestAmount = _lendingAmount.mul(_tenorDays).mul(_interestRate).div(INTEREST_RATE_DECIMALS);
 
         // Updates to Engageable state
-        _state = IssuanceState.Engageable;
+        _state = IssuanceProperty.IssuanceState.Engageable;
 
         // Emits Scheduled Engagement Due event
         emit EventTimeScheduled(_issuanceId, 0, _engagementDueTimestamp, ENGAGEMENT_DUE_EVENT, "");
@@ -123,5 +123,20 @@ contract LendingIssuance is Issuance {
      */
     function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData) public override {
 
+    }
+
+    /**
+     * @dev Returns the issuance-specific data about the issuance.
+     */
+    function _getIssuanceCustomProperty() internal override view returns (bytes memory) {
+
+    }
+
+    /**
+     * @dev Returns the issuance-specific data about the engagement.
+     * @param engagementId ID of the engagement
+     */
+    function _getEngagementCustomProperty(uint256 engagementId) internal override view returns (bytes memory) {
+        
     }
 }

@@ -10,19 +10,21 @@ message IssuanceProperty {
         Initiated = 1;
         Engageable = 2;
         Cancelled = 3;
-        PartialComplete = 4;
-        Complete = 5;
+        Complete = 4;
     }
 
     .solidity.uint256 issuanceId = 1;
     .solidity.uint256 instrumentId = 2;
     .solidity.address makerAddress = 3;
-    .solidity.uint256 issuanceCreation = 4;     // Timestamp when issuance is created
-    .solidity.uint256 issuanceDue = 5;          // Timestamp when issuance is due (closed for new engagement)
-    IssuanceState issuanceState = 6;
-    bytes issuanceCustomProperty = 7;
-    repeated EngagementProperty engagements = 8;
-    repeated Payable payables = 9;
+    .solidity.uint256 issuanceCreationTimestamp = 4;    // Timestamp when issuance is created
+    .solidity.uint256 issuanceDueTimestamp = 5;         // Timestamp when issuance is due (closed for new engagement)
+    .solidity.uint256 issuanceCancelTimestamp = 6;      // Timestamp when issuance is cancelled
+    .solidity.uint256 issuanceCompleteTimestamp = 7;    // Timestamp when issuance is complete
+    .solidity.uint256 completionRatio = 8;              // [0, 10000]
+    IssuanceState issuanceState = 9;
+    bytes issuanceCustomProperty = 10;
+    repeated EngagementProperty engagements = 11;
+    repeated Payable payables = 12;
 }
 
 message EngagementProperty {
@@ -33,13 +35,14 @@ message EngagementProperty {
         Active = 2;
         Cancelled = 3;
         Complete = 4;
-        Delinquent = 5;
     }
 
     .solidity.uint256 engagementId = 1;
     .solidity.address takerAddress = 2;
-    .solidity.uint256 engagementCreation = 3;   // Timestamp when engagement is created
-    .solidity.uint256 engagementDue = 4;        // Timestamp when engaegment is due
-    EngagementState engagementState = 5;
-    bytes engagementCustomProperty = 6;
+    .solidity.uint256 engagementCreationTimestamp = 3;  // Timestamp when engagement is created
+    .solidity.uint256 engagementDueTimestamp = 4;       // Timestamp when engaegment is due
+    .solidity.uint256 engagementCancelTimestamp = 5;    // Timestamp when engagement is cancelled
+    .solidity.uint256 engagementCompleteTimestamp = 6;  // Timestamp when engagement is complete
+    EngagementState engagementState = 7;
+    bytes engagementCustomProperty = 8;
 }

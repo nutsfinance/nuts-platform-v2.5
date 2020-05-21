@@ -9,5 +9,5 @@ message Payable {
     .solidity.address claimorAddress = 4;
     .solidity.address tokenAddress = 5;
     .solidity.uint256 amount = 6;
-    .solidity.uint256 payableDue = 7;       // Timestamp when the payable is due
+    .solidity.uint256 payableDueTimestamp = 7;       // Timestamp when the payable is due
 }

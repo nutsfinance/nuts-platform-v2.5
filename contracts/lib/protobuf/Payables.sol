@@ -7,13 +7,13 @@ library Payable {
 
   //struct definition
   struct Data {
-    uint256 id;
+    uint256 payableId;
     uint256 engagementId;
     address obligatorAddress;
     address claimorAddress;
     address tokenAddress;
     uint256 amount;
-    uint256 dueTimestamp;
+    uint256 payableDueTimestamp;
   }
 
   // Decoder section
@@ -63,7 +63,7 @@ library Payable {
       (fieldId, wireType, bytesRead) = ProtoBufRuntime._decode_key(pointer, bs);
       pointer += bytesRead;
       if (fieldId == 1) {
-        pointer += _read_id(pointer, bs, r, counters);
+        pointer += _read_payableId(pointer, bs, r, counters);
       }
       else if (fieldId == 2) {
         pointer += _read_engagementId(pointer, bs, r, counters);
@@ -81,7 +81,7 @@ library Payable {
         pointer += _read_amount(pointer, bs, r, counters);
       }
       else if (fieldId == 7) {
-        pointer += _read_dueTimestamp(pointer, bs, r, counters);
+        pointer += _read_payableDueTimestamp(pointer, bs, r, counters);
       }
       
       else {
@@ -121,7 +121,7 @@ library Payable {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_id(
+  function _read_payableId(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
@@ -134,7 +134,7 @@ library Payable {
     if (isNil(r)) {
       counters[1] += 1;
     } else {
-      r.id = x;
+      r.payableId = x;
       if (counters[1] > 0) counters[1] -= 1;
     }
     return sz;
@@ -283,7 +283,7 @@ library Payable {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_dueTimestamp(
+  function _read_payableDueTimestamp(
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
@@ -296,7 +296,7 @@ library Payable {
     if (isNil(r)) {
       counters[7] += 1;
     } else {
-      r.dueTimestamp = x;
+      r.payableDueTimestamp = x;
       if (counters[7] > 0) counters[7] -= 1;
     }
     return sz;
@@ -341,7 +341,7 @@ library Payable {
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.id, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.payableId, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       2, 
       ProtoBufRuntime.WireType.LengthDelim, 
@@ -383,7 +383,7 @@ library Payable {
       pointer, 
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.dueTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.payableDueTimestamp, pointer, bs);
     return pointer - offset;
   }
   // nested encoder
@@ -443,13 +443,13 @@ library Payable {
    * @param output The in-storage struct
    */
   function store(Data memory input, Data storage output) internal {
-    output.id = input.id;
+    output.payableId = input.payableId;
     output.engagementId = input.engagementId;
     output.obligatorAddress = input.obligatorAddress;
     output.claimorAddress = input.claimorAddress;
     output.tokenAddress = input.tokenAddress;
     output.amount = input.amount;
-    output.dueTimestamp = input.dueTimestamp;
+    output.payableDueTimestamp = input.payableDueTimestamp;
 
   }
 
