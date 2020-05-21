@@ -5,6 +5,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
 import "../escrow/IIssuanceEscrow.sol";
+import "../lib/access/AdminAccess.sol";
 import "../lib/protobuf/Transfers.sol";
 import "../lib/protobuf/Payables.sol";
 import "../lib/protobuf/IssuanceData.sol";
@@ -13,30 +14,28 @@ import "./Instrument.sol";
 /**
  * @title Base class for issuance.
  */
-abstract contract Issuance {
+abstract contract Issuance is AdminAccess {
     using EnumerableSet for EnumerableSet.UintSet;
+
+    /*******************************************************
+     * Timer Oracle related events.
+     *******************************************************/
 
     /**
      * @dev The event used to schedule contract events after specific time.
-     * @param issuanceId The id of the issuance
-     * @param engagementId The id of the engagement
-     * @param timestamp After when the issuance should be notified
-     * @param eventName The name of the custom event
-     * @param eventData The payload the custom event
      */
     event EventTimeScheduled(uint256 indexed issuanceId, uint256 indexed engagementId, uint256 timestamp,
         bytes32 eventName, bytes eventData);
 
     /**
      * @dev The event used to schedule contract events after specific block.
-     * @param issuanceId The id of the issuance
-     * @param engagementId The id of the engagement
-     * @param blockNumber After which block the issuance should be notified
-     * @param eventName The name of the custom event
-     * @param eventPayload The payload the custom event
      */
     event EventBlockScheduled(uint256 indexed issuanceId, uint256 indexed engagementId, uint256 blockNumber,
         bytes32 eventName, bytes eventPayload);
+
+    /*******************************************************
+     * Issuance lifecycle related events.
+     *******************************************************/
 
     event IssuanceCreated(uint256 indexed issuanceId, address indexed makerAddress, uint256 issuanceDueTimestamp);
 
@@ -44,54 +43,46 @@ abstract contract Issuance {
 
     event IssuanceComplete(uint256 indexed issuanceId);
 
+    /*******************************************************
+     * Engagement lifecycle related events.
+     *******************************************************/
+
     event EngagementCreated (uint256 indexed issuanceId, uint256 indexed engagementId, address indexed takerAddress);
 
     event EngagementCancelled(uint256 indexed issuanceId, uint256 indexed engagementId);
 
     event EngagementComplete(uint256 indexed issuanceId, uint256 indexed engagementId);
 
-
-    /**
-     * @dev Asset is transferred.
-     */
-    event AssetTransferred(uint256 indexed issuanceId, uint256 indexed engagementId, Transfer.TransferType transferType,
-        address fromAddress, address toAddress, address tokenAddress, uint256 amount, bytes32 action);
+    /*******************************************************
+     * Payable lifecycle related events.
+     *******************************************************/
 
     /**
      * @dev The event used to track the creation of a new payable.
-     * @param issuanceId The id of the issuance
-     * @param itemId The id of the payable
-     * @param engagementId The id of the engagement
-     * @param obligatorAddress The obligator of the payable
-     * @param claimorAddress The claimor of the payable
-     * @param tokenAddress The asset type of the payable
-     * @param amount The asset amount of the payable
-     * @param dueTimestamp When is the payable due
      */
     event PayableCreated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 indexed engagementId, address obligatorAddress,
         address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp);
 
     /**
      * @dev The event used to track the payment of a payable
-     * @param issuanceId The id of the issuance
-     * @param itemId The id of the payable
      */
     event PayablePaid(uint256 indexed issuanceId, uint256 indexed itemId);
 
     /**
      * @dev The event used to track the due of a payable
-     * @param issuanceId The id of the issuance
-     * @param itemId The id of the payable
      */
     event PayableDue(uint256 indexed issuanceId, uint256 indexed itemId);
 
     /**
      * @dev The event used to track the update of an existing payable
-     * @param issuanceId The id of the issuance
-     * @param itemId The id of the payable
-     * @param reinitiatedTo The target payable if the current one is reinitiated
      */
     event PayableReinitiated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 reinitiatedTo);
+
+    /**
+     * @dev Asset is transferred.
+     */
+    event AssetTransferred(uint256 indexed issuanceId, uint256 indexed engagementId, Transfer.TransferType transferType,
+        address fromAddress, address toAddress, address tokenAddress, uint256 amount, bytes32 action);
 
     // Common scheduled events
     bytes32 internal constant ISSUANCE_DUE_EVENT = "issuance_due";

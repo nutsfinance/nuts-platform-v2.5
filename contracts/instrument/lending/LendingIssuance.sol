@@ -84,10 +84,10 @@ contract LendingIssuance is Issuance {
     }
 
     /**
-     * @dev Initializes the issuance.
+     * @dev Initializes the issuance. Only admin(Instrument Manager) can call this method.
      * @return transfersData Asset transfer actions.
      */
-    function initialize() public override returns (bytes memory transfersData) {
+    function initialize() public override onlyAdmin returns (bytes memory transfersData) {
         require(_state == IssuanceProperty.IssuanceState.Initiated, "LendingIssuance: Not in Initiated.");
 
         // Updates to Engageable state
@@ -107,13 +107,13 @@ contract LendingIssuance is Issuance {
     }
 
     /**
-     * @dev Creates a new engagement for the issuance.
+     * @dev Creates a new engagement for the issuance. Only admin(Instrument Manager) can call this method.
      * @param takerAddress Address of the user who engages the issuance.
      * @return engagementId ID of the engagement.
      * @return transfersData Asset transfer actions.
      */
     function engage(address takerAddress, bytes memory /** takerData */)
-        public override returns (uint256 engagementId, bytes memory transfersData) {
+        public override onlyAdmin returns (uint256 engagementId, bytes memory transfersData) {
 
         require(_state == IssuanceProperty.IssuanceState.Engageable, "Issuance not Engageable");
         require(_loanState == LendingEngagementProperty.LoanState.LoanStateUnknown, "Already engaged");
@@ -187,20 +187,21 @@ contract LendingIssuance is Issuance {
 
     /**
      * @dev Process a custom event. This event could be targeted at an engagement or the whole issuance.
+     * Only admin(Instrument Manager) can call this method.
      * @param notifierAddress Address that notifies the custom event.
      * @param eventName Name of the custom event.
      * @return transfersData Asset transfer actions.
      */
     function processEvent(uint256 /** engagementId */, address notifierAddress, bytes32 eventName, bytes memory /** eventData */)
-        public override returns (bytes memory transfersData) {
+        public override onlyAdmin returns (bytes memory transfersData) {
          if (eventName == ISSUANCE_DUE_EVENT) {
-            return processIssuanceDue();
+            return _processIssuanceDue();
         } else if (eventName == ENGAGEMENT_DUE_EVENT) {
-            return processEngagementDue();
+            return _processEngagementDue();
         } else if (eventName == CANCEL_ISSUANCE_EVENT) {
-            return cancelIssuance(notifierAddress);
+            return _cancelIssuance(notifierAddress);
         } else if (eventName == REPAY_FULL_EVENT) {
-            return repayLendingEngagement(notifierAddress);
+            return _repayLendingEngagement(notifierAddress);
         } else {
             revert("Unknown event");
         }
@@ -209,7 +210,7 @@ contract LendingIssuance is Issuance {
     /**
      * @dev Processes the Issuance Due event.
      */
-    function processIssuanceDue() private returns (bytes memory transfersData) {
+    function _processIssuanceDue() private returns (bytes memory transfersData) {
         // Engagement Due will be processed only when:
         // 1. Issuance is in Engageable state, which means there is no Engagement. Otherwise the issuance is in Complete state.
         // 2. Issuance due timestamp is passed
@@ -236,7 +237,7 @@ contract LendingIssuance is Issuance {
     /**
      * @dev Processes the Engagement Due event.
      */
-    function processEngagementDue() private returns (bytes memory transfersData) {
+    function _processEngagementDue() private returns (bytes memory transfersData) {
         // Lending Engagement Due will be processed only when:
         // 1. Lending Issuance is in Complete state
         // 2. Lending Engagement is in Active State
@@ -270,7 +271,7 @@ contract LendingIssuance is Issuance {
      * @dev Cancels the lending issuance.
      * @param notifierAddress Address of the caller who cancels the issuance.
      */
-    function cancelIssuance(address notifierAddress) private returns (bytes memory transfersData) {
+    function _cancelIssuance(address notifierAddress) private returns (bytes memory transfersData) {
         // Cancel Issuance must be processed in Engageable state
         require(_state == IssuanceProperty.IssuanceState.Engageable, "Cancel issuance not engageable");
         // Only maker can cancel issuance
@@ -298,7 +299,7 @@ contract LendingIssuance is Issuance {
      * @dev Repays the issuance in full.
      * @param notifierAddress Address of the caller who repays the issuance.
      */
-    function repayLendingEngagement(address notifierAddress) private returns (bytes memory transfersData) {
+    function _repayLendingEngagement(address notifierAddress) private returns (bytes memory transfersData) {
         // Lending Engagement Due will be processed only when:
         // 1. Lending Issuance is in Complete state
         // 2. Lending Engagement is in Active State

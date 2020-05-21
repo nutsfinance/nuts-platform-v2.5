@@ -34,6 +34,10 @@ contract LendingInstrument is WhitelistInstrument {
     function createIssuance(uint256 issuanceId, address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
         public override returns (Issuance) {
 
-        return new LendingIssuance(address(this), issuanceId, issuanceEscrowAddress, makerAddress, makerData);
+        Issuance issuance = new LendingIssuance(address(this), issuanceId, issuanceEscrowAddress, makerAddress, makerData);
+        // Important: Grant admin role to Instrument Manager
+        issuance.grantRole(ADMIN_ROLE, msg.sender);
+
+        return issuance;
     }
 }
