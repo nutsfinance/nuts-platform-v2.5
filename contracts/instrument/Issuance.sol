@@ -140,10 +140,9 @@ abstract contract Issuance {
 
     /**
      * @dev Initializes the issuance.
-     * @param makerData Custom properties of the issuance.
      * @return transferData Asset transfer actions.
      */
-    function initialize(bytes memory makerData) public virtual returns (bytes memory transferData);
+    function initialize() public virtual returns (bytes memory transferData);
 
     /**
      * @dev Creates a new engagement for the issuance.

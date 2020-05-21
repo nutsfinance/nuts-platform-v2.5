@@ -48,16 +48,10 @@ contract LendingIssuance is Issuance {
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
-     */
-    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress)
-        Issuance(instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress) public {}
-
-    /**
-     * @dev Initializes the issuance.
      * @param makerData Custom properties of the issuance.
-     * @return transfersData Asset transfer actions.
      */
-    function initialize(bytes memory makerData) public override returns (bytes memory transfersData) {
+    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
+        Issuance(instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress) public {
         (_lendingToken, _collateralToken, _lendingAmount, _tenorDays, _collateralRatio, _interestRate) = abi.decode(makerData,
             (address, address, uint256, uint256, uint256, uint256));
         require(_state == IssuanceProperty.IssuanceState.Initiated, "LendingIssuance: Not in Initiated.");
@@ -72,24 +66,32 @@ contract LendingIssuance is Issuance {
             "LendingIssuance: Invalid interest rate.");
 
         // Validate principal token balance
-        IInstrumentEscrow instrumentEscrow = LendingInstrument(_instrumentAddress).getInstrumentEscrow();
-        uint256 principalBalance = instrumentEscrow.getTokenBalance(_makerAddress, _lendingToken);
-        require(principalBalance >= _lendingAmount, "LendingIssuance: Insufficient principal balance.");
+        // IInstrumentEscrow instrumentEscrow = LendingInstrument(_instrumentAddress).getInstrumentEscrow();
+        // uint256 principalBalance = instrumentEscrow.getTokenBalance(_makerAddress, _lendingToken);
+        // require(principalBalance >= _lendingAmount, "LendingIssuance: Insufficient principal balance.");
 
         // Sets common properties
         _dueTimestamp = now.add(ENGAGEMENT_DUE_DAYS);
-
-        // Sets lending properties
-        _interestAmount = _lendingAmount.mul(_tenorDays).mul(_interestRate).div(INTEREST_RATE_DECIMALS);
-
-        // Updates to Engageable state
-        _state = IssuanceProperty.IssuanceState.Engageable;
 
         // Scheduling Issuance Due event
         emit EventTimeScheduled(_issuanceId, 0, _dueTimestamp, ISSUANCE_DUE_EVENT, "");
 
         // Emits Issuance Created event
         emit IssuanceCreated(_issuanceId, _makerAddress, _dueTimestamp);
+
+        // Sets lending properties
+        _interestAmount = _lendingAmount.mul(_tenorDays).mul(_interestRate).div(INTEREST_RATE_DECIMALS);
+    }
+
+    /**
+     * @dev Initializes the issuance.
+     * @return transfersData Asset transfer actions.
+     */
+    function initialize() public override returns (bytes memory transfersData) {
+        require(_state == IssuanceProperty.IssuanceState.Initiated, "LendingIssuance: Not in Initiated.");
+
+        // Updates to Engageable state
+        _state = IssuanceProperty.IssuanceState.Engageable;
 
         // Transfers principal token
         // Principal token inbound transfer: Maker --> Maker
@@ -117,24 +119,22 @@ contract LendingIssuance is Issuance {
         require(_loanState == LendingEngagementProperty.LoanState.LoanStateUnknown, "Already engaged");
 
         // Calculate the collateral amount. Collateral is calculated at the time of engagement.
-        LendingInstrument instrument = LendingInstrument(_instrumentAddress);
-        IPriceOracle priceOracle = IPriceOracle(instrument.getPriceOracle());
-        (uint256 numerator, uint256 denominator) = priceOracle.getRate(_lendingToken, _collateralToken);
-        require(numerator > 0 && denominator > 0, "Exchange rate not found");
-        _collateralAmount = numerator.mul(_lendingAmount).mul(_collateralRatio)
-            .div(COLLATERAL_RATIO_DECIMALS).div(denominator);
+        IPriceOracle priceOracle = IPriceOracle(LendingInstrument(_instrumentAddress).getPriceOracle());
+        _collateralAmount = priceOracle.getOutputAmount(_lendingToken, _collateralToken,
+            _lendingAmount.mul(_collateralRatio), COLLATERAL_RATIO_DECIMALS);
 
         // Validates collateral balance
-        uint256 collateralBalance = instrument.getInstrumentEscrow().getTokenBalance(takerAddress, _collateralToken);
-        require(collateralBalance >= _collateralAmount, "Insufficient collateral balance");
+        // uint256 collateralBalance = instrument.getInstrumentEscrow().getTokenBalance(takerAddress, _collateralToken);
+        // require(collateralBalance >= _collateralAmount, "Insufficient collateral balance");
 
         // Set common engagement property
+        uint256 engagementDueTimestamp = now.add(_tenorDays * 1 days);
         _engagementSet.add(ENGAGEMENT_ID);
         EngagementProperty.Data memory engagement = EngagementProperty.Data({
             engagementId: ENGAGEMENT_ID,
             takerAddress: takerAddress,
             engagementCreationTimestamp: now,
-            engagementDueTimestamp: now.add(_tenorDays * 1 days),
+            engagementDueTimestamp: engagementDueTimestamp,
             engagementCancelTimestamp: 0,
             engagementCompleteTimestamp: 0,
             engagementState: EngagementProperty.EngagementState.Active,
@@ -150,7 +150,7 @@ contract LendingIssuance is Issuance {
         _loanState = LendingEngagementProperty.LoanState.Unpaid;
 
         // Scheduling Lending Engagement Due event
-        emit EventTimeScheduled(_issuanceId, ENGAGEMENT_ID, now.add(_tenorDays * 1 days), ENGAGEMENT_DUE_EVENT, "");
+        emit EventTimeScheduled(_issuanceId, ENGAGEMENT_ID, engagementDueTimestamp, ENGAGEMENT_DUE_EVENT, "");
 
         // Emits Engagement Created event
         emit EngagementCreated(_issuanceId, ENGAGEMENT_ID, takerAddress);
@@ -161,10 +161,10 @@ contract LendingIssuance is Issuance {
             _collateralToken, _collateralAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Inbound, takerAddress, takerAddress,
             _collateralToken, _collateralAmount, "Collateral in");
-       
+
         // Create payable 2: Custodian --> Taker
         _createPayable(2, ENGAGEMENT_ID, address(_issuanceEscrow), takerAddress, _collateralToken,
-            _collateralAmount, now.add(_tenorDays * 1 days));
+            _collateralAmount, engagementDueTimestamp);
 
         // Principal token outbound transfer: Maker --> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _makerAddress, takerAddress,
@@ -173,12 +173,12 @@ contract LendingIssuance is Issuance {
             _lendingToken, _lendingAmount, "Principal out");
 
         // Create payable 3: Taker --> Maker
-        _createPayable(3, ENGAGEMENT_ID, takerAddress, _makerAddress, _lendingToken, _lendingAmount, now.add(_tenorDays * 1 days));
+        _createPayable(3, ENGAGEMENT_ID, takerAddress, _makerAddress, _lendingToken, _lendingAmount, engagementDueTimestamp);
 
         // Create payable 4: Taker --> Maker
-        _createPayable(4, ENGAGEMENT_ID, takerAddress, _makerAddress, _lendingToken, _interestAmount, now.add(_tenorDays * 1 days));
-        
-        // Mark payable 1 as reinitiated by payable 4
+        _createPayable(4, ENGAGEMENT_ID, takerAddress, _makerAddress, _lendingToken, _interestAmount, engagementDueTimestamp);
+
+        // Mark payable 1 as reinitiated by payable 3
         _reinitiatePayable(1, 3);
 
         engagementId = ENGAGEMENT_ID;
@@ -187,13 +187,11 @@ contract LendingIssuance is Issuance {
 
     /**
      * @dev Process a custom event. This event could be targeted at an engagement or the whole issuance.
-     * @param engagementId ID of the engagement. Not useful if the event is targetted at issuance.
      * @param notifierAddress Address that notifies the custom event.
      * @param eventName Name of the custom event.
-     * @param eventData Custom properties of the custom event.
      * @return transfersData Asset transfer actions.
      */
-    function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData)
+    function processEvent(uint256 /** engagementId */, address notifierAddress, bytes32 eventName, bytes memory /** eventData */)
         public override returns (bytes memory transfersData) {
          if (eventName == ISSUANCE_DUE_EVENT) {
             return processIssuanceDue();
