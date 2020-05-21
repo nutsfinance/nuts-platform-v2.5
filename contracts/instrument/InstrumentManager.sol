@@ -246,7 +246,7 @@ contract InstrumentManager is IInstrumentManager {
             }
 
             emit TokenTransferred(issuanceId, transfer.transferType, transfer.fromAddress, transfer.toAddress,
-                transfer.tokenAddress, transfer.amount, transfer.action);
+                transfer.tokenAddress, transfer.amount);
         }
     }
 }

@@ -23,7 +23,7 @@ abstract contract IInstrumentManager {
      * @dev Token is transferred.
      */
     event TokenTransferred(uint256 indexed issuanceId, Transfer.TransferType transferType, address fromAddress,
-        address toAddress, address tokenAddress, uint256 amount, bytes32 action);
+        address toAddress, address tokenAddress, uint256 amount);
 
     /**
      * @dev Deactivates the instrument. Once deactivated, the instrument cannot create new issuance,

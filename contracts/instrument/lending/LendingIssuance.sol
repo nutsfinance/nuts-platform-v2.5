@@ -93,11 +93,9 @@ contract LendingIssuance is Issuance {
 
         // Transfers principal token
         // Principal token inbound transfer: Maker --> Maker
-        Transfers.Data memory transfers = Transfers.Data(
-            new Transfer.Data[](1)
-        );
+        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Inbound, _makerAddress, _makerAddress,
-            _lendingToken, _lendingAmount, "Principal in");
+            _lendingToken, _lendingAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Inbound, _makerAddress, _makerAddress,
             _lendingToken, _lendingAmount, "Principal in");
         transfersData = Transfers.encode(transfers);
@@ -157,12 +155,10 @@ contract LendingIssuance is Issuance {
         // Emits Engagement Created event
         emit EngagementCreated(_issuanceId, ENGAGEMENT_ID, takerAddress);
 
-        Transfers.Data memory transfers = Transfers.Data(
-            new Transfer.Data[](2)
-        );
+        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
         // Collateral token inbound transfer: Taker -> Taker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Inbound, takerAddress, takerAddress,
-            _collateralToken, _collateralAmount, "Collateral in");
+            _collateralToken, _collateralAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Inbound, takerAddress, takerAddress,
             _collateralToken, _collateralAmount, "Collateral in");
        
@@ -172,7 +168,7 @@ contract LendingIssuance is Issuance {
 
         // Principal token outbound transfer: Maker --> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _makerAddress, takerAddress,
-            _lendingToken, _lendingAmount, "Principal out");
+            _lendingToken, _lendingAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _makerAddress, takerAddress,
             _lendingToken, _lendingAmount, "Principal out");
 
@@ -226,12 +222,10 @@ contract LendingIssuance is Issuance {
         _completeTimestamp = now;
         emit IssuanceComplete(_issuanceId);
 
-        Transfers.Data memory transfers = Transfers.Data(
-            new Transfer.Data[](1)
-        );
+        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Principal token outbound transfer: Maler --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _makerAddress, _makerAddress,
-            _lendingToken, _lendingAmount, "Principal out");
+            _lendingToken, _lendingAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _makerAddress, _makerAddress,
             _lendingToken, _lendingAmount, "Principal out");
 
@@ -265,7 +259,7 @@ contract LendingIssuance is Issuance {
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Collateral token outbound transfer: Taker --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, engagement.takerAddress, _makerAddress,
-            _collateralToken, _collateralAmount, "Collateral out");
+            _collateralToken, _collateralAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, engagement.takerAddress, _makerAddress,
             _collateralToken, _collateralAmount, "Collateral out");
 
@@ -292,7 +286,7 @@ contract LendingIssuance is Issuance {
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Principal token outbound transfer: Makr --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _makerAddress, _makerAddress,
-            _lendingToken, _lendingAmount, "Principal out");
+            _lendingToken, _lendingAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _makerAddress, _makerAddress,
             _lendingToken, _lendingAmount, "Principal out");
 
@@ -336,14 +330,14 @@ contract LendingIssuance is Issuance {
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
         // Pricipal + Interest intra-instrument transfer: Taker -> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, engagement.takerAddress, _makerAddress,
-            _lendingToken, repayAmount, "Principal in");
+            _lendingToken, repayAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, engagement.takerAddress, _makerAddress,
             _lendingToken, _lendingAmount, "Principal transfer");
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, engagement.takerAddress, _makerAddress,
             _lendingToken, _interestAmount, "Interest transfer");
         // Collateral outbound transfer: Taker --> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, engagement.takerAddress, engagement.takerAddress,
-            _collateralToken, _collateralAmount, "Collateral out");
+            _collateralToken, _collateralAmount);
         emit AssetTransferred(_issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, engagement.takerAddress, engagement.takerAddress,
             _collateralToken, _collateralAmount, "Collateral out");
         transfersData = Transfers.encode(transfers);

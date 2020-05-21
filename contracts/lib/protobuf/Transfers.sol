@@ -74,7 +74,6 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     address toAddress;
     address tokenAddress;
     uint256 amount;
-    bytes32 action;
   }
 
   // Decoder section
@@ -114,7 +113,7 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     returns (Data memory, uint) 
   {
     Data memory r;
-    uint[7] memory counters;
+    uint[6] memory counters;
     uint256 fieldId;
     ProtoBufRuntime.WireType wireType;
     uint256 bytesRead;
@@ -137,9 +136,6 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
       }
       else if (fieldId == 5) {
         pointer += _read_amount(pointer, bs, r, counters);
-      }
-      else if (fieldId == 6) {
-        pointer += _read_action(pointer, bs, r, counters);
       }
       
       else {
@@ -183,7 +179,7 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[6] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -211,7 +207,7 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[6] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -238,7 +234,7 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[6] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -265,7 +261,7 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[6] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -292,7 +288,7 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     uint256 p, 
     bytes memory bs, 
     Data memory r, 
-    uint[7] memory counters
+    uint[6] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -303,33 +299,6 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     } else {
       r.amount = x;
       if (counters[5] > 0) counters[5] -= 1;
-    }
-    return sz;
-  }
-
-  /**
-   * @dev The decoder for reading a field
-   * @param p The offset of bytes array to start decode
-   * @param bs The bytes array to be decoded
-   * @param r The in-memory struct
-   * @param counters The counters for repeated fields
-   * @return The number of bytes decoded
-   */
-  function _read_action(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
-    uint[7] memory counters
-  ) internal pure returns (uint) {
-    /**
-     * if `r` is NULL, then only counting the number of fields.
-     */
-    (bytes32 x, uint256 sz) = ProtoBufRuntime._decode_sol_bytes32(p, bs);
-    if (isNil(r)) {
-      counters[6] += 1;
-    } else {
-      r.action = x;
-      if (counters[6] > 0) counters[6] -= 1;
     }
     return sz;
   }
@@ -403,13 +372,6 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.amount, pointer, bs);
-    pointer += ProtoBufRuntime._encode_key(
-      6, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
-      bs
-    );
-    pointer += ProtoBufRuntime._encode_sol_bytes32(r.action, pointer, bs);
     return pointer - offset;
   }
   // nested encoder
@@ -458,7 +420,6 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     e += 1 + 23;
     e += 1 + 23;
     e += 1 + 35;
-    e += 1 + 35;
     return e;
   }
 
@@ -474,7 +435,6 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
     output.toAddress = input.toAddress;
     output.tokenAddress = input.tokenAddress;
     output.amount = input.amount;
-    output.action = input.action;
 
   }
 
