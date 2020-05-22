@@ -84,8 +84,7 @@ contract LendingIssuance is IssuanceBase {
         emit IssuanceCreated(_issuanceProperty.issuanceId, _issuanceProperty.makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
         // Sets lending properties
-        _lip.interestAmount = _lip.lendingAmount
-            .mul(_lip.tenorDays).mul(_lip.interestRate).div(INTEREST_RATE_DECIMALS);
+        _lip.interestAmount = _lip.lendingAmount.mul(_lip.tenorDays).mul(_lip.interestRate).div(INTEREST_RATE_DECIMALS);
 
         // Updates to Engageable state
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
@@ -165,14 +164,16 @@ contract LendingIssuance is IssuanceBase {
         // Principal token outbound transfer: Maker --> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, takerAddress,
             _lip.lendingTokenAddress, _lip.lendingAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, takerAddress,
-            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+            _issuanceProperty.makerAddress, takerAddress, _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
 
         // Create payable 3: Taker --> Maker
-        _createPayable(3, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.lendingAmount, engagement.engagementDueTimestamp);
+        _createPayable(3, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress,
+            _lip.lendingAmount, engagement.engagementDueTimestamp);
 
         // Create payable 4: Taker --> Maker
-        _createPayable(4, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.interestAmount, engagement.engagementDueTimestamp);
+        _createPayable(4, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress,
+            _lip.interestAmount, engagement.engagementDueTimestamp);
 
         // Mark payable 1 as reinitiated by payable 3
         _reinitiatePayable(1, 3);
@@ -210,7 +211,8 @@ contract LendingIssuance is IssuanceBase {
         // Engagement Due will be processed only when:
         // 1. Issuance is in Engageable state, which means there is no Engagement. Otherwise the issuance is in Complete state.
         // 2. Issuance due timestamp is passed
-        if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Engageable || now < _issuanceProperty.issuanceDueTimestamp) return new bytes(0);
+        if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Engageable
+            || now < _issuanceProperty.issuanceDueTimestamp) return new bytes(0);
 
         // The issuance is now complete
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
@@ -221,8 +223,8 @@ contract LendingIssuance is IssuanceBase {
         // Principal token outbound transfer: Maler --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _lip.lendingTokenAddress, _lip.lendingAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
-            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+            _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -255,8 +257,8 @@ contract LendingIssuance is IssuanceBase {
         // Collateral token outbound transfer: Taker --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, engagement.takerAddress, _issuanceProperty.makerAddress,
             _lip.collateralTokenAddress, _lep.collateralAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lip.collateralTokenAddress, _lep.collateralAmount, "Collateral out");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+            engagement.takerAddress, _issuanceProperty.makerAddress, _lip.collateralTokenAddress, _lep.collateralAmount, "Collateral out");
 
         // Mark payable 2 as paid
         _markPayableAsPaid(2);
@@ -282,8 +284,8 @@ contract LendingIssuance is IssuanceBase {
         // Principal token outbound transfer: Makr --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _lip.lendingTokenAddress, _lip.lendingAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
-            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+            _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -326,15 +328,15 @@ contract LendingIssuance is IssuanceBase {
         // Pricipal + Interest intra-instrument transfer: Taker -> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, engagement.takerAddress, _issuanceProperty.makerAddress,
             _lip.lendingTokenAddress, repayAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal transfer");
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lip.lendingTokenAddress, _lip.interestAmount, "Interest transfer");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument,
+            engagement.takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.lendingAmount, "Principal transfer");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument,
+            engagement.takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.interestAmount, "Interest transfer");
         // Collateral outbound transfer: Taker --> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, engagement.takerAddress, engagement.takerAddress,
             _lip.collateralTokenAddress, _lep.collateralAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, engagement.takerAddress, engagement.takerAddress,
-            _lip.collateralTokenAddress, _lep.collateralAmount, "Collateral out");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+            engagement.takerAddress, engagement.takerAddress, _lip.collateralTokenAddress, _lep.collateralAmount, "Collateral out");
         transfersData = Transfers.encode(transfers);
 
         // Mark payable 2 as paid
