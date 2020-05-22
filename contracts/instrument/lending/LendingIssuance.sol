@@ -29,11 +29,10 @@ contract LendingIssuance is IssuanceBase {
     uint256 internal constant INTEREST_RATE_MAX = 50000; // Maximum interest rate is 5.0000%
 
     // Lending issuance properties
-    LendingIssuanceProperty.Data private _lendingIssuanceProperty;
+    LendingIssuanceProperty.Data private _lip;
 
     // Since it's a 1 to 1 lending, we could have at most one engagement
-    EngagementProperty.Data private _engagementProperty;
-    LendingEngagementProperty.Data private _lendingEngagementProperty;
+    LendingEngagementProperty.Data private _lep;
 
     // Lending custom events
     bytes32 internal constant REPAY_FULL_EVENT = "repay_full";
@@ -54,26 +53,26 @@ contract LendingIssuance is IssuanceBase {
 
         IssuanceBase._initialize(instrumentManagerAddress, instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress);
 
-        (_lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.collateralTokenAddress, _lendingIssuanceProperty.lendingAmount,
-            _lendingIssuanceProperty.tenorDays, _lendingIssuanceProperty.collateralRatio, _lendingIssuanceProperty.interestRate) = abi
+        (_lip.lendingTokenAddress, _lip.collateralTokenAddress, _lip.lendingAmount,
+            _lip.tenorDays, _lip.collateralRatio, _lip.interestRate) = abi
             .decode(makerData, (address, address, uint256, uint256, uint256, uint256));
 
         // Validates parameters
-        require(_lendingIssuanceProperty.collateralTokenAddress != address(0x0), "LendingIssuance: Collateral token not set.");
-        require(_lendingIssuanceProperty.lendingTokenAddress != address(0x0), "LendingIssuance: Lending token not set.");
-        require(_lendingIssuanceProperty.lendingAmount > 0, "Lending amount not set");
-        require(_lendingIssuanceProperty.tenorDays >= TENOR_DAYS_MIN && _lendingIssuanceProperty.tenorDays <= TENOR_DAYS_MAX,
+        require(_lip.collateralTokenAddress != address(0x0), "LendingIssuance: Collateral token not set.");
+        require(_lip.lendingTokenAddress != address(0x0), "LendingIssuance: Lending token not set.");
+        require(_lip.lendingAmount > 0, "Lending amount not set");
+        require(_lip.tenorDays >= TENOR_DAYS_MIN && _lip.tenorDays <= TENOR_DAYS_MAX,
             "LendingIssuance: Invalid tenor days.");
-        require(_lendingIssuanceProperty.collateralRatio >= COLLATERAL_RATIO_MIN &&
-            _lendingIssuanceProperty.collateralRatio <= COLLATERAL_RATIO_MAX,
+        require(_lip.collateralRatio >= COLLATERAL_RATIO_MIN &&
+            _lip.collateralRatio <= COLLATERAL_RATIO_MAX,
             "LendingIssuance: Invalid collateral ratio.");
-        require(_lendingIssuanceProperty.interestRate >= INTEREST_RATE_MIN && _lendingIssuanceProperty.interestRate <= INTEREST_RATE_MAX,
+        require(_lip.interestRate >= INTEREST_RATE_MIN && _lip.interestRate <= INTEREST_RATE_MAX,
             "LendingIssuance: Invalid interest rate.");
 
         // Validate principal token balance
         // IInstrumentEscrow instrumentEscrow = LendingInstrument(_instrumentAddress).getInstrumentEscrow();
-        // uint256 principalBalance = instrumentEscrow.getTokenBalance(_issuanceProperty.makerAddress, _lendingIssuanceProperty.lendingTokenAddress);
-        // require(principalBalance >= _lendingIssuanceProperty.lendingAmount, "LendingIssuance: Insufficient principal balance.");
+        // uint256 principalBalance = instrumentEscrow.getTokenBalance(_issuanceProperty.makerAddress, _lip.lendingTokenAddress);
+        // require(principalBalance >= _lip.lendingAmount, "LendingIssuance: Insufficient principal balance.");
 
         // Sets common properties
         _issuanceProperty.issuanceDueTimestamp = now.add(ENGAGEMENT_DUE_DAYS);
@@ -85,8 +84,8 @@ contract LendingIssuance is IssuanceBase {
         emit IssuanceCreated(_issuanceProperty.issuanceId, _issuanceProperty.makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
         // Sets lending properties
-        _lendingIssuanceProperty.interestAmount = _lendingIssuanceProperty.lendingAmount
-            .mul(_lendingIssuanceProperty.tenorDays).mul(_lendingIssuanceProperty.interestRate).div(INTEREST_RATE_DECIMALS);
+        _lip.interestAmount = _lip.lendingAmount
+            .mul(_lip.tenorDays).mul(_lip.interestRate).div(INTEREST_RATE_DECIMALS);
 
         // Updates to Engageable state
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
@@ -95,14 +94,14 @@ contract LendingIssuance is IssuanceBase {
         // Principal token inbound transfer: Maker --> Maker
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Inbound, _issuanceProperty.makerAddress,
-            _issuanceProperty.makerAddress, _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount);
+            _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.lendingAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Inbound, _issuanceProperty.makerAddress,
-            _issuanceProperty.makerAddress, _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount, "Principal in");
+            _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.lendingAmount, "Principal in");
         transfersData = Transfers.encode(transfers);
 
         // Create payable 1: Custodian --> Maker
-        _createPayable(1, ENGAGEMENT_ID, address(_issuanceEscrow), _issuanceProperty.makerAddress, _lendingIssuanceProperty.lendingTokenAddress,
-            _lendingIssuanceProperty.lendingAmount, _issuanceProperty.issuanceDueTimestamp);
+        _createPayable(1, ENGAGEMENT_ID, address(_issuanceEscrow), _issuanceProperty.makerAddress, _lip.lendingTokenAddress,
+            _lip.lendingAmount, _issuanceProperty.issuanceDueTimestamp);
     }
 
     /**
@@ -115,24 +114,25 @@ contract LendingIssuance is IssuanceBase {
         public override onlyAdmin returns (uint256 engagementId, bytes memory transfersData) {
 
         require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Issuance not Engageable");
-        require(_engagementProperty.engagementId == 0, "Already engaged");
+        require(_engagementSet.length() == 0, "Already engaged");
 
         // Calculate the collateral amount. Collateral is calculated at the time of engagement.
-        IPriceOracle priceOracle = IPriceOracle(LendingInstrument(_instrumentAddress).getPriceOracle());
-        _lendingEngagementProperty.collateralAmount = priceOracle.getOutputAmount(_lendingIssuanceProperty.lendingTokenAddress,
-            _lendingIssuanceProperty.collateralTokenAddress, _lendingIssuanceProperty.lendingAmount.mul(_lendingIssuanceProperty.collateralRatio),
+        IPriceOracle priceOracle = LendingInstrument(_instrumentAddress).getPriceOracle();
+        _lep.collateralAmount = priceOracle.getOutputAmount(_lip.lendingTokenAddress,
+            _lip.collateralTokenAddress, _lip.lendingAmount.mul(_lip.collateralRatio),
             COLLATERAL_RATIO_DECIMALS);
 
         // Validates collateral balance
-        // uint256 collateralBalance = instrument.getInstrumentEscrow().getTokenBalance(takerAddress, _lendingIssuanceProperty.collateralTokenAddress);
-        // require(collateralBalance >= _lendingEngagementProperty.collateralAmount, "Insufficient collateral balance");
+        // uint256 collateralBalance = instrument.getInstrumentEscrow().getTokenBalance(takerAddress, _lip.collateralTokenAddress);
+        // require(collateralBalance >= _lep.collateralAmount, "Insufficient collateral balance");
 
         // Set common engagement property
-        _engagementProperty.engagementId = ENGAGEMENT_ID;
-        _engagementProperty.takerAddress = takerAddress;
-        _engagementProperty.engagementCreationTimestamp = now;
-        _engagementProperty.engagementDueTimestamp = now.add(_lendingIssuanceProperty.tenorDays * 1 days);
-        _engagementProperty.engagementState = EngagementProperty.EngagementState.Active;
+        EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
+        engagement.engagementId = ENGAGEMENT_ID;
+        engagement.takerAddress = takerAddress;
+        engagement.engagementCreationTimestamp = now;
+        engagement.engagementDueTimestamp = now.add(_lip.tenorDays * 1 days);
+        engagement.engagementState = EngagementProperty.EngagementState.Active;
 
         // Set common issuance property
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
@@ -140,13 +140,12 @@ contract LendingIssuance is IssuanceBase {
         emit IssuanceComplete(_issuanceProperty.issuanceId);
 
         // Sets lending-specific engagement property
-        _lendingEngagementProperty.loanState = LendingEngagementProperty.LoanState.Unpaid;
+        _lep.loanState = LendingEngagementProperty.LoanState.Unpaid;
 
         _engagementSet.add(ENGAGEMENT_ID);
-        _engagements[ENGAGEMENT_ID] = _engagementProperty;
 
         // Scheduling Lending Engagement Due event
-        emit EventTimeScheduled(_issuanceProperty.issuanceId, ENGAGEMENT_ID, _engagementProperty.engagementDueTimestamp,
+        emit EventTimeScheduled(_issuanceProperty.issuanceId, ENGAGEMENT_ID, engagement.engagementDueTimestamp,
             ENGAGEMENT_DUE_EVENT, "");
 
         // Emits Engagement Created event
@@ -155,25 +154,25 @@ contract LendingIssuance is IssuanceBase {
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
         // Collateral token inbound transfer: Taker -> Taker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Inbound, takerAddress, takerAddress,
-            _lendingIssuanceProperty.collateralTokenAddress, _lendingEngagementProperty.collateralAmount);
+            _lip.collateralTokenAddress, _lep.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Inbound, takerAddress, takerAddress,
-            _lendingIssuanceProperty.collateralTokenAddress, _lendingEngagementProperty.collateralAmount, "Collateral in");
+            _lip.collateralTokenAddress, _lep.collateralAmount, "Collateral in");
 
         // Create payable 2: Custodian --> Taker
-        _createPayable(2, ENGAGEMENT_ID, address(_issuanceEscrow), takerAddress, _lendingIssuanceProperty.collateralTokenAddress,
-            _lendingEngagementProperty.collateralAmount, _engagementProperty.engagementDueTimestamp);
+        _createPayable(2, ENGAGEMENT_ID, address(_issuanceEscrow), takerAddress, _lip.collateralTokenAddress,
+            _lep.collateralAmount, engagement.engagementDueTimestamp);
 
         // Principal token outbound transfer: Maker --> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, takerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount);
+            _lip.lendingTokenAddress, _lip.lendingAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, takerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount, "Principal out");
+            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
 
         // Create payable 3: Taker --> Maker
-        _createPayable(3, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount, _engagementProperty.engagementDueTimestamp);
+        _createPayable(3, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.lendingAmount, engagement.engagementDueTimestamp);
 
         // Create payable 4: Taker --> Maker
-        _createPayable(4, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.interestAmount, _engagementProperty.engagementDueTimestamp);
+        _createPayable(4, ENGAGEMENT_ID, takerAddress, _issuanceProperty.makerAddress, _lip.lendingTokenAddress, _lip.interestAmount, engagement.engagementDueTimestamp);
 
         // Mark payable 1 as reinitiated by payable 3
         _reinitiatePayable(1, 3);
@@ -221,9 +220,9 @@ contract LendingIssuance is IssuanceBase {
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Principal token outbound transfer: Maler --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount);
+            _lip.lendingTokenAddress, _lip.lendingAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount, "Principal out");
+            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -243,21 +242,21 @@ contract LendingIssuance is IssuanceBase {
         if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Complete)  return new bytes(0);
         EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
         if (engagement.engagementState != EngagementProperty.EngagementState.Active ||
-            _lendingEngagementProperty.loanState == LendingEngagementProperty.LoanState.Unpaid ||
+            _lep.loanState == LendingEngagementProperty.LoanState.Unpaid ||
             now < engagement.engagementDueTimestamp) return new bytes(0);
 
         // The engagement is now complete
         engagement.engagementState = EngagementProperty.EngagementState.Complete;
         engagement.engagementCompleteTimestamp = now;
-        _lendingEngagementProperty.loanState = LendingEngagementProperty.LoanState.Delinquent;
+        _lep.loanState = LendingEngagementProperty.LoanState.Delinquent;
         emit EngagementComplete(_issuanceProperty.issuanceId, ENGAGEMENT_ID);
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Collateral token outbound transfer: Taker --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.collateralTokenAddress, _lendingEngagementProperty.collateralAmount);
+            _lip.collateralTokenAddress, _lep.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.collateralTokenAddress, _lendingEngagementProperty.collateralAmount, "Collateral out");
+            _lip.collateralTokenAddress, _lep.collateralAmount, "Collateral out");
 
         // Mark payable 2 as paid
         _markPayableAsPaid(2);
@@ -282,9 +281,9 @@ contract LendingIssuance is IssuanceBase {
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Principal token outbound transfer: Makr --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount);
+            _lip.lendingTokenAddress, _lip.lendingAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount, "Principal out");
+            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal out");
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -305,14 +304,14 @@ contract LendingIssuance is IssuanceBase {
         EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
         require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Complete, "Issuance not complete");
         require(engagement.engagementState == EngagementProperty.EngagementState.Active, "Engagement not active");
-        require(_lendingEngagementProperty.loanState == LendingEngagementProperty.LoanState.Unpaid, "Loan not unpaid");
+        require(_lep.loanState == LendingEngagementProperty.LoanState.Unpaid, "Loan not unpaid");
         require(now < engagement.engagementDueTimestamp, "Engagement due");
         require(notifierAddress == engagement.takerAddress, "Only taker can repay");
 
-        uint256 repayAmount = _lendingIssuanceProperty.lendingAmount + _lendingIssuanceProperty.interestAmount;
+        uint256 repayAmount = _lip.lendingAmount + _lip.interestAmount;
         // Validate principal token balance
         uint256 principalTokenBalance = InstrumentManagerInterface(_instrumentAddress).getInstrumentEscrow()
-            .getTokenBalance(engagement.takerAddress, _lendingIssuanceProperty.lendingTokenAddress);
+            .getTokenBalance(engagement.takerAddress, _lip.lendingTokenAddress);
         require(principalTokenBalance >= repayAmount, "Insufficient principal balance");
 
         // Sets Engagement common properties
@@ -321,21 +320,21 @@ contract LendingIssuance is IssuanceBase {
         emit EngagementComplete(_issuanceProperty.issuanceId, ENGAGEMENT_ID);
 
         // Emits Lending-specific Engagement property
-        _lendingEngagementProperty.loanState = LendingEngagementProperty.LoanState.Repaid;
+        _lep.loanState = LendingEngagementProperty.LoanState.Repaid;
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
         // Pricipal + Interest intra-instrument transfer: Taker -> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, repayAmount);
+            _lip.lendingTokenAddress, repayAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.lendingAmount, "Principal transfer");
+            _lip.lendingTokenAddress, _lip.lendingAmount, "Principal transfer");
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, engagement.takerAddress, _issuanceProperty.makerAddress,
-            _lendingIssuanceProperty.lendingTokenAddress, _lendingIssuanceProperty.interestAmount, "Interest transfer");
+            _lip.lendingTokenAddress, _lip.interestAmount, "Interest transfer");
         // Collateral outbound transfer: Taker --> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, engagement.takerAddress, engagement.takerAddress,
-            _lendingIssuanceProperty.collateralTokenAddress, _lendingEngagementProperty.collateralAmount);
+            _lip.collateralTokenAddress, _lep.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, engagement.takerAddress, engagement.takerAddress,
-            _lendingIssuanceProperty.collateralTokenAddress, _lendingEngagementProperty.collateralAmount, "Collateral out");
+            _lip.collateralTokenAddress, _lep.collateralAmount, "Collateral out");
         transfersData = Transfers.encode(transfers);
 
         // Mark payable 2 as paid
@@ -350,13 +349,13 @@ contract LendingIssuance is IssuanceBase {
      * @dev Returns the issuance-specific data about the issuance.
      */
     function _getIssuanceCustomProperty() internal override view returns (bytes memory) {
-        return LendingIssuanceProperty.encode(_lendingIssuanceProperty);
+        return LendingIssuanceProperty.encode(_lip);
     }
 
     /**
      * @dev Returns the issuance-specific data about the engagement.
      */
     function _getEngagementCustomProperty(uint256 /** engagementId */) internal override view returns (bytes memory) {
-        return LendingEngagementProperty.encode(_lendingEngagementProperty);
+        return LendingEngagementProperty.encode(_lep);
     }
 }
