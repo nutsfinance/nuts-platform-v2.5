@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-interface IPriceOracle {
+interface PriceOracleInterface {
     /**
      * @dev Get the exchange rate between two tokens.
      * Note: Output token price / Input token price = numberator/denominator.

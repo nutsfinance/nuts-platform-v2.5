@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../../lib/protobuf/Transfers.sol";
 import "../../lib/protobuf/IssuanceData.sol";
 import "../../lib/protobuf/LendingData.sol";
-import "../../lib/priceoracle/IPriceOracle.sol";
+import "../../lib/priceoracle/PriceOracleInterface.sol";
 import "../../escrow/InstrumentEscrowInterface.sol";
 import "../IssuanceBase.sol";
 import "./LendingInstrument.sol";
@@ -51,6 +51,7 @@ contract LendingIssuance is IssuanceBase {
         address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
         public override returns (bytes memory transfersData) {
 
+        require(LendingInstrument(instrumentAddress).isMakerAllowed(makerAddress), "LendingIssuance: Maker not allowed.");
         IssuanceBase._initialize(instrumentManagerAddress, instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress);
 
         (_lip.lendingTokenAddress, _lip.collateralTokenAddress, _lip.lendingAmount,
@@ -70,9 +71,8 @@ contract LendingIssuance is IssuanceBase {
             "LendingIssuance: Invalid interest rate.");
 
         // Validate principal token balance
-        // IInstrumentEscrow instrumentEscrow = LendingInstrument(_instrumentAddress).getInstrumentEscrow();
-        // uint256 principalBalance = instrumentEscrow.getTokenBalance(_issuanceProperty.makerAddress, _lip.lendingTokenAddress);
-        // require(principalBalance >= _lip.lendingAmount, "LendingIssuance: Insufficient principal balance.");
+        uint256 principalBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(_issuanceProperty.makerAddress, _lip.lendingTokenAddress);
+        require(principalBalance >= _lip.lendingAmount, "LendingIssuance: Insufficient principal balance.");
 
         // Sets common properties
         _issuanceProperty.issuanceDueTimestamp = now.add(ENGAGEMENT_DUE_DAYS);
@@ -112,12 +112,12 @@ contract LendingIssuance is IssuanceBase {
      */
     function engage(address takerAddress, bytes memory /** takerData */)
         public override onlyAdmin returns (uint256 engagementId, bytes memory transfersData) {
-
+        require(LendingInstrument(_instrumentAddress).isTakerAllowed(takerAddress), "LendingIssuance: Taker not allowed.");
         require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Issuance not Engageable");
         require(_engagementSet.length() == 0, "Already engaged");
 
         // Calculate the collateral amount. Collateral is calculated at the time of engagement.
-        IPriceOracle priceOracle = LendingInstrument(_instrumentAddress).getPriceOracle();
+        PriceOracleInterface priceOracle = LendingInstrument(_instrumentAddress).getPriceOracle();
         _lep.collateralAmount = priceOracle.getOutputAmount(_lip.lendingTokenAddress,
             _lip.collateralTokenAddress, _lip.lendingAmount.mul(_lip.collateralRatio),
             COLLATERAL_RATIO_DECIMALS);
@@ -310,7 +310,7 @@ contract LendingIssuance is IssuanceBase {
 
         uint256 repayAmount = _lip.lendingAmount + _lip.interestAmount;
         // Validate principal token balance
-        uint256 principalTokenBalance = InstrumentManagerInterface(_instrumentAddress).getInstrumentEscrow()
+        uint256 principalTokenBalance = _instrumentManager.getInstrumentEscrow()
             .getTokenBalance(engagement.takerAddress, _lip.lendingTokenAddress);
         require(principalTokenBalance >= repayAmount, "Insufficient principal balance");
 

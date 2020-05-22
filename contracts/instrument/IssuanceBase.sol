@@ -95,7 +95,7 @@ abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
     bytes32 internal constant CANCEL_ENGAGEMENT_EVENT = "cancel_engagement";
 
     // Instrument manager provides general information, including instrument Id, instrument escrow address and fsp address.
-    address internal _instrumentManagerAddress;
+    InstrumentManagerInterface internal _instrumentManager;
     // Instrument provides instrumentd-specific information.
     address internal _instrumentAddress;
     IssuanceEscrowInterface internal _issuanceEscrow;
@@ -128,11 +128,11 @@ abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
         // Instrument Manager is the owner of the issuance.
         AdminAccess._initialize(instrumentManagerAddress);
 
-        _instrumentManagerAddress = instrumentManagerAddress;
+        _instrumentManager = InstrumentManagerInterface(instrumentManagerAddress);
         _instrumentAddress = instrumentAddress;
         _issuanceEscrow = IssuanceEscrowInterface(issuanceEscrowAddress);
 
-        _issuanceProperty.instrumentId = InstrumentManagerInterface(instrumentManagerAddress).getInstrumentId();
+        _issuanceProperty.instrumentId = _instrumentManager.getInstrumentId();
         _issuanceProperty.issuanceId = issuanceId;
         _issuanceProperty.makerAddress = makerAddress;
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Initiated;

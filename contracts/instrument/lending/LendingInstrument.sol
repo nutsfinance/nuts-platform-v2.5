@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "../../lib/priceoracle/IPriceOracle.sol";
+import "../../lib/priceoracle/PriceOracleInterface.sol";
 import "../../lib/proxy/UpgradeabilityProxy.sol";
 import "../WhitelistInstrument.sol";
 import "../IssuanceInterface.sol";
@@ -12,7 +12,7 @@ import "./LendingIssuance.sol";
  */
 contract LendingInstrument is WhitelistInstrument {
 
-    IPriceOracle private _priceOracle;
+    PriceOracleInterface private _priceOracle;
     address private _issuanceAddress;
 
     constructor(bool makerWhitelistEnabled, bool takerWhitelistEnabled, address priceOracleAddress, address issuanceAddress)
@@ -20,11 +20,11 @@ contract LendingInstrument is WhitelistInstrument {
         require(priceOracleAddress != address(0x0), "LendingInstrument: Price oracle not set.");
         require(issuanceAddress != address(0x0), "LendingInstrument: Issuance not set.");
 
-        _priceOracle = IPriceOracle(priceOracleAddress);
+        _priceOracle = PriceOracleInterface(priceOracleAddress);
         _issuanceAddress = issuanceAddress;
     }
 
-    function getPriceOracle() public view returns (IPriceOracle) {
+    function getPriceOracle() public view returns (PriceOracleInterface) {
         return _priceOracle;
     }
 
