@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "../escrow/IInstrumentEscrow.sol";
-import "../escrow/IIssuanceEscrow.sol";
+import "../escrow/InstrumentEscrowInterface.sol";
+import "../escrow/IssuanceEscrowInterface.sol";
 import "../lib/protobuf/Transfers.sol";
-import "./Issuance.sol";
-import "./Instrument.sol";
+import "./IssuanceInterface.sol";
 
-abstract contract IInstrumentManager {
+/**
+ * @title Interface for Instrument Manager.
+ */
+abstract contract InstrumentManagerInterface {
     /**
      * @dev The instrument is activated.
      */
@@ -77,7 +79,7 @@ abstract contract IInstrumentManager {
      * @dev Returns the Instrument Escrow of the instrument.
      * @return Instrument Escrow of the instrument.
      */
-    function getInstrumentEscrow() public virtual view returns (IInstrumentEscrow);
+    function getInstrumentEscrow() public virtual view returns (InstrumentEscrowInterface);
 
     /**
      * @dev Returns the total number of issuances.
@@ -90,12 +92,12 @@ abstract contract IInstrumentManager {
      * @param issuanceId ID of the issuance.
      * @return The issuance to lookup.
      */
-    function getIssuance(uint256 issuanceId) public virtual view returns (Issuance);
+    function getIssuance(uint256 issuanceId) public virtual view returns (IssuanceInterface);
 
     /**
      * @dev Returns the Issuance Escrow by issuance ID.
      * @param issuanceId ID of the issuance.
      * @return The Issuance Escrow of the issuance.
      */
-    function getIssuanceEscrow(uint256 issuanceId) public virtual view returns (IIssuanceEscrow);
+    function getIssuanceEscrow(uint256 issuanceId) public virtual view returns (IssuanceEscrowInterface);
 }

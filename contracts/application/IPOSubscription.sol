@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "../escrow/IInstrumentEscrow.sol";
-import "../instrument/IInstrumentManager.sol";
+import "../escrow/InstrumentEscrowInterface.sol";
+import "../instrument/InstrumentManagerInterface.sol";
 
 /**
  * @dev A sample application build with two Multi-Swap Issuances.
  */
 abstract contract IPOSubscription {
 
-    IInstrumentManager private _swapInstrumentManager;
+    InstrumentManagerInterface private _swapInstrumentManager;
 
     constructor(address swapInstrumentManagerAddress) public {
         require(swapInstrumentManagerAddress != address(0x0), "IPOSubscription: Swap instrument not set.");
-        _swapInstrumentManager = IInstrumentManager(swapInstrumentManagerAddress);
+        _swapInstrumentManager = InstrumentManagerInterface(swapInstrumentManagerAddress);
     }
 
     function createSubscriptionOffer(uint256 rightsTokenSupply, address targetToken, uint256 targetAmount,

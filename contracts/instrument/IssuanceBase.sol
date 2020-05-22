@@ -4,18 +4,19 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
-import "../escrow/IIssuanceEscrow.sol";
+import "../escrow/IssuanceEscrowInterface.sol";
 import "../lib/access/AdminAccess.sol";
 import "../lib/protobuf/Transfers.sol";
 import "../lib/protobuf/Payables.sol";
 import "../lib/protobuf/IssuanceData.sol";
-import "./Instrument.sol";
-import "./IIssuance.sol";
+
+import "./InstrumentManagerInterface.sol";
+import "./IssuanceInterface.sol";
 
 /**
  * @title Base class for issuance.
  */
-abstract contract IssuanceBase is IIssuance, AdminAccess {
+abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
     using EnumerableSet for EnumerableSet.UintSet;
 
     /*******************************************************
@@ -93,20 +94,18 @@ abstract contract IssuanceBase is IIssuance, AdminAccess {
     bytes32 internal constant CANCEL_ISSUANCE_EVENT = "cancel_issuance";
     bytes32 internal constant CANCEL_ENGAGEMENT_EVENT = "cancel_engagement";
 
+    // Instrument manager provides general information, including instrument Id, instrument escrow address and fsp address.
+    address internal _instrumentManagerAddress;
+    // Instrument provides instrumentd-specific information.
     address internal _instrumentAddress;
-    uint256 internal _issuanceId;
-    IIssuanceEscrow internal _issuanceEscrow;
-    address internal _makerAddress;
-    IssuanceProperty.IssuanceState internal _state;
-    uint256 internal _creationTimestamp;
-    uint256 internal _cancelTimestamp;
-    uint256 internal _dueTimestamp;
-    uint256 internal _completeTimestamp;
-    uint256 internal _completionRatio;
+    IssuanceEscrowInterface internal _issuanceEscrow;
+    IssuanceProperty.Data internal _issuanceProperty;
 
-    EnumerableSet.UintSet internal _engagementSet;       // We provide engagement ids in Issuance.
+    // Engagement properties
+    EnumerableSet.UintSet internal _engagementSet;
     mapping(uint256 => EngagementProperty.Data) internal _engagements;
 
+    // Payable properties
     EnumerableSet.UintSet private _payableSet;
     mapping(uint256 => Payable.Data) internal _payables;
 
@@ -118,7 +117,7 @@ abstract contract IssuanceBase is IIssuance, AdminAccess {
      * @param makerAddress Address of the user who creates the issuance.
      */
     function _initialize(address instrumentManagerAddress, address instrumentAddress, uint256 issuanceId,
-        address issuanceEscrowAddress, address makerAddress) override internal {
+        address issuanceEscrowAddress, address makerAddress) internal {
         
         require(_instrumentAddress == address(0x0), "Issuance: Already initialized.");
         require(instrumentAddress != address(0x0), "Issuance: Instrument must be set.");
@@ -126,55 +125,41 @@ abstract contract IssuanceBase is IIssuance, AdminAccess {
         require(issuanceEscrowAddress != address(0x0), "Issuance: Issuance Escrow not set.");
         require(makerAddress != address(0x0), "Issuance: Maker address not set.");
 
+        // Instrument Manager is the owner of the issuance.
         AdminAccess._initialize(instrumentManagerAddress);
 
+        _instrumentManagerAddress = instrumentManagerAddress;
         _instrumentAddress = instrumentAddress;
-        _issuanceId = issuanceId;
-        _issuanceEscrow = IIssuanceEscrow(issuanceEscrowAddress);
-        _makerAddress = makerAddress;
-        _state = IssuanceProperty.IssuanceState.Initiated;
-        _creationTimestamp = now;
-    }
+        _issuanceEscrow = IssuanceEscrowInterface(issuanceEscrowAddress);
 
-    /**
-     * @dev Initializes the issuance.
-     * @return transferData Asset transfer actions.
-     */
-    function initialize() public virtual returns (bytes memory transferData);
+        _issuanceProperty.instrumentId = InstrumentManagerInterface(instrumentManagerAddress).getInstrumentId();
+        _issuanceProperty.issuanceId = issuanceId;
+        _issuanceProperty.makerAddress = makerAddress;
+        _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Initiated;
+        _issuanceProperty.issuanceCreationTimestamp = now;
+    }
 
     /**
      * @dev Returns property of this issuance.
      * This is the key method to read on-chain issuance status.
      */
     function getIssuanceProperty() public view returns (bytes memory) {
+        // Construct issuance data
+        IssuanceProperty.Data memory issuanceProperty = _issuanceProperty;
+        issuanceProperty.issuanceCustomProperty = _getIssuanceCustomProperty();
+
         // Construct paybles data
-        Payable.Data[] memory payables = new Payable.Data[](_payableSet.length());
+        issuanceProperty.payables = new Payable.Data[](_payableSet.length());
         for (uint256 i = 0; i < _payableSet.length(); i++) {
-            payables[i] = _payables[_payableSet.at(i)];
+            issuanceProperty.payables[i] = _payables[_payableSet.at(i)];
         }
 
         // Construct engagements data
-        EngagementProperty.Data[] memory engagements = new EngagementProperty.Data[](_engagementSet.length());
+        issuanceProperty.engagements = new EngagementProperty.Data[](_engagementSet.length());
         for (uint256 i = 0; i < _engagementSet.length(); i++) {
-            engagements[i] = _engagements[_engagementSet.at(i)];
-            engagements[i].engagementCustomProperty = _getEngagementCustomProperty(_engagementSet.at(i));
+            issuanceProperty.engagements[i] = _engagements[_engagementSet.at(i)];
+            issuanceProperty.engagements[i].engagementCustomProperty = _getEngagementCustomProperty(_engagementSet.at(i));
         }
-
-        // Construct issuance data
-        IssuanceProperty.Data memory issuanceProperty = IssuanceProperty.Data({
-            issuanceId: _issuanceId,
-            instrumentId: Instrument(_instrumentAddress).getInstrumentId(),
-            makerAddress: _makerAddress,
-            issuanceCreationTimestamp: _creationTimestamp,
-            issuanceDueTimestamp: _dueTimestamp,
-            issuanceCancelTimestamp: _cancelTimestamp,
-            issuanceCompleteTimestamp: _completeTimestamp,
-            completionRatio: _completionRatio,
-            issuanceState: _state,
-            issuanceCustomProperty: _getIssuanceCustomProperty(),
-            engagements: engagements,
-            payables: payables
-        });
 
         return IssuanceProperty.encode(issuanceProperty);
     }
@@ -206,7 +191,7 @@ abstract contract IssuanceBase is IIssuance, AdminAccess {
             amount: amount,
             payableDueTimestamp: dueTimestamp
         });
-        emit PayableCreated(_issuanceId, id, engagementId, obligatorAddress, claimorAddress, tokenAddress, amount, dueTimestamp);
+        emit PayableCreated(_issuanceProperty.issuanceId, id, engagementId, obligatorAddress, claimorAddress, tokenAddress, amount, dueTimestamp);
     }
 
     /**
@@ -217,7 +202,7 @@ abstract contract IssuanceBase is IIssuance, AdminAccess {
         // Removes the payable with id
         _payableSet.remove(id);
         delete _payables[id];
-        emit PayablePaid(_issuanceId, id);
+        emit PayablePaid(_issuanceProperty.issuanceId, id);
     }
 
     /**
@@ -228,7 +213,7 @@ abstract contract IssuanceBase is IIssuance, AdminAccess {
         // Removes the payable with id
         _payableSet.remove(id);
         delete _payables[id];
-        emit PayableDue(_issuanceId, id);
+        emit PayableDue(_issuanceProperty.issuanceId, id);
     }
 
     /**
@@ -240,6 +225,6 @@ abstract contract IssuanceBase is IIssuance, AdminAccess {
         // Removes the payable with id
         _payableSet.remove(id);
         delete _payables[id];
-        emit PayableReinitiated(_issuanceId, id, reinitiatedTo);
+        emit PayableReinitiated(_issuanceProperty.issuanceId, id, reinitiatedTo);
     }
 }

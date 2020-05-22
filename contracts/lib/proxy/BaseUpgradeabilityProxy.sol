@@ -29,7 +29,7 @@ contract BaseUpgradeabilityProxy is Proxy {
 
     /**
    * @dev Returns the current implementation.
-   * @return Address of the current implementation
+   * @return impl Address of the current implementation
    */
     function _implementation() internal override view returns (address impl) {
         bytes32 slot = IMPLEMENTATION_SLOT;

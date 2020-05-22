@@ -4,7 +4,7 @@ pragma solidity 0.6.8;
 import "../../lib/priceoracle/IPriceOracle.sol";
 import "../../lib/proxy/UpgradeabilityProxy.sol";
 import "../WhitelistInstrument.sol";
-import "../IIssuance.sol";
+import "../IssuanceInterface.sol";
 import "./LendingIssuance.sol";
 
 /**
@@ -30,19 +30,18 @@ contract LendingInstrument is WhitelistInstrument {
 
     /**
      * @dev Creates a new issuance instance.
-     * @param instrumentManagerAddress Address of the instrument manager.
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
      * @param makerData Custom properties of the issuance.
-     * @return The created issuance instance.
-     * @return Initial token transfer actions.
+     * @return issuance The created issuance instance.
+     * @return transfersData Initial token transfer actions.
      */
-    function createIssuance(address instrumentManagerAddress, uint256 issuanceId, address issuanceEscrowAddress,
-        address makerAddress, bytes memory makerData) public override returns (IIssuance issuance, bytes memory transfersData) {
+    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress,
+        address makerAddress, bytes memory makerData) public override returns (IssuanceInterface issuance, bytes memory transfersData) {
 
         UpgradeabilityProxy proxy = new UpgradeabilityProxy(_issuanceAddress);
-        issuance = IIssuance(address(proxy));
-        transfersData = issuance.initialize(instrumentManagerAddress, address(this), issuanceId, issuanceEscrowAddress, makerAddress, makerData);
+        issuance = IssuanceInterface(address(proxy));
+        transfersData = issuance.initialize(msg.sender, address(this), issuanceId, issuanceEscrowAddress, makerAddress, makerData);
     }
 }

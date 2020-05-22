@@ -3,8 +3,7 @@ pragma solidity 0.6.8;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "../lib/access/AdminAccess.sol";
-import "../escrow/IInstrumentEscrow.sol";
-import "./IIssuance.sol";
+import "./IssuanceInterface.sol";
 
 /**
  * @title Base class for instrument.
@@ -40,7 +39,6 @@ abstract contract InstrumentBase is AdminAccess {
 
     /**
      * @dev Creates a new issuance instance.
-     * @param instrumentManagerAddress Address of the instrument manager.
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
@@ -48,6 +46,6 @@ abstract contract InstrumentBase is AdminAccess {
      * @return The created issuance instance.
      * @return Initial token transfer actions.
      */
-    function createIssuance(address instrumentManagerAddress, uint256 issuanceId, address issuanceEscrowAddress,
-        address makerAddress, bytes memory makerData) public virtual returns (IIssuance, bytes memory);
+    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress,
+        address makerAddress, bytes memory makerData) public virtual returns (IssuanceInterface, bytes memory);
 }

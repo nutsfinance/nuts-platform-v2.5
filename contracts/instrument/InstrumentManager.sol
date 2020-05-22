@@ -5,23 +5,24 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../escrow/IEscrowFactory.sol";
-import "../escrow/IInstrumentEscrow.sol";
-import "../escrow/IIssuanceEscrow.sol";
+import "../escrow/EscrowFactoryInterface.sol";
+import "../escrow/InstrumentEscrowInterface.sol";
+import "../escrow/IssuanceEscrowInterface.sol";
 import "../lib/token/WETH9.sol";
 import "../lib/protobuf/Transfers.sol";
 import "../Config.sol";
-import "./IIssuance.sol";
-import "./IInstrumentManager.sol";
+import "./IssuanceInterface.sol";
+import "./InstrumentManagerInterface.sol";
+import "./InstrumentBase.sol";
 
-contract InstrumentManager is IInstrumentManager {
+contract InstrumentManager is InstrumentManagerInterface {
 
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
 
     struct IssuanceProperty {
-        IIssuance issuance;
-        IIssuanceEscrow issuanceEscrow;
+        IssuanceInterface issuance;
+        IssuanceEscrowInterface issuanceEscrow;
         uint256 creationTimestamp;
     }
 
@@ -31,7 +32,7 @@ contract InstrumentManager is IInstrumentManager {
     address private _instrumentAddress;
     address private _fspAddress;
     uint256 private _instrumentId;
-    IInstrumentEscrow private _instrumentEscrow;
+    InstrumentEscrowInterface private _instrumentEscrow;
     Counters.Counter private _issuanceIds;
     mapping(uint256 => IssuanceProperty) private _issuances;
 
@@ -65,10 +66,7 @@ contract InstrumentManager is IInstrumentManager {
         (_terminationTimestamp, _overrideTimestamp) = abi.decode(instrumentData, (uint256, uint256));
 
         // Creates the Instrument Escrow
-        _instrumentEscrow = IEscrowFactory(_escrowFactoryAddress).createInstrumentEscrow(_wethAddress);
-
-        // Initializes the instrument.
-        Instrument(_instrumentAddress).initialize(_instrumentId, _fspAddress, address(_instrumentEscrow));
+        _instrumentEscrow = EscrowFactoryInterface(_escrowFactoryAddress).createInstrumentEscrow(_wethAddress);
     }
 
     /**
@@ -105,17 +103,17 @@ contract InstrumentManager is IInstrumentManager {
 
         _issuanceIds.increment();
         uint256 newIssuanceId = _issuanceIds.current();
-        Instrument instrument = Instrument(_instrumentAddress);
+        InstrumentBase instrument = InstrumentBase(_instrumentAddress);
 
         // Checks whether Issuance Escrow is supported.
-        IIssuanceEscrow issuanceEscrow = IIssuanceEscrow(0);
+        IssuanceEscrowInterface issuanceEscrow = IssuanceEscrowInterface(0);
         if (instrument.supportsIssuanceEscrow()) {
-            issuanceEscrow = IEscrowFactory(_escrowFactoryAddress).createIssuanceEscrow(_wethAddress);
+            issuanceEscrow = EscrowFactoryInterface(_escrowFactoryAddress).createIssuanceEscrow(_wethAddress);
         }
 
         // Creates and initializes the issuance instance.
-        IIssuance issuance = instrument.createIssuance(newIssuanceId, address(issuanceEscrow), msg.sender, makerData);
-        bytes memory transferData = issuance.initialize();
+        (IssuanceInterface issuance, bytes memory transferData) = instrument.createIssuance(newIssuanceId,
+            address(issuanceEscrow), msg.sender, makerData);
         processTransfers(newIssuanceId, transferData);
 
         _issuances[newIssuanceId] = IssuanceProperty({
@@ -134,7 +132,7 @@ contract InstrumentManager is IInstrumentManager {
      * @return engagementId ID of the engagement.
      */
     function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256) {
-        IIssuance issuance = _issuances[issuanceId].issuance;
+        IssuanceInterface issuance = _issuances[issuanceId].issuance;
         (uint256 engagementId, bytes memory transfersData) = issuance.engage(msg.sender, takerData);
 
         processTransfers(issuanceId, transfersData);
@@ -150,7 +148,7 @@ contract InstrumentManager is IInstrumentManager {
      * @param eventData Data of the custom event.
      */
     function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {
-        IIssuance issuance = _issuances[issuanceId].issuance;
+        IssuanceInterface issuance = _issuances[issuanceId].issuance;
         bytes memory transfersData = issuance.processEvent(engagementId, msg.sender, eventName, eventData);
         processTransfers(issuanceId, transfersData);
     }
@@ -183,7 +181,7 @@ contract InstrumentManager is IInstrumentManager {
      * @dev Returns the Instrument Escrow of the instrument.
      * @return Instrument Escrow of the instrument.
      */
-    function getInstrumentEscrow() public override view returns (IInstrumentEscrow) {
+    function getInstrumentEscrow() public override view returns (InstrumentEscrowInterface) {
         return _instrumentEscrow;
     }
 
@@ -200,7 +198,7 @@ contract InstrumentManager is IInstrumentManager {
      * @param issuanceId ID of the issuance.
      * @return issuance The issuance to lookup.
      */
-    function getIssuance(uint256 issuanceId) public override view returns (Issuance issuance) {
+    function getIssuance(uint256 issuanceId) public override view returns (IssuanceInterface) {
         return _issuances[issuanceId].issuance;
     }
 
@@ -209,7 +207,7 @@ contract InstrumentManager is IInstrumentManager {
      * @param issuanceId ID of the issuance.
      * @return issuanceEscrow The Issuance Escrow of the issuance.
      */
-    function getIssuanceEscrow(uint256 issuanceId) public override view returns (IIssuanceEscrow issuanceEscrow) {
+    function getIssuanceEscrow(uint256 issuanceId) public override view returns (IssuanceEscrowInterface) {
         return _issuances[issuanceId].issuanceEscrow;
     }
 
@@ -218,7 +216,7 @@ contract InstrumentManager is IInstrumentManager {
      * @param issuanceId The ID of the issuance to process transfers.
      */
     function processTransfers(uint256 issuanceId, bytes memory transfersData) private {
-        IIssuanceEscrow issuanceEscrow = _issuances[issuanceId].issuanceEscrow;
+        IssuanceEscrowInterface issuanceEscrow = _issuances[issuanceId].issuanceEscrow;
         Transfers.Data memory transfers = Transfers.decode(transfersData);
         for (uint256 i = 0; i < transfers.actions.length; i++) {
             // (Transfers.TransferType transferType, address fromAddress, address toAddress, address tokenAddress,

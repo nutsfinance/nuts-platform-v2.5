@@ -4,7 +4,7 @@ pragma solidity 0.6.8;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "./instrument/IInstrumentManagerFactory.sol";
+import "./instrument/InstrumentManagerFactoryInterface.sol";
 import "./Config.sol";
 
 contract InstrumentRegistry {
@@ -33,8 +33,9 @@ contract InstrumentRegistry {
 
         _instrumentIds.increment();
         // Create Instrument Manager
-        IInstrumentManagerFactory instrumentManagerFactory = IInstrumentManagerFactory(_config.getInstrumentManagerFactory(version));
-        IInstrumentManager instrumentManager = instrumentManagerFactory.createInstrumentManager(
+        InstrumentManagerFactoryInterface instrumentManagerFactory = InstrumentManagerFactoryInterface(
+            _config.getInstrumentManagerFactory(version));
+        InstrumentManagerInterface instrumentManager = instrumentManagerFactory.createInstrumentManager(
             instrumentAddress, _instrumentIds.current(), msg.sender, address(_config), instrumentData);
 
         _instrumentManagers[_instrumentIds.current()] = address(instrumentManager);

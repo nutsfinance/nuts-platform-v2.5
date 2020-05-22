@@ -4,7 +4,7 @@ pragma solidity 0.6.8;
 /**
  * @title Base interface for issuance.
  */
-abstract contract IIssuance {
+abstract contract IssuanceInterface {
     /**
      * @dev Initializes the issuance.
      * @param instrumentManagerAddress Address of the instrument manager.

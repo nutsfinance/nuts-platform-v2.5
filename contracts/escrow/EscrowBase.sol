@@ -7,14 +7,14 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import "../lib/access/AdminAccess.sol";
 import "../lib/token/WETH9.sol";
-import "./IEscrow.sol";
+import "./EscrowInterface.sol";
 
 /**
  * @title Base contract for both instrument and issuance escrow.
  * Note: Only admins can withdraw from or deposit to the Escrow directly.
  * Only owner can grant admin roles.
  */
-abstract contract EscrowBase is IEscrow, AdminAccess {
+abstract contract EscrowBase is EscrowInterface, AdminAccess {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
