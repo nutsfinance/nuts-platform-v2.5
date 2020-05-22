@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "./Instrument.sol";
+import "./InstrumentBase.sol";
 
 /**
  * @title Instrument that charges maker and/or taker.
  */
-abstract contract FeebasedInstrument is Instrument {
+abstract contract FeebasedInstrument is InstrumentBase {
 
     address private _makerFeeToken;
     address private _takerFeeToken;

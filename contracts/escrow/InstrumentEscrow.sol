@@ -12,7 +12,9 @@ import "./IInstrumentEscrow.sol";
  */
 contract InstrumentEscrow is EscrowBase, IInstrumentEscrow {
 
-    constructor(address wethAddress) EscrowBase(wethAddress) public {}
+    function initialize(address wethAddress) public {
+        super._initialize(wethAddress);
+    }
 
     /**********************************************
      * APIs to deposit and withdraw Ether

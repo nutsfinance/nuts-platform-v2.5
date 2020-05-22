@@ -8,5 +8,7 @@ import "./IIssuanceEscrow.sol";
  * @title Issuance Escrow that keeps assets that are locked by issuance.
  */
 contract IssuanceEscrow is EscrowBase, IIssuanceEscrow {
-    constructor(address wethAddress) EscrowBase(wethAddress) public {}
+    function initialize(address wethAddress) public {
+        super._initialize(wethAddress);
+    }
 }

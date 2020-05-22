@@ -50,7 +50,7 @@ contract LendingIssuance is Issuance {
      * @param makerAddress Address of the user who creates the issuance.
      * @param makerData Custom properties of the issuance.
      */
-    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
+    function(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
         Issuance(instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress) public {
         (_lendingToken, _collateralToken, _lendingAmount, _tenorDays, _collateralRatio, _interestRate) = abi.decode(makerData,
             (address, address, uint256, uint256, uint256, uint256));

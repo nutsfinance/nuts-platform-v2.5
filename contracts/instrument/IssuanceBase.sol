@@ -10,11 +10,12 @@ import "../lib/protobuf/Transfers.sol";
 import "../lib/protobuf/Payables.sol";
 import "../lib/protobuf/IssuanceData.sol";
 import "./Instrument.sol";
+import "./IIssuance.sol";
 
 /**
  * @title Base class for issuance.
  */
-abstract contract Issuance is AdminAccess {
+abstract contract IssuanceBase is IIssuance, AdminAccess {
     using EnumerableSet for EnumerableSet.UintSet;
 
     /*******************************************************
@@ -110,16 +111,22 @@ abstract contract Issuance is AdminAccess {
     mapping(uint256 => Payable.Data) internal _payables;
 
     /**
+     * @param instrumentManagerAddress Address of the instrument manager.
      * @param instrumentAddress Address of the instrument contract.
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
      */
-    constructor(address instrumentAddress, uint256 issuanceId, address issuanceEscrowAddress, address makerAddress) internal {
+    function _initialize(address instrumentManagerAddress, address instrumentAddress, uint256 issuanceId,
+        address issuanceEscrowAddress, address makerAddress) override internal {
+        
+        require(_instrumentAddress == address(0x0), "Issuance: Already initialized.");
         require(instrumentAddress != address(0x0), "Issuance: Instrument must be set.");
         require(issuanceId != 0, "Issuance: ID not set.");
         require(issuanceEscrowAddress != address(0x0), "Issuance: Issuance Escrow not set.");
         require(makerAddress != address(0x0), "Issuance: Maker address not set.");
+
+        AdminAccess._initialize(instrumentManagerAddress);
 
         _instrumentAddress = instrumentAddress;
         _issuanceId = issuanceId;
@@ -134,27 +141,6 @@ abstract contract Issuance is AdminAccess {
      * @return transferData Asset transfer actions.
      */
     function initialize() public virtual returns (bytes memory transferData);
-
-    /**
-     * @dev Creates a new engagement for the issuance.
-     * @param takerAddress Address of the user who engages the issuance.
-     * @param takerData Custom properties of the engagemnet.
-     * @return engagementId ID of the engagement.
-     * @return transfersData Asset transfer actions.
-     */
-    function engage(address takerAddress, bytes memory takerData)
-        public virtual returns (uint256 engagementId, bytes memory transfersData);
-
-    /**
-     * @dev Process a custom event. This event could be targeted at an engagement or the whole issuance.
-     * @param engagementId ID of the engagement. Not useful if the event is targetted at issuance.
-     * @param notifierAddress Address that notifies the custom event.
-     * @param eventName Name of the custom event.
-     * @param eventData Custom properties of the custom event.
-     * @return transfersData Asset transfer actions.
-     */
-    function processEvent(uint256 engagementId, address notifierAddress, bytes32 eventName, bytes memory eventData)
-        public virtual returns (bytes memory transfersData);
 
     /**
      * @dev Returns property of this issuance.

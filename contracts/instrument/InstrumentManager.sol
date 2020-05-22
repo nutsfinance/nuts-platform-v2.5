@@ -11,7 +11,7 @@ import "../escrow/IIssuanceEscrow.sol";
 import "../lib/token/WETH9.sol";
 import "../lib/protobuf/Transfers.sol";
 import "../Config.sol";
-import "./Issuance.sol";
+import "./IIssuance.sol";
 import "./IInstrumentManager.sol";
 
 contract InstrumentManager is IInstrumentManager {
@@ -20,7 +20,7 @@ contract InstrumentManager is IInstrumentManager {
     using Counters for Counters.Counter;
 
     struct IssuanceProperty {
-        Issuance issuance;
+        IIssuance issuance;
         IIssuanceEscrow issuanceEscrow;
         uint256 creationTimestamp;
     }
@@ -114,7 +114,7 @@ contract InstrumentManager is IInstrumentManager {
         }
 
         // Creates and initializes the issuance instance.
-        Issuance issuance = instrument.createIssuance(newIssuanceId, address(issuanceEscrow), msg.sender, makerData);
+        IIssuance issuance = instrument.createIssuance(newIssuanceId, address(issuanceEscrow), msg.sender, makerData);
         bytes memory transferData = issuance.initialize();
         processTransfers(newIssuanceId, transferData);
 
@@ -134,7 +134,7 @@ contract InstrumentManager is IInstrumentManager {
      * @return engagementId ID of the engagement.
      */
     function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256) {
-        Issuance issuance = _issuances[issuanceId].issuance;
+        IIssuance issuance = _issuances[issuanceId].issuance;
         (uint256 engagementId, bytes memory transfersData) = issuance.engage(msg.sender, takerData);
 
         processTransfers(issuanceId, transfersData);
@@ -150,7 +150,7 @@ contract InstrumentManager is IInstrumentManager {
      * @param eventData Data of the custom event.
      */
     function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {
-        Issuance issuance = _issuances[issuanceId].issuance;
+        IIssuance issuance = _issuances[issuanceId].issuance;
         bytes memory transfersData = issuance.processEvent(engagementId, msg.sender, eventName, eventData);
         processTransfers(issuanceId, transfersData);
     }

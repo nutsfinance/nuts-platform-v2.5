@@ -14,11 +14,11 @@ abstract contract AdminAccess is AccessControl {
     // Creates a new role identifier for the admin role
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    constructor() internal {
+    function _initialize(address owner) internal virtual {
         // Grant the owner role to the contract creator
-        _setupRole(OWNER_ROLE, msg.sender);
+        _setupRole(OWNER_ROLE, owner);
         // Grant the admin role to the contract creator as well
-        _setupRole(ADMIN_ROLE, msg.sender);
+        _setupRole(ADMIN_ROLE, owner);
         // Grant the admin of admin role to the contract creator
         _setRoleAdmin(ADMIN_ROLE, OWNER_ROLE);
     }

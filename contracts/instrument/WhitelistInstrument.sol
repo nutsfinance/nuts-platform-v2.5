@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "./Instrument.sol";
+import "./InstrumentBase.sol";
 
 /**
  * @title Instrument that has maker and taker white list.
  */
-abstract contract WhitelistInstrument is Instrument {
+abstract contract WhitelistInstrument is InstrumentBase {
 
     bool private _makerWhitelistEnabled;
     bool private _takerWhitelistEnabled;
