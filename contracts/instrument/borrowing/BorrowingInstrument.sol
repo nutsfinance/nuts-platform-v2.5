@@ -7,17 +7,17 @@ import "../WhitelistInstrument.sol";
 import "../IssuanceInterface.sol";
 
 /**
- * @title The lending instrument.
+ * @title The borrowing instrument.
  */
-contract LendingInstrument is WhitelistInstrument {
+contract BorrowingInstrument is WhitelistInstrument {
 
     PriceOracleInterface private _priceOracle;
     address private _issuanceAddress;
 
     constructor(bool makerWhitelistEnabled, bool takerWhitelistEnabled, address priceOracleAddress, address issuanceAddress)
         WhitelistInstrument(makerWhitelistEnabled, takerWhitelistEnabled) public {
-        require(priceOracleAddress != address(0x0), "LendingInstrument: Price oracle not set.");
-        require(issuanceAddress != address(0x0), "LendingInstrument: Issuance not set.");
+        require(priceOracleAddress != address(0x0), "BorrowingInstrument: Price oracle not set.");
+        require(issuanceAddress != address(0x0), "BorrowingInstrument: Issuance not set.");
 
         _priceOracle = PriceOracleInterface(priceOracleAddress);
         _issuanceAddress = issuanceAddress;
@@ -36,8 +36,8 @@ contract LendingInstrument is WhitelistInstrument {
      * @return issuance The created issuance instance.
      * @return transfersData Initial token transfer actions.
      */
-    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress,
-        address makerAddress, bytes memory makerData) public override returns (IssuanceInterface issuance, bytes memory transfersData) {
+    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress, address makerAddress,
+        bytes memory makerData) public override returns (IssuanceInterface issuance, bytes memory transfersData) {
 
         UpgradeabilityProxy proxy = new UpgradeabilityProxy(_issuanceAddress);
         issuance = IssuanceInterface(address(proxy));
