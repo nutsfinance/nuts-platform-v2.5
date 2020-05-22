@@ -122,7 +122,7 @@ contract BorrowingIssuance is IssuanceBase {
         require(_engagementSet.length() == 0, "Already engaged");
 
         // Validates principal balance
-        uint256 principalBalance = instrument.getInstrumentEscrow().getTokenBalance(takerAddress, _bip.borrowingTokenAddress);
+        uint256 principalBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(takerAddress, _bip.borrowingTokenAddress);
         require(principalBalance >= _bip.borrowingAmount, "Insufficient principal balance");
 
         // Set common engagement property
@@ -271,11 +271,11 @@ contract BorrowingIssuance is IssuanceBase {
         emit IssuanceCancelled(_issuanceProperty.issuanceId);
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
-        // Principal token outbound transfer: Makr --> Maker
+        // Collateral token outbound transfer: Maker --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
-            _bip.borrowingTokenAddress, _bip.borrowingAmount);
+            _bip.collateralTokenAddress, _bip.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
-            _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.borrowingTokenAddress, _bip.borrowingAmount, "Principal out");
+            _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -298,12 +298,12 @@ contract BorrowingIssuance is IssuanceBase {
         require(engagement.engagementState == EngagementProperty.EngagementState.Active, "Engagement not active");
         require(_bep.loanState == BorrowingEngagementProperty.LoanState.Unpaid, "Loan not unpaid");
         require(now < engagement.engagementDueTimestamp, "Engagement due");
-        require(notifierAddress == engagement.takerAddress, "Only taker can repay");
+        require(notifierAddress == _issuanceProperty.makerAddress, "Only maker can repay");
 
         uint256 repayAmount = _bip.borrowingAmount + _bip.interestAmount;
         // Validate principal token balance
         uint256 principalTokenBalance = _instrumentManager.getInstrumentEscrow()
-            .getTokenBalance(engagement.takerAddress, _bip.borrowingTokenAddress);
+            .getTokenBalance(_issuanceProperty.makerAddress, _bip.borrowingTokenAddress);
         require(principalTokenBalance >= repayAmount, "Insufficient principal balance");
 
         // Sets Engagement common properties
@@ -315,18 +315,18 @@ contract BorrowingIssuance is IssuanceBase {
         _bep.loanState = BorrowingEngagementProperty.LoanState.Repaid;
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
-        // Pricipal + Interest intra-instrument transfer: Taker -> Maker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, engagement.takerAddress, _issuanceProperty.makerAddress,
+        // Pricipal + Interest intra-instrument transfer: Maker -> Taker
+        transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, _issuanceProperty.makerAddress, engagement.takerAddress,
             _bip.borrowingTokenAddress, repayAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument,
-            engagement.takerAddress, _issuanceProperty.makerAddress, _bip.borrowingTokenAddress, _bip.borrowingAmount, "Principal transfer");
+            _issuanceProperty.makerAddress, engagement.takerAddress, _bip.borrowingTokenAddress, _bip.borrowingAmount, "Principal transfer");
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument,
-            engagement.takerAddress, _issuanceProperty.makerAddress, _bip.borrowingTokenAddress, _bip.interestAmount, "Interest transfer");
-        // Collateral outbound transfer: Taker --> Taker
-        transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, engagement.takerAddress, engagement.takerAddress,
-            _bip.collateralTokenAddress, _bep.collateralAmount);
+            _issuanceProperty.makerAddress, engagement.takerAddress, _bip.borrowingTokenAddress, _bip.interestAmount, "Interest transfer");
+        // Collateral outbound transfer: Maker --> Maker
+        transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
+            _bip.collateralTokenAddress, _bip.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
-            engagement.takerAddress, engagement.takerAddress, _bip.collateralTokenAddress, _bep.collateralAmount, "Collateral out");
+            _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
         transfersData = Transfers.encode(transfers);
 
         // Mark payable 2 as paid

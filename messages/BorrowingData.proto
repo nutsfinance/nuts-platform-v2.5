@@ -13,7 +13,7 @@ message BorrowingIssuanceProperty {
     .solidity.uint256 tenorDays = 8;
 }
 
-message LendingEngagementProperty {
+message BorrowingEngagementProperty {
     enum LoanState {
         LoanStateUnknown = 0;
         Unpaid = 1;

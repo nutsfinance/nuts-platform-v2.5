@@ -519,7 +519,7 @@ library BorrowingIssuanceProperty {
 }
 //library BorrowingIssuanceProperty
 
-library LendingEngagementProperty {
+library BorrowingEngagementProperty {
 
   //enum definition
 // Solidity enum definitions
@@ -577,7 +577,7 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
 
   //struct definition
   struct Data {
-    LendingEngagementProperty.LoanState loanState;
+    BorrowingEngagementProperty.LoanState loanState;
   }
 
   // Decoder section
@@ -677,7 +677,7 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
      * if `r` is NULL, then only counting the number of fields.
      */
     (int64 tmp, uint256 sz) = ProtoBufRuntime._decode_enum(p, bs);
-    LendingEngagementProperty.LoanState x = decode_LoanState(tmp);
+    BorrowingEngagementProperty.LoanState x = decode_LoanState(tmp);
     if (isNil(r)) {
       counters[1] += 1;
     } else {
@@ -810,4 +810,4 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
     }
   }
 }
-//library LendingEngagementProperty
+//library BorrowingEngagementProperty
