@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "./IEscrow.sol";
+import "./EscrowInterface.sol";
 
 /**
  * @title Interface for Instrument Escrow.
  * @dev This is the interface with which external users interact with Instrument Escrow.
  */
-abstract contract IInstrumentEscrow is IEscrow {
+abstract contract InstrumentEscrowInterface is EscrowInterface {
     /**
      * ETH is deposited into instrument escrow.
      * @param depositer The address who deposits ETH.

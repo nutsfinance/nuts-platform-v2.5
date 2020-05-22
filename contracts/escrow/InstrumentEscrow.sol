@@ -5,12 +5,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import "./EscrowBase.sol";
-import "./IInstrumentEscrow.sol";
+import "./InstrumentEscrowInterface.sol";
 
 /**
  * @title Instrument Escrow that keeps assets that are not yet locked by issuances.
  */
-contract InstrumentEscrow is EscrowBase, IInstrumentEscrow {
+contract InstrumentEscrow is EscrowBase, InstrumentEscrowInterface {
 
     function initialize(address wethAddress) public {
         super._initialize(wethAddress);

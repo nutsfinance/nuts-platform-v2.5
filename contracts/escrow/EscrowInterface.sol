@@ -5,7 +5,7 @@ pragma solidity 0.6.8;
  * @title Base interface for both instrument and issuance escrows.
  * @dev Abstract contract is used instead of Interface for inheritance.
  */
-abstract contract IEscrow {
+abstract contract EscrowInterface {
     /**
      * Balance is increased.
      */

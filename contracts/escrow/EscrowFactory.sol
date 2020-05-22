@@ -2,16 +2,16 @@
 pragma solidity 0.6.8;
 
 import "../lib/proxy/UpgradeabilityProxy.sol";
-import "./IInstrumentEscrow.sol";
-import "./IIssuanceEscrow.sol";
-import "./IEscrowFactory.sol";
+import "./InstrumentEscrowInterface.sol";
+import "./IssuanceEscrowInterface.sol";
+import "./EscrowFactoryInterface.sol";
 import "./InstrumentEscrow.sol";
 import "./IssuanceEscrow.sol";
 
 /**
  * @title Factory of Instrument and Issuance Escrows.
  */
-contract EscrowFactory is IEscrowFactory {
+contract EscrowFactory is EscrowFactoryInterface {
     InstrumentEscrow private _instrumentEscrow;
     IssuanceEscrow private _issuanceEscrow;
 
@@ -25,7 +25,7 @@ contract EscrowFactory is IEscrowFactory {
      * @param wethAddress Address of the WETH9 token.
      * @return Address of created Instrument Escrow.
      */
-    function createInstrumentEscrow(address wethAddress) public override returns (IInstrumentEscrow) {
+    function createInstrumentEscrow(address wethAddress) public override returns (InstrumentEscrowInterface) {
         UpgradeabilityProxy proxy = new UpgradeabilityProxy(address(_instrumentEscrow));
         InstrumentEscrow instrumentEscrow = InstrumentEscrow(address(proxy));
         instrumentEscrow.initialize(wethAddress);
@@ -38,7 +38,7 @@ contract EscrowFactory is IEscrowFactory {
      * @param wethAddress Address of the WETH9 token.
      * @return Address of created Issuance Escrow.
      */
-    function createIssuanceEscrow(address wethAddress) public override returns (IIssuanceEscrow) {
+    function createIssuanceEscrow(address wethAddress) public override returns (IssuanceEscrowInterface) {
         UpgradeabilityProxy proxy = new UpgradeabilityProxy(address(_issuanceEscrow));
         IssuanceEscrow issuanceEscrow = IssuanceEscrow(address(proxy));
         issuanceEscrow.initialize(wethAddress);
