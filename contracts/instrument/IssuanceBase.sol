@@ -19,73 +19,6 @@ import "./IssuanceInterface.sol";
 abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
     using EnumerableSet for EnumerableSet.UintSet;
 
-    /*******************************************************
-     * Timer Oracle related events.
-     *******************************************************/
-
-    /**
-     * @dev The event used to schedule contract events after specific time.
-     */
-    event EventTimeScheduled(uint256 indexed issuanceId, uint256 indexed engagementId, uint256 timestamp,
-        bytes32 eventName, bytes eventData);
-
-    /**
-     * @dev The event used to schedule contract events after specific block.
-     */
-    event EventBlockScheduled(uint256 indexed issuanceId, uint256 indexed engagementId, uint256 blockNumber,
-        bytes32 eventName, bytes eventPayload);
-
-    /*******************************************************
-     * Issuance lifecycle related events.
-     *******************************************************/
-
-    event IssuanceCreated(uint256 indexed issuanceId, address indexed makerAddress, uint256 issuanceDueTimestamp);
-
-    event IssuanceCancelled(uint256 indexed issuanceId);
-
-    event IssuanceComplete(uint256 indexed issuanceId);
-
-    /*******************************************************
-     * Engagement lifecycle related events.
-     *******************************************************/
-
-    event EngagementCreated (uint256 indexed issuanceId, uint256 indexed engagementId, address indexed takerAddress);
-
-    event EngagementCancelled(uint256 indexed issuanceId, uint256 indexed engagementId);
-
-    event EngagementComplete(uint256 indexed issuanceId, uint256 indexed engagementId);
-
-    /*******************************************************
-     * Payable lifecycle related events.
-     *******************************************************/
-
-    /**
-     * @dev The event used to track the creation of a new payable.
-     */
-    event PayableCreated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 indexed engagementId, address obligatorAddress,
-        address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp);
-
-    /**
-     * @dev The event used to track the payment of a payable
-     */
-    event PayablePaid(uint256 indexed issuanceId, uint256 indexed itemId);
-
-    /**
-     * @dev The event used to track the due of a payable
-     */
-    event PayableDue(uint256 indexed issuanceId, uint256 indexed itemId);
-
-    /**
-     * @dev The event used to track the update of an existing payable
-     */
-    event PayableReinitiated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 reinitiatedTo);
-
-    /**
-     * @dev Asset is transferred.
-     */
-    event AssetTransferred(uint256 indexed issuanceId, uint256 indexed engagementId, Transfer.TransferType transferType,
-        address fromAddress, address toAddress, address tokenAddress, uint256 amount, bytes32 action);
-
     // Constant
     uint256 internal constant COMPLETION_RATIO_RANGE = 10000;
 
@@ -123,6 +56,7 @@ abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
         address issuanceEscrowAddress, address makerAddress) internal {
         
         require(_instrumentAddress == address(0x0), "Issuance: Already initialized.");
+        require(instrumentManagerAddress != address(0x0), "Issuance: Instrument Manager must be set.");
         require(instrumentAddress != address(0x0), "Issuance: Instrument must be set.");
         require(issuanceId != 0, "Issuance: ID not set.");
         require(issuanceEscrowAddress != address(0x0), "Issuance: Issuance Escrow not set.");
@@ -160,8 +94,9 @@ abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
         // Construct engagements data
         issuanceProperty.engagements = new EngagementProperty.Data[](_engagementSet.length());
         for (uint256 i = 0; i < _engagementSet.length(); i++) {
-            issuanceProperty.engagements[i] = _engagements[_engagementSet.at(i)];
-            issuanceProperty.engagements[i].engagementCustomProperty = _getEngagementCustomProperty(_engagementSet.at(i));
+            uint256 engagementId = _engagementSet.at(i);
+            issuanceProperty.engagements[i] = _engagements[engagementId];
+            issuanceProperty.engagements[i].engagementCustomProperty = _getEngagementCustomProperty(engagementId);
         }
 
         return IssuanceProperty.encode(issuanceProperty);
@@ -181,53 +116,53 @@ abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
     /**
      * @dev Create new payable for the issuance.
      */
-    function _createPayable(uint256 id, uint256 engagementId, address obligatorAddress, address claimorAddress, address tokenAddress,
-        uint256 amount, uint256 dueTimestamp) internal {
-        require(!_payableSet.contains(id), "Issuance: Payable exists.");
-        _payableSet.add(id);
-        _payables[id] = Payable.Data({
-            payableId: id,
-            engagementId: engagementId,
-            obligatorAddress: obligatorAddress,
-            claimorAddress: claimorAddress,
-            tokenAddress: tokenAddress,
-            amount: amount,
-            payableDueTimestamp: dueTimestamp
-        });
-        emit PayableCreated(_issuanceProperty.issuanceId, id, engagementId, obligatorAddress, claimorAddress, tokenAddress, amount, dueTimestamp);
+    function _createPayable(uint256 payableId, uint256 engagementId, address obligatorAddress, address claimorAddress, address tokenAddress,
+        uint256 amount, uint256 payableDueTimestamp) internal {
+        require(!_payableSet.contains(payableId), "Issuance: Payable exists.");
+        _payableSet.add(payableId);
+        Payable.Data storage payablee = _payables[payableId];
+        payablee.payableId = payableId;
+        payablee.engagementId = engagementId;
+        payablee.obligatorAddress = obligatorAddress;
+        payablee.claimorAddress = claimorAddress;
+        payablee.tokenAddress = tokenAddress;
+        payablee.amount = amount;
+        payablee.payableDueTimestamp = payableDueTimestamp;
+        emit PayableCreated(_issuanceProperty.issuanceId, payableId, engagementId, obligatorAddress, claimorAddress,
+            tokenAddress, amount, payableDueTimestamp);
     }
 
     /**
      * @dev Updates the existing payable as paid
      */
-    function _markPayableAsPaid(uint256 id) internal {
-        require(_payableSet.contains(id), "Issuance: Payable not exists.");
-        // Removes the payable with id
-        _payableSet.remove(id);
-        delete _payables[id];
-        emit PayablePaid(_issuanceProperty.issuanceId, id);
+    function _markPayableAsPaid(uint256 payableId) internal {
+        require(_payableSet.contains(payableId), "Issuance: Payable not exists.");
+        // Removes the payable with the payable id
+        _payableSet.remove(payableId);
+        delete _payables[payableId];
+        emit PayablePaid(_issuanceProperty.issuanceId, payableId);
     }
 
     /**
      * @dev Updates the existing payable as due
      */
-    function _markPayableAsDue(uint256 id) internal {
-        require(_payableSet.contains(id), "Issuance: Payable not exists.");
-        // Removes the payable with id
-        _payableSet.remove(id);
-        delete _payables[id];
-        emit PayableDue(_issuanceProperty.issuanceId, id);
+    function _markPayableAsDue(uint256 payableId) internal {
+        require(_payableSet.contains(payableId), "Issuance: Payable not exists.");
+        // Removes the payable with payable id
+        _payableSet.remove(payableId);
+        delete _payables[payableId];
+        emit PayableDue(_issuanceProperty.issuanceId, payableId);
     }
 
     /**
      * @dev Updates the existing payable as due
      */
-    function _reinitiatePayable(uint256 id, uint256 reinitiatedTo) internal {
-        require(_payableSet.contains(id), "Issuance: Source payable not exists.");
+    function _reinitiatePayable(uint256 payableId, uint256 reinitiatedTo) internal {
+        require(_payableSet.contains(payableId), "Issuance: Source payable not exists.");
         require(_payableSet.contains(reinitiatedTo), "Issuance: Target payable not exists.");
-        // Removes the payable with id
-        _payableSet.remove(id);
-        delete _payables[id];
-        emit PayableReinitiated(_issuanceProperty.issuanceId, id, reinitiatedTo);
+        // Removes the payable with payable id
+        _payableSet.remove(payableId);
+        delete _payables[payableId];
+        emit PayableReinitiated(_issuanceProperty.issuanceId, payableId, reinitiatedTo);
     }
 }

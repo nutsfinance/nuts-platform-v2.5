@@ -4,7 +4,9 @@ pragma solidity 0.6.8;
 import "./InstrumentBase.sol";
 
 /**
- * @title Instrument that charges maker and/or taker.
+ * @title Instrument that allows FSP to charge maker and/or taker.
+ * Note: The instrument only configures the what to charge. It's up to the issuance
+ * to implement the charge function.
  */
 abstract contract FeebasedInstrument is InstrumentBase {
 
@@ -21,8 +23,8 @@ abstract contract FeebasedInstrument is InstrumentBase {
      * @param takerFeeAmount The amount that taker needs to pay.
      * @param feeRecepientAddress Recepient of the maker and taker fee.
      */
-    constructor(address makerFeeTokenAddress, uint256 makerFeeAmount, address takerFeeTokenAddress, uint256 takerFeeAmount,
-        address feeRecepientAddress) internal {
+    constructor(address makerFeeTokenAddress, uint256 makerFeeAmount, address takerFeeTokenAddress,
+        uint256 takerFeeAmount, address feeRecepientAddress) internal {
         _makerFeeTokenAddress = makerFeeTokenAddress;
         _makerFeeAmount = makerFeeAmount;
         _takerFeeTokenAddress = takerFeeTokenAddress;
@@ -50,10 +52,16 @@ abstract contract FeebasedInstrument is InstrumentBase {
         _feeRecepientAddress = feeRecepientAddress;
     }
 
+    /**
+     * @dev Returns what's charge to the maker.
+     */
     function getMakerFee() public view returns (address, uint256) {
         return (_makerFeeTokenAddress, _makerFeeAmount);
     }
 
+    /**
+     * @dev Returns what's charge to the taker.
+     */
     function getTakerFee() public view returns (address, uint256) {
         return (_takerFeeTokenAddress, _takerFeeAmount);
     }

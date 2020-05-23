@@ -24,7 +24,10 @@ abstract contract EscrowBase is EscrowInterface, AdminAccess {
     mapping(address => mapping(address => uint256)) private _accountBalances;
     WETH9 internal _weth;
 
-    function _initialize(address wethAddress) internal override virtual {
+    /**
+     * @dev Initializes the owner and weth address.
+     */
+    function _initialize(address payable wethAddress) internal {
         require(address(_weth) == address(0x0), "EscrowBase: Already initialize.");
         require(wethAddress != address(0x0), "EscrowBase: WETH not set.");
         AdminAccess._initialize(msg.sender);

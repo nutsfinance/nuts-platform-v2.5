@@ -1,10 +1,80 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
+import "../lib/protobuf/Transfers.sol";
+
 /**
  * @title Base interface for issuance.
  */
 abstract contract IssuanceInterface {
+    
+    /*******************************************************
+     * Timer Oracle related events.
+     *******************************************************/
+
+    /**
+     * @dev The event used to schedule contract events after specific time.
+     */
+    event EventTimeScheduled(uint256 indexed issuanceId, uint256 indexed engagementId, uint256 timestamp,
+        bytes32 eventName, bytes eventData);
+
+    /**
+     * @dev The event used to schedule contract events after specific block.
+     */
+    event EventBlockScheduled(uint256 indexed issuanceId, uint256 indexed engagementId, uint256 blockNumber,
+        bytes32 eventName, bytes eventPayload);
+
+    /*******************************************************
+     * Issuance lifecycle related events.
+     *******************************************************/
+
+    event IssuanceCreated(uint256 indexed issuanceId, address indexed makerAddress, uint256 issuanceDueTimestamp);
+
+    event IssuanceCancelled(uint256 indexed issuanceId);
+
+    event IssuanceComplete(uint256 indexed issuanceId);
+
+    /*******************************************************
+     * Engagement lifecycle related events.
+     *******************************************************/
+
+    event EngagementCreated (uint256 indexed issuanceId, uint256 indexed engagementId, address indexed takerAddress);
+
+    event EngagementCancelled(uint256 indexed issuanceId, uint256 indexed engagementId);
+
+    event EngagementComplete(uint256 indexed issuanceId, uint256 indexed engagementId);
+
+    /*******************************************************
+     * Payable lifecycle related events.
+     *******************************************************/
+
+    /**
+     * @dev The event used to track the creation of a new payable.
+     */
+    event PayableCreated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 indexed engagementId, address obligatorAddress,
+        address claimorAddress, address tokenAddress, uint256 amount, uint256 dueTimestamp);
+
+    /**
+     * @dev The event used to track the payment of a payable
+     */
+    event PayablePaid(uint256 indexed issuanceId, uint256 indexed itemId);
+
+    /**
+     * @dev The event used to track the due of a payable
+     */
+    event PayableDue(uint256 indexed issuanceId, uint256 indexed itemId);
+
+    /**
+     * @dev The event used to track the update of an existing payable
+     */
+    event PayableReinitiated(uint256 indexed issuanceId, uint256 indexed itemId, uint256 reinitiatedTo);
+
+    /**
+     * @dev Asset is transferred.
+     */
+    event AssetTransferred(uint256 indexed issuanceId, uint256 indexed engagementId, Transfer.TransferType transferType,
+        address fromAddress, address toAddress, address tokenAddress, uint256 amount, bytes32 action);
+
     /**
      * @dev Initializes the issuance.
      * @param instrumentManagerAddress Address of the instrument manager.

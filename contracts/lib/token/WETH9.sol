@@ -3,6 +3,10 @@ pragma solidity 0.6.8;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
+/**
+ * @title Wrapped ETH token.
+ * Credit: https://github.com/makerdao/sai/blob/master/src/weth9.sol with 0.6.8 changes.
+ */
 contract WETH9 {
     using SafeMath for uint256;
 
@@ -18,7 +22,7 @@ contract WETH9 {
     mapping (address => uint256)                       public  balanceOf;
     mapping (address => mapping (address => uint256))  public  allowance;
 
-    function fallback() public payable {
+    receive() external payable {
         deposit();
     }
 

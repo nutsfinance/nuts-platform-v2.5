@@ -11,7 +11,8 @@ abstract contract InstrumentBase is AdminAccess {
 
     constructor() internal {
         // Instruments are not proxied. Therefore, we simply initializes here.
-        _initialize(msg.sender);
+        // The instrument creator is the owner.
+        AdminAccess._initialize(msg.sender);
     }
 
     /**
@@ -29,7 +30,8 @@ abstract contract InstrumentBase is AdminAccess {
      * If true, the issuance contract can withdraw from or deposit to the Issuance Escrow.
      * If false, the issuance contract can only read from the Issuance Escrow. Only the Instrument
      * Manager can withdraw from or deposit to the Issuance Escrow.
-     * Instrument by default does not support issuance transaction for high security.
+     * Instrument by default does not support issuance transaction for higher security.
+     * IMPORTANT: This is an experimental feature and should be used with care.
      * @return Whether issuance transaction is supported.
      */
     function supportsIssuanceTransaction() public virtual pure returns (bool) {
@@ -38,13 +40,15 @@ abstract contract InstrumentBase is AdminAccess {
 
     /**
      * @dev Creates a new issuance instance.
+     * Note: This method is expected to be invoked by Instrument Manager so that the Instrument Manager
+     * is the owner of the created Issuance.
      * @param issuanceId ID of the issuance.
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the user who creates the issuance.
      * @param makerData Custom properties of the issuance.
-     * @return The created issuance instance.
-     * @return Initial token transfer actions.
+     * @return issuance The created issuance instance.
+     * @return transfersData Initial token transfer actions.
      */
-    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress,
-        address makerAddress, bytes memory makerData) public virtual returns (IssuanceInterface, bytes memory);
+    function createIssuance(uint256 issuanceId, address issuanceEscrowAddress, address makerAddress,
+        bytes memory makerData) public virtual returns (IssuanceInterface issuance, bytes memory transfersData);
 }
