@@ -22,6 +22,12 @@ abstract contract InstrumentManagerInterface {
     event InstrumentDeactivated(uint256 indexed instrumentId);
 
     /**
+     * @dev An issuance is created.
+     */
+    event IssuanceCreated(uint256 indexed issuanceId, address indexed makerAddress, address issuanceAddress,
+        address issuanceEscrowAddress);
+
+    /**
      * @dev Token is transferred.
      */
     event TokenTransferred(uint256 indexed issuanceId, Transfer.TransferType transferType, address fromAddress,

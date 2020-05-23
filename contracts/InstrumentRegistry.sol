@@ -11,6 +11,12 @@ contract InstrumentRegistry {
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
 
+    /**
+     * @dev The instrument is activated.
+     */
+    event InstrumentActivated(uint256 indexed instrumentId, address indexed fspAddress,
+        address indexed instrumentAddress, address instrumentEscrowAddress);
+
     Counters.Counter private _instrumentIds;
     Config private _config;
     mapping(uint256 => address) _instrumentManagers;
@@ -33,12 +39,15 @@ contract InstrumentRegistry {
 
         _instrumentIds.increment();
         // Create Instrument Manager
+        uint256 instrumentId = _instrumentIds.current();
         InstrumentManagerFactoryInterface instrumentManagerFactory = InstrumentManagerFactoryInterface(
             _config.getInstrumentManagerFactory(version));
         InstrumentManagerInterface instrumentManager = instrumentManagerFactory.createInstrumentManager(
-            instrumentAddress, _instrumentIds.current(), msg.sender, address(_config), instrumentData);
+            instrumentAddress, instrumentId, msg.sender, address(_config), instrumentData);
 
-        _instrumentManagers[_instrumentIds.current()] = address(instrumentManager);
+        _instrumentManagers[instrumentId] = address(instrumentManager);
+        emit InstrumentActivated(instrumentId, msg.sender, address(instrumentManager),
+            address(instrumentManager.getInstrumentEscrow()));
 
         if (_config.getDepositAmount() > 0) {
             IERC20 depositToken = IERC20(_config.getDepositToken());

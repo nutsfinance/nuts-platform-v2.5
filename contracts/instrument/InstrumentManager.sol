@@ -119,6 +119,8 @@ contract InstrumentManager is InstrumentManagerInterface {
         if (instrument.supportsIssuanceTransaction()) {
             issuanceEscrow.grantAdmin(address(issuance));
         }
+        emit IssuanceCreated(newIssuanceId, msg.sender, address(issuance), address(issuanceEscrow));
+
         processTransfers(newIssuanceId, transferData);
 
         _issuances[newIssuanceId] = IssuanceProperty({
