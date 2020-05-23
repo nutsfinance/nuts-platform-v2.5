@@ -86,6 +86,9 @@ abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
     event AssetTransferred(uint256 indexed issuanceId, uint256 indexed engagementId, Transfer.TransferType transferType,
         address fromAddress, address toAddress, address tokenAddress, uint256 amount, bytes32 action);
 
+    // Constant
+    uint256 internal constant COMPLETION_RATIO_RANGE = 10000;
+
     // Common scheduled events
     bytes32 internal constant ISSUANCE_DUE_EVENT = "issuance_due";
     bytes32 internal constant ENGAGEMENT_DUE_EVENT = "engagement_due";

@@ -129,7 +129,7 @@ contract SwapIssuance is IssuanceBase {
         emit EngagementComplete(_issuanceProperty.issuanceId, engagementId);
 
         // Set common issuance property
-        _issuanceProperty.completionRatio = 10000 - _mip.remainingInputAmount.mul(10000).div(_mip.inputAmount);
+        _issuanceProperty.completionRatio = _mip.inputAmount.sub(_mip.remainingInputAmount).mul(COMPLETION_RATIO_RANGE).div(_mip.inputAmount);
         if (_mip.remainingInputAmount == 0) {
             _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
             _issuanceProperty.issuanceCompleteTimestamp = now;

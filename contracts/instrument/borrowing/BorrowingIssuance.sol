@@ -134,7 +134,7 @@ contract BorrowingIssuance is IssuanceBase {
         // Set common issuance property
         _issuanceProperty.issuanceCompleteTimestamp = now;
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
-        _issuanceProperty.completionRatio = 10000;
+        _issuanceProperty.completionRatio = COMPLETION_RATIO_RANGE;
         emit IssuanceComplete(_issuanceProperty.issuanceId);
 
         // Sets borrowing-specific engagement property
