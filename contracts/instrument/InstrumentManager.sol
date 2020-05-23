@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "../escrow/EscrowFactoryInterface.sol";
 import "../escrow/InstrumentEscrowInterface.sol";
 import "../escrow/IssuanceEscrowInterface.sol";
+import "../lib/access/AdminAccess.sol";
 import "../lib/token/WETH9.sol";
 import "../lib/protobuf/Transfers.sol";
 import "../Config.sol";
@@ -114,6 +115,10 @@ contract InstrumentManager is InstrumentManagerInterface {
         // Creates and initializes the issuance instance.
         (IssuanceInterface issuance, bytes memory transferData) = instrument.createIssuance(newIssuanceId,
             address(issuanceEscrow), msg.sender, makerData);
+        // If the instrument supports issuance escrow transaction, grant the admin role of issuance escrow to issuance
+        if (instrument.supportsIssuanceTransaction()) {
+            issuanceEscrow.grantAdmin(address(issuance));
+        }
         processTransfers(newIssuanceId, transferData);
 
         _issuances[newIssuanceId] = IssuanceProperty({

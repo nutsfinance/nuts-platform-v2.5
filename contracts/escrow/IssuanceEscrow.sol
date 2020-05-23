@@ -11,4 +11,12 @@ contract IssuanceEscrow is EscrowBase, IssuanceEscrowInterface {
     function initialize(address wethAddress) public {
         super._initialize(wethAddress);
     }
+
+    /**
+     * @dev Grants an admin role to the account.
+     * @param account The address of the new admin.
+     */
+    function grantAdmin(address account) public override {
+        grantRole(ADMIN_ROLE, account);
+    }
 }
