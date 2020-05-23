@@ -13,7 +13,7 @@ import "./MultiSwapInstrument.sol";
 /**
  * @title A base contract that provide admin access control.
  */
-contract SwapIssuance is IssuanceBase {
+contract MultiSwapIssuance is IssuanceBase {
     using Counters for Counters.Counter;
     using SafeMath for uint256;
 
