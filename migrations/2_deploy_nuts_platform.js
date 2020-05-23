@@ -1,7 +1,18 @@
+const InstrumentRegistry = artifacts.require("InstrumentRegistry");
 const LendingIssuance = artifacts.require("LendingIssuance");
 
-module.exports = function(deployer, environment, accounts) {
-    console.log(accounts);
-    console.log(environment);
-  deployer.deploy(LendingIssuance, accounts[1], 1, accounts[2], accounts[0], web3.utils.fromAscii(''));
+
+module.exports = function(deployer, environment, [owner]) {
+
 };
+
+
+module.exports = function(deployer, network, accounts) {
+  deployer
+      .then(() => deployNutsPlatform(deployer, accounts))
+      .catch(error => {
+        console.log(error);
+        process.exit(1);
+      });
+  };
+  

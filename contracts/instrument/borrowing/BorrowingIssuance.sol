@@ -11,14 +11,14 @@ import "../IssuanceBase.sol";
 import "./BorrowingInstrument.sol";
 
 /**
- * @title A base contract that provide admin access control.
+ * @title 1 to 1 borrowing issuance contract.
  */
 contract BorrowingIssuance is IssuanceBase {
     using SafeMath for uint256;
 
     // Constants
-    uint256 internal constant ENGAGEMENT_ID = 1;
-    uint256 internal constant ISSUANCE_DUE_DAYS = 14 days; // Time available for taker to engage
+    uint256 internal constant ENGAGEMENT_ID = 1; // Since it's 1 to 1, we use a constant engagement id 1
+    uint256 internal constant ISSUANCE_DUE_DAYS = 14 days; // Issuance duration, or time available for taker to engage
     uint256 internal constant TENOR_DAYS_MIN = 2; // Minimum tenor is 2 days
     uint256 internal constant TENOR_DAYS_MAX = 90; // Maximum tenor is 90 days
     uint256 internal constant COLLATERAL_RATIO_DECIMALS = 10**4; // 0.01%
@@ -84,14 +84,14 @@ contract BorrowingIssuance is IssuanceBase {
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
         emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
-        // Scheduling Issuance Due event
-        emit EventTimeScheduled(_issuanceProperty.issuanceId, 0, _issuanceProperty.issuanceDueTimestamp, ISSUANCE_DUE_EVENT, "");
-
         // Sets borrowing issuance properties
         _bip.interestAmount = _bip.borrowingAmount.mul(_bip.tenorDays).mul(_bip.interestRate).div(INTEREST_RATE_DECIMALS);
 
+        // Scheduling Issuance Due event
+        emit EventTimeScheduled(_issuanceProperty.issuanceId, 0, _issuanceProperty.issuanceDueTimestamp, ISSUANCE_DUE_EVENT, "");
+
         // Transfers principal token
-        // Principal token inbound transfer: Maker --> Maker
+        // Collateral token inbound transfer: Maker --> Maker
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Inbound, makerAddress,
             makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount);
@@ -134,7 +134,7 @@ contract BorrowingIssuance is IssuanceBase {
         _issuanceProperty.issuanceCompleteTimestamp = now;
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.completionRatio = COMPLETION_RATIO_RANGE;
-        emit IssuanceComplete(_issuanceProperty.issuanceId);
+        emit IssuanceComplete(_issuanceProperty.issuanceId, COMPLETION_RATIO_RANGE);
 
         // Sets borrowing-specific engagement property
         _bep.loanState = BorrowingEngagementProperty.LoanState.Unpaid;
@@ -198,10 +198,10 @@ contract BorrowingIssuance is IssuanceBase {
         // The issuance is now complete
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.issuanceCompleteTimestamp = now;
-        emit IssuanceComplete(_issuanceProperty.issuanceId);
+        emit IssuanceComplete(_issuanceProperty.issuanceId, 0);
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
-        // Collateral token outbound transfer: Maler --> Maker
+        // Collateral token outbound transfer: Maker --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _bip.collateralTokenAddress, _bip.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Outbound,

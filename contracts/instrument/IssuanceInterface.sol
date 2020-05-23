@@ -32,7 +32,7 @@ abstract contract IssuanceInterface {
 
     event IssuanceCancelled(uint256 indexed issuanceId);
 
-    event IssuanceComplete(uint256 indexed issuanceId);
+    event IssuanceComplete(uint256 indexed issuanceId, uint256 completionRatio);
 
     /*******************************************************
      * Engagement lifecycle related events.

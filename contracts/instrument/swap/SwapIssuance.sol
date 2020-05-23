@@ -10,13 +10,13 @@ import "../IssuanceBase.sol";
 import "./SwapInstrument.sol";
 
 /**
- * @title A base contract that provide admin access control.
+ * @title 1 to 1 swap issuance contract.
  */
 contract SwapIssuance is IssuanceBase {
     using SafeMath for uint256;
 
     // Constants
-    uint256 internal constant ENGAGEMENT_ID = 1;
+    uint256 internal constant ENGAGEMENT_ID = 1; // Since it's 1 to 1, we use a constant engagement id 1
     uint256 internal constant DURATION_MIN = 1; // Minimum duration is 1 day
     uint256 internal constant DURATION_MAX = 90; // Maximum duration is 90 days
 
@@ -55,7 +55,7 @@ contract SwapIssuance is IssuanceBase {
         require(inputTokenBalance >= _sip.inputAmount, "Insufficient input balance");
 
         // Sets common properties
-        _issuanceProperty.issuanceDueTimestamp = now.add(_sip.duration);
+        _issuanceProperty.issuanceDueTimestamp = now.add(1 days * _sip.duration);
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
         emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
@@ -93,8 +93,10 @@ contract SwapIssuance is IssuanceBase {
         uint256 outputTokenBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(takerAddress, _sip.outputTokenAddress);
         require(outputTokenBalance >= _sip.outputAmount, "Insufficient output balance");
 
-        // Set common engagement property
         engagementId = ENGAGEMENT_ID;
+        _engagementSet.add(ENGAGEMENT_ID);
+
+        // Set common engagement property
         EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
         engagement.engagementId = ENGAGEMENT_ID;
         engagement.takerAddress = takerAddress;
@@ -108,20 +110,20 @@ contract SwapIssuance is IssuanceBase {
         // Set common issuance property
         _issuanceProperty.issuanceCompleteTimestamp = now;
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
-        _issuanceProperty.completionRatio = 10000;
-        emit IssuanceComplete(_issuanceProperty.issuanceId);
+        _issuanceProperty.completionRatio = COMPLETION_RATIO_RANGE;
+        emit IssuanceComplete(_issuanceProperty.issuanceId, COMPLETION_RATIO_RANGE);
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
         // Output token intra-instrument transfer: Taker -> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, takerAddress,
             _issuanceProperty.makerAddress, _sip.outputTokenAddress, _sip.outputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Inbound, takerAddress,
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, takerAddress,
             _issuanceProperty.makerAddress, _sip.outputTokenAddress, _sip.outputAmount, "Output transfer");
-        // Inpunt token outbound transfer: Maker -> Taker
+        // Input token outbound transfer: Maker -> Taker
         transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress,
             takerAddress, _sip.inputTokenAddress, _sip.inputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Inbound, _issuanceProperty.makerAddress,
-            takerAddress, _sip.inputTokenAddress, _sip.inputAmount, "Output out");
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress,
+            takerAddress, _sip.inputTokenAddress, _sip.inputAmount, "Input out");
         transfersData = Transfers.encode(transfers);
 
         // Mark payable 1 as paid
@@ -159,7 +161,7 @@ contract SwapIssuance is IssuanceBase {
         // The issuance is now complete
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.issuanceCompleteTimestamp = now;
-        emit IssuanceComplete(_issuanceProperty.issuanceId);
+        emit IssuanceComplete(_issuanceProperty.issuanceId, 0);
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Input token outbound transfer: Maker --> Maker

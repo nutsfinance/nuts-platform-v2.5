@@ -11,13 +11,13 @@ import "../IssuanceBase.sol";
 import "./LendingInstrument.sol";
 
 /**
- * @title A base contract that provide admin access control.
+ * @title 1 to 1 lending issuance contract.
  */
 contract LendingIssuance is IssuanceBase {
     using SafeMath for uint256;
 
     // Constants
-    uint256 internal constant ENGAGEMENT_ID = 1;
+    uint256 internal constant ENGAGEMENT_ID = 1; // Since it's 1 to 1, we use a constant engagement id 1
     uint256 internal constant ISSUANCE_DUE_DAYS = 14 days; // Time available for taker to engage
     uint256 internal constant TENOR_DAYS_MIN = 2; // Minimum tenor is 2 days
     uint256 internal constant TENOR_DAYS_MAX = 90; // Maximum tenor is 90 days
@@ -79,11 +79,11 @@ contract LendingIssuance is IssuanceBase {
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
         emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
+        // Sets lending issuance properties
+        _lip.interestAmount = _lip.lendingAmount.mul(_lip.tenorDays).mul(_lip.interestRate).div(INTEREST_RATE_DECIMALS);
+
         // Scheduling Issuance Due event
         emit EventTimeScheduled(_issuanceProperty.issuanceId, 0, _issuanceProperty.issuanceDueTimestamp, ISSUANCE_DUE_EVENT, "");
-
-        // Sets lending properties
-        _lip.interestAmount = _lip.lendingAmount.mul(_lip.tenorDays).mul(_lip.interestRate).div(INTEREST_RATE_DECIMALS);
 
         // Transfers principal token
         // Principal token inbound transfer: Maker --> Maker
@@ -132,8 +132,9 @@ contract LendingIssuance is IssuanceBase {
 
         // Set common issuance property
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
+        _issuanceProperty.issuanceCompleteTimestamp = now;
         _issuanceProperty.completionRatio = COMPLETION_RATIO_RANGE;
-        emit IssuanceComplete(_issuanceProperty.issuanceId);
+        emit IssuanceComplete(_issuanceProperty.issuanceId, COMPLETION_RATIO_RANGE);
 
         // Sets lending-specific engagement property
         _lep.loanState = LendingEngagementProperty.LoanState.Unpaid;
@@ -209,7 +210,7 @@ contract LendingIssuance is IssuanceBase {
         // The issuance is now complete
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.issuanceCompleteTimestamp = now;
-        emit IssuanceComplete(_issuanceProperty.issuanceId);
+        emit IssuanceComplete(_issuanceProperty.issuanceId, 0);
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
         // Principal token outbound transfer: Maler --> Maker
