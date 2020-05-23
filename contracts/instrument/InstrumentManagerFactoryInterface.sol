@@ -9,6 +9,14 @@ import "../Config.sol";
  */
 abstract contract InstrumentManagerFactoryInterface {
 
+    /**
+     * @dev Creates a new instrument manager.
+     * @param instrumentAddress Address of the instrument.
+     * @param instrumentId Id of the activated instrument.
+     * @param fspAddress Address of the FSP who activates the instrument.
+     * @param configAddress Address of the NUTS Platform config contract.
+     * @param instrumentData Custom property of the instrument.
+     */
     function createInstrumentManager(address instrumentAddress, uint256 instrumentId, address fspAddress,
         address configAddress, bytes memory instrumentData) public virtual returns (InstrumentManagerInterface);
 
