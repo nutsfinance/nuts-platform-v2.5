@@ -7,6 +7,9 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "./instrument/InstrumentManagerFactoryInterface.sol";
 import "./Config.sol";
 
+/**
+ * @title The registry for all instruments.
+ */
 contract InstrumentRegistry {
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
@@ -51,7 +54,8 @@ contract InstrumentRegistry {
 
         if (_config.getDepositAmount() > 0) {
             IERC20 depositToken = IERC20(_config.getDepositToken());
-            // Transfers NUTS token from sender to Instrument Registry.
+            // Transfers NUTS token from sender to Instrument Registry first
+            // as user approves Instrument Registry instead of the newly created Instrument Manager.
             depositToken.safeTransferFrom(msg.sender, address(this), _config.getDepositAmount());
             // Sends NUTS token from Instrument Registry to the newly created Instrument Manager.
             depositToken.safeTransfer(address(instrumentManager), _config.getDepositAmount());
