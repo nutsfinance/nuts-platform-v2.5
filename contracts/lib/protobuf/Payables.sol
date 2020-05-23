@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 import "./ProtoBufRuntime.sol";
+import "./GoogleProtobufAny.sol";
 
 library Payable {
 
@@ -48,9 +49,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[8] memory counters;
@@ -122,9 +123,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _read_payableId(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -149,9 +150,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _read_engagementId(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -176,9 +177,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _read_obligatorAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -203,9 +204,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _read_claimorAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -230,9 +231,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _read_tokenAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -257,9 +258,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _read_amount(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -284,9 +285,9 @@ library Payable {
    * @return The number of bytes decoded
    */
   function _read_payableDueTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -328,59 +329,59 @@ library Payable {
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     
     pointer += ProtoBufRuntime._encode_key(
-      1, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      1,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.payableId, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      2, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      2,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementId, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      3, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      3,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.obligatorAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      4, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      4,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.claimorAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      5, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      5,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.tokenAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      6, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      6,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.amount, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      7, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      7,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.payableDueTimestamp, pointer, bs);
@@ -396,9 +397,9 @@ library Payable {
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.

@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 import "./ProtoBufRuntime.sol";
+import "./GoogleProtobufAny.sol";
 import "./Payables.sol";
 
 library IssuanceProperty {
 
   //enum definition
-// Solidity enum definitions
-enum IssuanceState {
+  // Solidity enum definitions
+  enum IssuanceState {
     IssuanceStateUnknown,
     Initiated,
     Engageable,
@@ -16,56 +17,56 @@ enum IssuanceState {
   }
 
 
-// Solidity enum encoder
-function encode_IssuanceState(IssuanceState x) internal pure returns (int64) {
+  // Solidity enum encoder
+  function encode_IssuanceState(IssuanceState x) internal pure returns (int64) {
     
-  if (x == IssuanceState.IssuanceStateUnknown) {
-    return 0;
+    if (x == IssuanceState.IssuanceStateUnknown) {
+      return 0;
+    }
+
+    if (x == IssuanceState.Initiated) {
+      return 1;
+    }
+
+    if (x == IssuanceState.Engageable) {
+      return 2;
+    }
+
+    if (x == IssuanceState.Cancelled) {
+      return 3;
+    }
+
+    if (x == IssuanceState.Complete) {
+      return 4;
+    }
+    revert();
   }
 
-  if (x == IssuanceState.Initiated) {
-    return 1;
-  }
 
-  if (x == IssuanceState.Engageable) {
-    return 2;
-  }
-
-  if (x == IssuanceState.Cancelled) {
-    return 3;
-  }
-
-  if (x == IssuanceState.Complete) {
-    return 4;
-  }
-  revert();
-}
-
-
-// Solidity enum decoder
-function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
+  // Solidity enum decoder
+  function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
     
-  if (x == 0) {
-    return IssuanceState.IssuanceStateUnknown;
-  }
+    if (x == 0) {
+      return IssuanceState.IssuanceStateUnknown;
+    }
 
-  if (x == 1) {
-    return IssuanceState.Initiated;
-  }
+    if (x == 1) {
+      return IssuanceState.Initiated;
+    }
 
-  if (x == 2) {
-    return IssuanceState.Engageable;
-  }
+    if (x == 2) {
+      return IssuanceState.Engageable;
+    }
 
-  if (x == 3) {
-    return IssuanceState.Cancelled;
-  }
+    if (x == 3) {
+      return IssuanceState.Cancelled;
+    }
 
-  if (x == 4) {
-    return IssuanceState.Complete;
+    if (x == 4) {
+      return IssuanceState.Complete;
+    }
+    revert();
   }
-  revert();
-}
 
 
   //struct definition
@@ -116,9 +117,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[13] memory counters;
@@ -271,9 +272,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_issuanceId(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -298,9 +299,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_instrumentId(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -325,9 +326,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_makerAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -352,9 +353,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_issuanceCreationTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -379,9 +380,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_issuanceDueTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -406,9 +407,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_issuanceCancelTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -433,9 +434,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_issuanceCompleteTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -460,9 +461,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_completionRatio(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -487,9 +488,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_issuanceState(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -515,9 +516,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_issuanceCustomProperty(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -542,9 +543,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_engagements(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -569,9 +570,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes decoded
    */
   function _read_payables(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[13] memory counters
   ) internal pure returns (uint) {
     /**
@@ -596,9 +597,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes used to decode
    */
   function _decode_EngagementProperty(uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (EngagementProperty.Data memory, uint) 
+    internal
+    pure
+    returns (EngagementProperty.Data memory, uint)
   {
     uint256 pointer = p;
     (uint256 sz, uint256 bytesRead) = ProtoBufRuntime._decode_varint(pointer, bs);
@@ -615,9 +616,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes used to decode
    */
   function _decode_Payable(uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (Payable.Data memory, uint) 
+    internal
+    pure
+    returns (Payable.Data memory, uint)
   {
     uint256 pointer = p;
     (uint256 sz, uint256 bytesRead) = ProtoBufRuntime._decode_varint(pointer, bs);
@@ -652,98 +653,98 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     uint256 i;
     pointer += ProtoBufRuntime._encode_key(
-      1, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      1,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceId, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      2, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      2,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.instrumentId, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      3, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      3,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.makerAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      4, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      4,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCreationTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      5, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      5,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceDueTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      6, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      6,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCancelTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      7, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      7,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCompleteTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      8, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      8,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.completionRatio, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      9, 
-      ProtoBufRuntime.WireType.Varint, 
-      pointer, 
+      9,
+      ProtoBufRuntime.WireType.Varint,
+      pointer,
       bs
     );
     int64 _enum_issuanceState = encode_IssuanceState(r.issuanceState);
     pointer += ProtoBufRuntime._encode_enum(_enum_issuanceState, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      10, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      10,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_bytes(r.issuanceCustomProperty, pointer, bs);
     for(i = 0; i < r.engagements.length; i++) {
       pointer += ProtoBufRuntime._encode_key(
-        11, 
-        ProtoBufRuntime.WireType.LengthDelim, 
-        pointer, 
+        11,
+        ProtoBufRuntime.WireType.LengthDelim,
+        pointer,
         bs)
       ;
       pointer += EngagementProperty._encode_nested(r.engagements[i], pointer, bs);
     }
     for(i = 0; i < r.payables.length; i++) {
       pointer += ProtoBufRuntime._encode_key(
-        12, 
-        ProtoBufRuntime.WireType.LengthDelim, 
-        pointer, 
+        12,
+        ProtoBufRuntime.WireType.LengthDelim,
+        pointer,
         bs)
       ;
       pointer += Payable._encode_nested(r.payables[i], pointer, bs);
@@ -760,9 +761,9 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.
@@ -817,27 +818,25 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
    * @param output The in-storage struct
    */
   function store(Data memory input, Data storage output) internal {
-    // output.issuanceId = input.issuanceId;
-    // output.instrumentId = input.instrumentId;
-    // output.makerAddress = input.makerAddress;
-    // output.issuanceCreationTimestamp = input.issuanceCreationTimestamp;
-    // output.issuanceDueTimestamp = input.issuanceDueTimestamp;
-    // output.issuanceCancelTimestamp = input.issuanceCancelTimestamp;
-    // output.issuanceCompleteTimestamp = input.issuanceCompleteTimestamp;
-    // output.completionRatio = input.completionRatio;
-    // output.issuanceState = input.issuanceState;
-    // output.issuanceCustomProperty = input.issuanceCustomProperty;
+    output.issuanceId = input.issuanceId;
+    output.instrumentId = input.instrumentId;
+    output.makerAddress = input.makerAddress;
+    output.issuanceCreationTimestamp = input.issuanceCreationTimestamp;
+    output.issuanceDueTimestamp = input.issuanceDueTimestamp;
+    output.issuanceCancelTimestamp = input.issuanceCancelTimestamp;
+    output.issuanceCompleteTimestamp = input.issuanceCompleteTimestamp;
+    output.completionRatio = input.completionRatio;
+    output.issuanceState = input.issuanceState;
+    output.issuanceCustomProperty = input.issuanceCustomProperty;
 
-    // output.engagements.length = input.engagements.length;
-    // for(uint256 i11 = 0; i11 < input.engagements.length; i11++) {
-    //   EngagementProperty.store(input.engagements[i11], output.engagements[i11]);
-    // }
+    for(uint256 i11 = 0; i11 < input.engagements.length; i11++) {
+      output.engagements.push(input.engagements[i11]);
+    }
     
 
-    // output.payables.length = input.payables.length;
-    // for(uint256 i12 = 0; i12 < input.payables.length; i12++) {
-    //   Payable.store(input.payables[i12], output.payables[i12]);
-    // }
+    for(uint256 i12 = 0; i12 < input.payables.length; i12++) {
+      output.payables.push(input.payables[i12]);
+    }
     
 
   }
@@ -907,8 +906,8 @@ function decode_IssuanceState(int64 x) internal pure returns (IssuanceState) {
 library EngagementProperty {
 
   //enum definition
-// Solidity enum definitions
-enum EngagementState {
+  // Solidity enum definitions
+  enum EngagementState {
     EngagementStateUnknown,
     Initiated,
     Active,
@@ -917,56 +916,56 @@ enum EngagementState {
   }
 
 
-// Solidity enum encoder
-function encode_EngagementState(EngagementState x) internal pure returns (int64) {
+  // Solidity enum encoder
+  function encode_EngagementState(EngagementState x) internal pure returns (int64) {
     
-  if (x == EngagementState.EngagementStateUnknown) {
-    return 0;
+    if (x == EngagementState.EngagementStateUnknown) {
+      return 0;
+    }
+
+    if (x == EngagementState.Initiated) {
+      return 1;
+    }
+
+    if (x == EngagementState.Active) {
+      return 2;
+    }
+
+    if (x == EngagementState.Cancelled) {
+      return 3;
+    }
+
+    if (x == EngagementState.Complete) {
+      return 4;
+    }
+    revert();
   }
 
-  if (x == EngagementState.Initiated) {
-    return 1;
-  }
 
-  if (x == EngagementState.Active) {
-    return 2;
-  }
-
-  if (x == EngagementState.Cancelled) {
-    return 3;
-  }
-
-  if (x == EngagementState.Complete) {
-    return 4;
-  }
-  revert();
-}
-
-
-// Solidity enum decoder
-function decode_EngagementState(int64 x) internal pure returns (EngagementState) {
+  // Solidity enum decoder
+  function decode_EngagementState(int64 x) internal pure returns (EngagementState) {
     
-  if (x == 0) {
-    return EngagementState.EngagementStateUnknown;
-  }
+    if (x == 0) {
+      return EngagementState.EngagementStateUnknown;
+    }
 
-  if (x == 1) {
-    return EngagementState.Initiated;
-  }
+    if (x == 1) {
+      return EngagementState.Initiated;
+    }
 
-  if (x == 2) {
-    return EngagementState.Active;
-  }
+    if (x == 2) {
+      return EngagementState.Active;
+    }
 
-  if (x == 3) {
-    return EngagementState.Cancelled;
-  }
+    if (x == 3) {
+      return EngagementState.Cancelled;
+    }
 
-  if (x == 4) {
-    return EngagementState.Complete;
+    if (x == 4) {
+      return EngagementState.Complete;
+    }
+    revert();
   }
-  revert();
-}
 
 
   //struct definition
@@ -1013,9 +1012,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[9] memory counters;
@@ -1090,9 +1089,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_engagementId(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1117,9 +1116,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_takerAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1144,9 +1143,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_engagementCreationTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1171,9 +1170,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_engagementDueTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1198,9 +1197,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_engagementCancelTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1225,9 +1224,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_engagementCompleteTimestamp(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1252,9 +1251,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_engagementState(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1280,9 +1279,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes decoded
    */
   function _read_engagementCustomProperty(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[9] memory counters
   ) internal pure returns (uint) {
     /**
@@ -1324,67 +1323,67 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     
     pointer += ProtoBufRuntime._encode_key(
-      1, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      1,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementId, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      2, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      2,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.takerAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      3, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      3,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementCreationTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      4, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      4,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementDueTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      5, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      5,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementCancelTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      6, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      6,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementCompleteTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      7, 
-      ProtoBufRuntime.WireType.Varint, 
-      pointer, 
+      7,
+      ProtoBufRuntime.WireType.Varint,
+      pointer,
       bs
     );
     int64 _enum_engagementState = encode_EngagementState(r.engagementState);
     pointer += ProtoBufRuntime._encode_enum(_enum_engagementState, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      8, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      8,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_bytes(r.engagementCustomProperty, pointer, bs);
@@ -1400,9 +1399,9 @@ function decode_EngagementState(int64 x) internal pure returns (EngagementState)
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.

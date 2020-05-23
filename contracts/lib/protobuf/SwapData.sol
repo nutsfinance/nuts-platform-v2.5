@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 import "./ProtoBufRuntime.sol";
+import "./GoogleProtobufAny.sol";
 
 library SwapIssuanceProperty {
 
@@ -46,9 +47,9 @@ library SwapIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[6] memory counters;
@@ -114,9 +115,9 @@ library SwapIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_inputTokenAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -141,9 +142,9 @@ library SwapIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_outputTokenAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -168,9 +169,9 @@ library SwapIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_inputAmount(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -195,9 +196,9 @@ library SwapIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_outputAmount(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -222,9 +223,9 @@ library SwapIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_duration(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -266,45 +267,45 @@ library SwapIssuanceProperty {
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     
     pointer += ProtoBufRuntime._encode_key(
-      1, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      1,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.inputTokenAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      2, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      2,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.outputTokenAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      3, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      3,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.inputAmount, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      4, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      4,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.outputAmount, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      5, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      5,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.duration, pointer, bs);
@@ -320,9 +321,9 @@ library SwapIssuanceProperty {
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.

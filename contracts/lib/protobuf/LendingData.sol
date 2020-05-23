@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 import "./ProtoBufRuntime.sol";
+import "./GoogleProtobufAny.sol";
 
 library LendingIssuanceProperty {
 
@@ -48,9 +49,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[8] memory counters;
@@ -122,9 +123,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_lendingTokenAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -149,9 +150,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_collateralTokenAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -176,9 +177,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_lendingAmount(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -203,9 +204,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_collateralRatio(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -230,9 +231,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_interestRate(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -257,9 +258,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_interestAmount(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -284,9 +285,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes decoded
    */
   function _read_tenorDays(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[8] memory counters
   ) internal pure returns (uint) {
     /**
@@ -328,59 +329,59 @@ library LendingIssuanceProperty {
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     
     pointer += ProtoBufRuntime._encode_key(
-      1, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      1,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.lendingTokenAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      2, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      2,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.collateralTokenAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      3, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      3,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.lendingAmount, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      4, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      4,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.collateralRatio, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      5, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      5,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.interestRate, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      6, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      6,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.interestAmount, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      7, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      7,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.tenorDays, pointer, bs);
@@ -396,9 +397,9 @@ library LendingIssuanceProperty {
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.
@@ -482,8 +483,8 @@ library LendingIssuanceProperty {
 library LendingEngagementProperty {
 
   //enum definition
-// Solidity enum definitions
-enum LoanState {
+  // Solidity enum definitions
+  enum LoanState {
     LoanStateUnknown,
     Unpaid,
     Repaid,
@@ -491,48 +492,48 @@ enum LoanState {
   }
 
 
-// Solidity enum encoder
-function encode_LoanState(LoanState x) internal pure returns (int64) {
+  // Solidity enum encoder
+  function encode_LoanState(LoanState x) internal pure returns (int64) {
     
-  if (x == LoanState.LoanStateUnknown) {
-    return 0;
+    if (x == LoanState.LoanStateUnknown) {
+      return 0;
+    }
+
+    if (x == LoanState.Unpaid) {
+      return 1;
+    }
+
+    if (x == LoanState.Repaid) {
+      return 2;
+    }
+
+    if (x == LoanState.Delinquent) {
+      return 3;
+    }
+    revert();
   }
 
-  if (x == LoanState.Unpaid) {
-    return 1;
-  }
 
-  if (x == LoanState.Repaid) {
-    return 2;
-  }
-
-  if (x == LoanState.Delinquent) {
-    return 3;
-  }
-  revert();
-}
-
-
-// Solidity enum decoder
-function decode_LoanState(int64 x) internal pure returns (LoanState) {
+  // Solidity enum decoder
+  function decode_LoanState(int64 x) internal pure returns (LoanState) {
     
-  if (x == 0) {
-    return LoanState.LoanStateUnknown;
-  }
+    if (x == 0) {
+      return LoanState.LoanStateUnknown;
+    }
 
-  if (x == 1) {
-    return LoanState.Unpaid;
-  }
+    if (x == 1) {
+      return LoanState.Unpaid;
+    }
 
-  if (x == 2) {
-    return LoanState.Repaid;
-  }
+    if (x == 2) {
+      return LoanState.Repaid;
+    }
 
-  if (x == 3) {
-    return LoanState.Delinquent;
+    if (x == 3) {
+      return LoanState.Delinquent;
+    }
+    revert();
   }
-  revert();
-}
 
 
   //struct definition
@@ -573,9 +574,9 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[3] memory counters;
@@ -632,9 +633,9 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
    * @return The number of bytes decoded
    */
   function _read_collateralAmount(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[3] memory counters
   ) internal pure returns (uint) {
     /**
@@ -659,9 +660,9 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
    * @return The number of bytes decoded
    */
   function _read_loanState(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[3] memory counters
   ) internal pure returns (uint) {
     /**
@@ -704,24 +705,24 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     
     pointer += ProtoBufRuntime._encode_key(
-      1, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      1,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.collateralAmount, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      2, 
-      ProtoBufRuntime.WireType.Varint, 
-      pointer, 
+      2,
+      ProtoBufRuntime.WireType.Varint,
+      pointer,
       bs
     );
     int64 _enum_loanState = encode_LoanState(r.loanState);
@@ -738,9 +739,9 @@ function decode_LoanState(int64 x) internal pure returns (LoanState) {
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.

@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 import "./ProtoBufRuntime.sol";
+import "./GoogleProtobufAny.sol";
 
 library Transfer {
 
   //enum definition
-// Solidity enum definitions
-enum TransferType {
+  // Solidity enum definitions
+  enum TransferType {
     Unknown,
     Inbound,
     Outbound,
@@ -15,56 +16,56 @@ enum TransferType {
   }
 
 
-// Solidity enum encoder
-function encode_TransferType(TransferType x) internal pure returns (int64) {
+  // Solidity enum encoder
+  function encode_TransferType(TransferType x) internal pure returns (int64) {
     
-  if (x == TransferType.Unknown) {
-    return 0;
+    if (x == TransferType.Unknown) {
+      return 0;
+    }
+
+    if (x == TransferType.Inbound) {
+      return 1;
+    }
+
+    if (x == TransferType.Outbound) {
+      return 2;
+    }
+
+    if (x == TransferType.IntraIssuance) {
+      return 3;
+    }
+
+    if (x == TransferType.IntraInstrument) {
+      return 4;
+    }
+    revert();
   }
 
-  if (x == TransferType.Inbound) {
-    return 1;
-  }
 
-  if (x == TransferType.Outbound) {
-    return 2;
-  }
-
-  if (x == TransferType.IntraIssuance) {
-    return 3;
-  }
-
-  if (x == TransferType.IntraInstrument) {
-    return 4;
-  }
-  revert();
-}
-
-
-// Solidity enum decoder
-function decode_TransferType(int64 x) internal pure returns (TransferType) {
+  // Solidity enum decoder
+  function decode_TransferType(int64 x) internal pure returns (TransferType) {
     
-  if (x == 0) {
-    return TransferType.Unknown;
-  }
+    if (x == 0) {
+      return TransferType.Unknown;
+    }
 
-  if (x == 1) {
-    return TransferType.Inbound;
-  }
+    if (x == 1) {
+      return TransferType.Inbound;
+    }
 
-  if (x == 2) {
-    return TransferType.Outbound;
-  }
+    if (x == 2) {
+      return TransferType.Outbound;
+    }
 
-  if (x == 3) {
-    return TransferType.IntraIssuance;
-  }
+    if (x == 3) {
+      return TransferType.IntraIssuance;
+    }
 
-  if (x == 4) {
-    return TransferType.IntraInstrument;
+    if (x == 4) {
+      return TransferType.IntraInstrument;
+    }
+    revert();
   }
-  revert();
-}
 
 
   //struct definition
@@ -108,9 +109,9 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[6] memory counters;
@@ -176,9 +177,9 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes decoded
    */
   function _read_transferType(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -204,9 +205,9 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes decoded
    */
   function _read_fromAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -231,9 +232,9 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes decoded
    */
   function _read_toAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -258,9 +259,9 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes decoded
    */
   function _read_tokenAddress(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -285,9 +286,9 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes decoded
    */
   function _read_amount(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[6] memory counters
   ) internal pure returns (uint) {
     /**
@@ -329,46 +330,46 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     
     pointer += ProtoBufRuntime._encode_key(
-      1, 
-      ProtoBufRuntime.WireType.Varint, 
-      pointer, 
+      1,
+      ProtoBufRuntime.WireType.Varint,
+      pointer,
       bs
     );
     int64 _enum_transferType = encode_TransferType(r.transferType);
     pointer += ProtoBufRuntime._encode_enum(_enum_transferType, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      2, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      2,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.fromAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      3, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      3,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.toAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      4, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      4,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_address(r.tokenAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      5, 
-      ProtoBufRuntime.WireType.LengthDelim, 
-      pointer, 
+      5,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.amount, pointer, bs);
@@ -384,9 +385,9 @@ function decode_TransferType(int64 x) internal pure returns (TransferType) {
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.
@@ -504,9 +505,9 @@ library Transfers {
    * @return The number of bytes decoded
    */
   function _decode(uint256 p, bytes memory bs, uint256 sz)
-    internal 
-    pure 
-    returns (Data memory, uint) 
+    internal
+    pure
+    returns (Data memory, uint)
   {
     Data memory r;
     uint[2] memory counters;
@@ -592,9 +593,9 @@ library Transfers {
    * @return The number of bytes decoded
    */
   function _read_actions(
-    uint256 p, 
-    bytes memory bs, 
-    Data memory r, 
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
     uint[2] memory counters
   ) internal pure returns (uint) {
     /**
@@ -619,9 +620,9 @@ library Transfers {
    * @return The number of bytes used to decode
    */
   function _decode_Transfer(uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (Transfer.Data memory, uint) 
+    internal
+    pure
+    returns (Transfer.Data memory, uint)
   {
     uint256 pointer = p;
     (uint256 sz, uint256 bytesRead) = ProtoBufRuntime._decode_varint(pointer, bs);
@@ -656,18 +657,18 @@ library Transfers {
    * @return The number of bytes encoded
    */
   function _encode(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     uint256 offset = p;
     uint256 pointer = p;
     uint256 i;
     for(i = 0; i < r.actions.length; i++) {
       pointer += ProtoBufRuntime._encode_key(
-        1, 
-        ProtoBufRuntime.WireType.LengthDelim, 
-        pointer, 
+        1,
+        ProtoBufRuntime.WireType.LengthDelim,
+        pointer,
         bs)
       ;
       pointer += Transfer._encode_nested(r.actions[i], pointer, bs);
@@ -684,9 +685,9 @@ library Transfers {
    * @return The number of bytes encoded
    */
   function _encode_nested(Data memory r, uint256 p, bytes memory bs)
-    internal 
-    pure 
-    returns (uint) 
+    internal
+    pure
+    returns (uint)
   {
     /**
      * First encoded `r` into a temporary array, and encode the actual size used.
@@ -729,10 +730,9 @@ library Transfers {
    */
   function store(Data memory input, Data storage output) internal {
 
-    // output.actions.length = input.actions.length;
-    // for(uint256 i1 = 0; i1 < input.actions.length; i1++) {
-    //   Transfer.store(input.actions[i1], output.actions[i1]);
-    // }
+    for(uint256 i1 = 0; i1 < input.actions.length; i1++) {
+      output.actions.push(input.actions[i1]);
+    }
     
 
   }
