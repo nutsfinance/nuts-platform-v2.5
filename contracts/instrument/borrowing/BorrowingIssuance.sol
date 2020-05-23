@@ -72,9 +72,8 @@ contract BorrowingIssuance is IssuanceBase {
 
         // Calculate the collateral amount. Collateral is calculated at the time of engagement.
         PriceOracleInterface priceOracle = BorrowingInstrument(_instrumentAddress).getPriceOracle();
-        _bip.collateralAmount = priceOracle.getOutputAmount(_bip.borrowingTokenAddress,
-            _bip.collateralTokenAddress, _bip.borrowingAmount.mul(_bip.collateralRatio),
-            COLLATERAL_RATIO_DECIMALS);
+        _bip.collateralAmount = priceOracle.getOutputAmount(_bip.borrowingTokenAddress, _bip.collateralTokenAddress,
+            _bip.borrowingAmount.mul(_bip.collateralRatio).div(COLLATERAL_RATIO_DECIMALS));
 
         // Validates collateral balance
         uint256 collateralBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(makerAddress, _bip.collateralTokenAddress);
