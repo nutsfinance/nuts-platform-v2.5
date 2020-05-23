@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "../lib/access/AdminAccess.sol";
 import "./IssuanceInterface.sol";
 
