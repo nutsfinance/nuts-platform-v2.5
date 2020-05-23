@@ -8,39 +8,57 @@ import "./InstrumentBase.sol";
  */
 abstract contract FeebasedInstrument is InstrumentBase {
 
-    address private _makerFeeToken;
-    address private _takerFeeToken;
+    address private _makerFeeTokenAddress;
+    address private _takerFeeTokenAddress;
     uint256 private _makerFeeAmount;
     uint256 private _takerFeeAmount;
+    address private _feeRecepientAddress;
 
-    constructor(address makerFeeToken, uint256 makerFeeAmount, address takerFeeToken, uint256 takerFeeAmount) internal {
-        _makerFeeToken = makerFeeToken;
+    /**
+     * @param makerFeeTokenAddress The token that maker needs to pay.
+     * @param makerFeeAmount The amount that maker needs to pay.
+     * @param takerFeeTokenAddress The token that taker needs to pay.
+     * @param takerFeeAmount The amount that taker needs to pay.
+     * @param feeRecepientAddress Recepient of the maker and taker fee.
+     */
+    constructor(address makerFeeTokenAddress, uint256 makerFeeAmount, address takerFeeTokenAddress, uint256 takerFeeAmount,
+        address feeRecepientAddress) internal {
+        _makerFeeTokenAddress = makerFeeTokenAddress;
         _makerFeeAmount = makerFeeAmount;
-        _takerFeeToken = takerFeeToken;
+        _takerFeeTokenAddress = takerFeeTokenAddress;
         _takerFeeAmount = takerFeeAmount;
+        _feeRecepientAddress = feeRecepientAddress;
     }
 
-    function setMakerFeeToken(address makerFeeToken) public onlyAdmin {
-        _makerFeeToken = makerFeeToken;
+    function setMakerFeeToken(address makerFeeTokenAddress) public onlyAdmin {
+        _makerFeeTokenAddress = makerFeeTokenAddress;
     }
 
     function setMakerFeeAmount(uint256 makerFeeAmount) public onlyAdmin {
         _makerFeeAmount = makerFeeAmount;
     }
 
-    function setTakerFeeToken(address takerFeeToken) public onlyAdmin {
-        _takerFeeToken = takerFeeToken;
+    function setTakerFeeToken(address takerFeeTokenAddress) public onlyAdmin {
+        _takerFeeTokenAddress = takerFeeTokenAddress;
     }
 
     function setTakerFeeAmount(uint256 takerFeeAmount) public onlyAdmin {
         _takerFeeAmount = takerFeeAmount;
     }
 
+    function setFeeRecepientAddress(address feeRecepientAddress) public onlyAdmin {
+        _feeRecepientAddress = feeRecepientAddress;
+    }
+
     function getMakerFee() public view returns (address, uint256) {
-        return (_makerFeeToken, _makerFeeAmount);
+        return (_makerFeeTokenAddress, _makerFeeAmount);
     }
 
     function getTakerFee() public view returns (address, uint256) {
-        return (_takerFeeToken, _takerFeeAmount);
+        return (_takerFeeTokenAddress, _takerFeeAmount);
+    }
+
+    function getFeeRecepient() public view returns (address) {
+        return _feeRecepientAddress;
     }
 }
