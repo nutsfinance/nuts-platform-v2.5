@@ -2,7 +2,7 @@
 pragma solidity 0.6.8;
 import "./ProtoBufRuntime.sol";
 
-library SwapProperty {
+library SwapIssuanceProperty {
 
 
   //struct definition
@@ -397,4 +397,4 @@ library SwapProperty {
     }
   }
 }
-//library SwapProperty
+//library SwapIssuanceProperty

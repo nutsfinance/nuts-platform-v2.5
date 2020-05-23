@@ -82,18 +82,14 @@ contract BorrowingIssuance is IssuanceBase {
 
         // Sets common properties
         _issuanceProperty.issuanceDueTimestamp = now.add(ISSUANCE_DUE_DAYS);
+        _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
+        emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
         // Scheduling Issuance Due event
         emit EventTimeScheduled(_issuanceProperty.issuanceId, 0, _issuanceProperty.issuanceDueTimestamp, ISSUANCE_DUE_EVENT, "");
 
-        // Emits Issuance Created event
-        emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
-
-        // Sets borrowing properties
+        // Sets borrowing issuance properties
         _bip.interestAmount = _bip.borrowingAmount.mul(_bip.tenorDays).mul(_bip.interestRate).div(INTEREST_RATE_DECIMALS);
-
-        // Updates to Engageable state
-        _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
 
         // Transfers principal token
         // Principal token inbound transfer: Maker --> Maker
@@ -132,8 +128,10 @@ contract BorrowingIssuance is IssuanceBase {
         engagement.engagementCreationTimestamp = now;
         engagement.engagementDueTimestamp = now.add(_bip.tenorDays * 1 days);
         engagement.engagementState = EngagementProperty.EngagementState.Active;
+        emit EngagementCreated(_issuanceProperty.issuanceId, ENGAGEMENT_ID, takerAddress);
 
         // Set common issuance property
+        _issuanceProperty.issuanceCompleteTimestamp = now;
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.completionRatio = 10000;
         emit IssuanceComplete(_issuanceProperty.issuanceId);
@@ -141,14 +139,12 @@ contract BorrowingIssuance is IssuanceBase {
         // Sets borrowing-specific engagement property
         _bep.loanState = BorrowingEngagementProperty.LoanState.Unpaid;
 
+        engagementId = ENGAGEMENT_ID;
         _engagementSet.add(ENGAGEMENT_ID);
 
         // Scheduling Borrowing Engagement Due event
         emit EventTimeScheduled(_issuanceProperty.issuanceId, ENGAGEMENT_ID, engagement.engagementDueTimestamp,
             ENGAGEMENT_DUE_EVENT, "");
-
-        // Emits Engagement Created event
-        emit EngagementCreated(_issuanceProperty.issuanceId, ENGAGEMENT_ID, takerAddress);
 
         Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
         // Borrowing token intra-instrument transfer: Taker -> Maker
@@ -156,6 +152,7 @@ contract BorrowingIssuance is IssuanceBase {
             _bip.borrowingTokenAddress, _bip.borrowingAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, takerAddress,
             _issuanceProperty.makerAddress, _bip.borrowingTokenAddress, _bip.borrowingAmount, "Principal transfer");
+        transfersData = Transfers.encode(transfers);
 
         // Create payable 2: Maker --> Taker
         _createPayable(2, ENGAGEMENT_ID, _issuanceProperty.makerAddress, takerAddress, _bip.borrowingTokenAddress,
@@ -164,9 +161,6 @@ contract BorrowingIssuance is IssuanceBase {
         // Create payable 3: Maker --> Taker
         _createPayable(3, ENGAGEMENT_ID, _issuanceProperty.makerAddress, takerAddress, _bip.borrowingTokenAddress,
             _bip.interestAmount, engagement.engagementDueTimestamp);
-
-        engagementId = ENGAGEMENT_ID;
-        transfersData = Transfers.encode(transfers);
     }
 
     /**
@@ -212,11 +206,10 @@ contract BorrowingIssuance is IssuanceBase {
             _bip.collateralTokenAddress, _bip.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
+        transfersData = Transfers.encode(transfers);
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
-
-        transfersData = Transfers.encode(transfers);
     }
 
     /**
@@ -246,13 +239,13 @@ contract BorrowingIssuance is IssuanceBase {
             _bip.collateralTokenAddress, _bip.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
             _issuanceProperty.makerAddress, engagement.takerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
+        transfersData = Transfers.encode(transfers);
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
         // Mark payble 2 & 3 as due
         _markPayableAsDue(2);
         _markPayableAsDue(3);
-        transfersData = Transfers.encode(transfers);
     }
 
     /**
@@ -276,11 +269,10 @@ contract BorrowingIssuance is IssuanceBase {
             _bip.collateralTokenAddress, _bip.collateralAmount);
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
-
+        transfersData = Transfers.encode(transfers);
+        
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
-
-        transfersData = Transfers.encode(transfers);
     }
 
     /**
