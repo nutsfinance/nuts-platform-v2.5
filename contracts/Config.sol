@@ -29,7 +29,7 @@ contract Config is AdminAccess {
         AdminAccess._initialize(msg.sender);
 
         _wethAddress = wethAddress;
-        _escrowFactoryAddress = _escrowFactoryAddress;
+        _escrowFactoryAddress = escrowFactoryAddress;
         _depositTokenAddress = depositTokenAddress;
         _depositAmount = depositAmount;
     }
