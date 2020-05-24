@@ -57,13 +57,10 @@ const deployNutsPlatform = async function(deployer, [owner, maker, taker]) {
   const lendingInstrumentEscrow = await InstrumentEscrow.at(lendingInstrumentEscrowAddress);
   await lendingInstrumentEscrow.depositToken(lendingToken.address, 20000, {from: maker});
   const makerBalance = await lendingInstrumentEscrow.getTokenBalance(maker, lendingToken.address);
-  console.log(makerBalance);
 
   const lendingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
     [lendingToken.address, collateralToken.address, '20000', '20', '15000', '10000']);
-  console.log(lendingMakerParameters);
   const createdIssuance = await lendingInstrumentManager.createIssuance(lendingMakerParameters, {from: maker});
-  console.log(createdIssuance);
 
   await collateralToken.transfer(taker, 4000000);
   await collateralToken.approve(lendingInstrumentEscrowAddress, 4000000, {from: taker});
