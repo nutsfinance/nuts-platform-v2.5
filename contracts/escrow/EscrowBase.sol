@@ -27,11 +27,11 @@ abstract contract EscrowBase is EscrowInterface, AdminAccess {
     /**
      * @dev Initializes the owner and weth address.
      */
-    function _initialize(address payable wethAddress) internal {
+    function _initialize(address owner, address wethAddress) internal {
         require(address(_weth) == address(0x0), "EscrowBase: Already initialize.");
         require(wethAddress != address(0x0), "EscrowBase: WETH not set.");
-        AdminAccess._initialize(msg.sender);
-        _weth = WETH9(wethAddress);
+        AdminAccess._initialize(owner);
+        _weth = WETH9(payable(wethAddress));
     }
 
     /*******************************************************

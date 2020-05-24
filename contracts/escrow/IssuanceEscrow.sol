@@ -8,8 +8,8 @@ import "./IssuanceEscrowInterface.sol";
  * @title Issuance Escrow that keeps assets that are locked by issuance.
  */
 contract IssuanceEscrow is EscrowBase, IssuanceEscrowInterface {
-    function initialize(address wethAddress) public {
-        super._initialize(wethAddress);
+    function initialize(address owner, address wethAddress) public {
+        EscrowBase._initialize(owner, wethAddress);
     }
 
     /**

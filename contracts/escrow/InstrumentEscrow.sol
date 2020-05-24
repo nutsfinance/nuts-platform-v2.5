@@ -12,8 +12,8 @@ import "./InstrumentEscrowInterface.sol";
  */
 contract InstrumentEscrow is EscrowBase, InstrumentEscrowInterface {
 
-    function initialize(address wethAddress) public {
-        super._initialize(wethAddress);
+    function initialize(address owner, address wethAddress) public {
+        EscrowBase._initialize(owner, wethAddress);
     }
 
     /**********************************************

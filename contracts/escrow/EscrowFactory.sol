@@ -28,7 +28,7 @@ contract EscrowFactory is EscrowFactoryInterface {
     function createInstrumentEscrow(address wethAddress) public override returns (InstrumentEscrowInterface) {
         UpgradeabilityProxy proxy = new UpgradeabilityProxy(address(_instrumentEscrow));
         InstrumentEscrow instrumentEscrow = InstrumentEscrow(address(proxy));
-        instrumentEscrow.initialize(wethAddress);
+        instrumentEscrow.initialize(msg.sender, wethAddress);
 
         return instrumentEscrow;
     }
@@ -41,7 +41,7 @@ contract EscrowFactory is EscrowFactoryInterface {
     function createIssuanceEscrow(address wethAddress) public override returns (IssuanceEscrowInterface) {
         UpgradeabilityProxy proxy = new UpgradeabilityProxy(address(_issuanceEscrow));
         IssuanceEscrow issuanceEscrow = IssuanceEscrow(address(proxy));
-        issuanceEscrow.initialize(wethAddress);
+        issuanceEscrow.initialize(msg.sender, wethAddress);
 
         return issuanceEscrow;
     }

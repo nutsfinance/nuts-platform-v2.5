@@ -115,6 +115,11 @@ contract InstrumentManager is InstrumentManagerInterface {
         // Creates and initializes the issuance instance.
         (IssuanceInterface issuance, bytes memory transferData) = instrument.createIssuance(newIssuanceId,
             address(issuanceEscrow), msg.sender, makerData);
+        _issuances[newIssuanceId] = IssuanceProperty({
+            issuance: issuance,
+            issuanceEscrow: issuanceEscrow,
+            creationTimestamp: now
+        });
         // If the instrument supports issuance escrow transaction, grant the admin role of issuance escrow to issuance
         if (instrument.supportsIssuanceTransaction()) {
             issuanceEscrow.grantAdmin(address(issuance));
@@ -122,12 +127,6 @@ contract InstrumentManager is InstrumentManagerInterface {
         emit IssuanceCreated(newIssuanceId, msg.sender, address(issuance), address(issuanceEscrow));
 
         processTransfers(newIssuanceId, transferData);
-
-        _issuances[newIssuanceId] = IssuanceProperty({
-            issuance: issuance,
-            issuanceEscrow: issuanceEscrow,
-            creationTimestamp: now
-        });
 
         return newIssuanceId;
     }
@@ -236,14 +235,14 @@ contract InstrumentManager is InstrumentManagerInterface {
                 // IMPORTANT: Set allowance before deposit
                 IERC20(transfer.tokenAddress).safeApprove(address(issuanceEscrow), transfer.amount);
                 // Deposit ERC20 token to Issuance Escrow
-                issuanceEscrow.depositByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
+                issuanceEscrow.depositByAdmin(transfer.toAddress, transfer.tokenAddress, transfer.amount);
             } else if (transfer.transferType == Transfer.TransferType.Outbound) {
                 // First withdraw ERC20 token from Issuance Escrow to owner
                 issuanceEscrow.withdrawByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
                 // (Important!!!)Then set allowance for Instrument Escrow
                 IERC20(transfer.tokenAddress).safeApprove(address(_instrumentEscrow), transfer.amount);
                 // Then deposit the ERC20 token from owner to Instrument Escrow
-                _instrumentEscrow.depositByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
+                _instrumentEscrow.depositByAdmin(transfer.toAddress, transfer.tokenAddress, transfer.amount);
             } else if (transfer.transferType == Transfer.TransferType.IntraInstrument) {
                 _instrumentEscrow.transferByAdmin(transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount);
             } else {
