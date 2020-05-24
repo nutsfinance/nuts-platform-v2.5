@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "../../lib/protobuf/Transfers.sol";
+import "../../lib/data/Transfers.sol";
 import "../../lib/protobuf/IssuanceData.sol";
 import "../../lib/protobuf/MultiSwapData.sol";
 import "../../escrow/InstrumentEscrowInterface.sol";
@@ -38,11 +39,11 @@ contract MultiSwapIssuance is IssuanceBase {
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the maker who creates the issuance.
      * @param makerData Custom property of issuance.
-     * @return transfersData Transfer actions for the issuance.
+     * @return transfers Transfer actions for the issuance.
      */
     function initialize(address instrumentManagerAddress, address instrumentAddress, uint256 issuanceId,
         address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
-        public override returns (bytes memory transfersData) {
+        public override returns (Transfers.Transfer[] memory transfers) {
 
         require(MultiSwapInstrument(instrumentAddress).isMakerAllowed(makerAddress), "SwapIssuance: Maker not allowed.");
         IssuanceBase._initialize(instrumentManagerAddress, instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress);
@@ -74,12 +75,11 @@ contract MultiSwapIssuance is IssuanceBase {
 
         // Transfers principal token
         // Input token inbound transfer: Maker --> Maker
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.Inbound, makerAddress, makerAddress,
+        transfers = new Transfers.Transfer[](1);
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.Inbound, makerAddress, makerAddress,
             _mip.inputTokenAddress, _mip.inputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Inbound, makerAddress, makerAddress,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Inbound, makerAddress, makerAddress,
             _mip.inputTokenAddress, _mip.inputAmount, "Input in");
-        transfersData = Transfers.encode(transfers);
 
         // Create payable 1: Custodian --> Maker
         _payableIds.increment();
@@ -92,10 +92,10 @@ contract MultiSwapIssuance is IssuanceBase {
      * @param takerAddress Address of the user who engages the issuance.
      * @param takerData Custom property of the engagement.
      * @return engagementId ID of the engagement.
-     * @return transfersData Asset transfer actions.
+     * @return transfers Asset transfer actions.
      */
     function engage(address takerAddress, bytes memory takerData)
-        public override onlyAdmin returns (uint256 engagementId, bytes memory transfersData) {
+        public override onlyAdmin returns (uint256 engagementId, Transfers.Transfer[] memory transfers) {
         require(MultiSwapInstrument(_instrumentAddress).isTakerAllowed(takerAddress), "SwapIssuance: Taker not allowed.");
         require(now <= _issuanceProperty.issuanceDueTimestamp, "Issuance due");
         require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Issuance not Engageable");
@@ -136,18 +136,17 @@ contract MultiSwapIssuance is IssuanceBase {
             emit IssuanceComplete(_issuanceProperty.issuanceId, _issuanceProperty.completionRatio);
         }
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
+        transfers = new Transfers.Transfer[](2);
         // Output token intra-instrument transfer: Taker -> Maker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, takerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.IntraInstrument, takerAddress,
             _issuanceProperty.makerAddress, _mip.outputTokenAddress, outputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, engagementId, Transfer.TransferType.IntraInstrument, takerAddress,
+        emit AssetTransferred(_issuanceProperty.issuanceId, engagementId, Transfers.TransferType.IntraInstrument, takerAddress,
             _issuanceProperty.makerAddress, _mip.outputTokenAddress, outputAmount, "Output transfer");
         // Inpunt token outbound transfer: Maker -> Taker
-        transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress,
+        transfers[1] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress,
             takerAddress, _mip.inputTokenAddress, inputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, engagementId, Transfer.TransferType.Outbound, _issuanceProperty.makerAddress,
+        emit AssetTransferred(_issuanceProperty.issuanceId, engagementId, Transfers.TransferType.Outbound, _issuanceProperty.makerAddress,
             takerAddress, _mip.inputTokenAddress, inputAmount, "Input out");
-        transfersData = Transfers.encode(transfers);
 
         uint256 currentPayableId = _payableIds.current();
         if (_mip.remainingInputAmount == 0) {
@@ -168,10 +167,10 @@ contract MultiSwapIssuance is IssuanceBase {
      * Only admin(Instrument Manager) can call this method.
      * @param notifierAddress Address that notifies the custom event.
      * @param eventName Name of the custom event.
-     * @return transfersData Asset transfer actions.
+     * @return transfers Asset transfer actions.
      */
     function processEvent(uint256 /** engagementId */, address notifierAddress, bytes32 eventName, bytes memory /** eventData */)
-        public override onlyAdmin returns (bytes memory transfersData) {
+        public override onlyAdmin returns (Transfers.Transfer[] memory transfers) {
          if (eventName == ISSUANCE_DUE_EVENT) {
             return _processIssuanceDue();
         } else if (eventName == CANCEL_ISSUANCE_EVENT) {
@@ -184,25 +183,24 @@ contract MultiSwapIssuance is IssuanceBase {
     /**
      * @dev Processes the Issuance Due event.
      */
-    function _processIssuanceDue() private returns (bytes memory transfersData) {
+    function _processIssuanceDue() private returns (Transfers.Transfer[] memory transfers) {
         // Engagement Due will be processed only when:
         // 1. Issuance is in Engageable state, which means there is no Engagement. Otherwise the issuance is in Complete state.
         // 2. Issuance due timestamp is passed
         if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Engageable
-            || now < _issuanceProperty.issuanceDueTimestamp) return new bytes(0);
+            || now < _issuanceProperty.issuanceDueTimestamp) return new Transfers.Transfer[](0);
 
         // The issuance is now complete
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.issuanceCompleteTimestamp = now;
         emit IssuanceComplete(_issuanceProperty.issuanceId, _issuanceProperty.completionRatio);
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
+        transfers = new Transfers.Transfer[](1);
         // Input token outbound transfer: Maker --> Maker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _mip.inputTokenAddress, _mip.remainingInputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _mip.inputTokenAddress, _mip.remainingInputAmount, "Input out");
-        transfersData = Transfers.encode(transfers);
 
         // Mark the current payable as paid
         _markPayableAsPaid(_payableIds.current());
@@ -212,7 +210,7 @@ contract MultiSwapIssuance is IssuanceBase {
      * @dev Cancels the lending issuance.
      * @param notifierAddress Address of the caller who cancels the issuance.
      */
-    function _cancelIssuance(address notifierAddress) private returns (bytes memory transfersData) {
+    function _cancelIssuance(address notifierAddress) private returns (Transfers.Transfer[] memory transfers) {
         // Cancel Issuance must be processed in Engageable state
         require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Cancel issuance not engageable");
         // Only maker can cancel issuance
@@ -225,13 +223,12 @@ contract MultiSwapIssuance is IssuanceBase {
         _issuanceProperty.issuanceCancelTimestamp = now;
         emit IssuanceCancelled(_issuanceProperty.issuanceId);
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
+        transfers = new Transfers.Transfer[](1);
         // Input token outbound transfer: Maker --> Maker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _mip.inputTokenAddress, _mip.remainingInputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _mip.inputTokenAddress, _mip.remainingInputAmount, "Input out");
-        transfersData = Transfers.encode(transfers);
 
         // Mark the current payable as paid
         _markPayableAsPaid(_payableIds.current());
