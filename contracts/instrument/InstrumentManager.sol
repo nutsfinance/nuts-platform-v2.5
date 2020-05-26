@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -9,8 +10,8 @@ import "../escrow/EscrowFactoryInterface.sol";
 import "../escrow/InstrumentEscrowInterface.sol";
 import "../escrow/IssuanceEscrowInterface.sol";
 import "../lib/access/AdminAccess.sol";
+import "../lib/data/Transfers.sol";
 import "../lib/token/WETH9.sol";
-import "../lib/protobuf/Transfers.sol";
 import "../Config.sol";
 import "./IssuanceInterface.sol";
 import "./InstrumentManagerInterface.sol";
@@ -113,7 +114,7 @@ contract InstrumentManager is InstrumentManagerInterface {
         }
 
         // Creates and initializes the issuance instance.
-        (IssuanceInterface issuance, bytes memory transferData) = instrument.createIssuance(newIssuanceId,
+        (IssuanceInterface issuance, Transfers.Transfer[] memory transfers) = instrument.createIssuance(newIssuanceId,
             address(issuanceEscrow), msg.sender, makerData);
         _issuances[newIssuanceId] = IssuanceProperty({
             issuance: issuance,
@@ -126,7 +127,7 @@ contract InstrumentManager is InstrumentManagerInterface {
         }
         emit IssuanceCreated(newIssuanceId, msg.sender, address(issuance), address(issuanceEscrow));
 
-        processTransfers(newIssuanceId, transferData);
+        processTransfers(newIssuanceId, transfers);
 
         return newIssuanceId;
     }
@@ -139,9 +140,9 @@ contract InstrumentManager is InstrumentManagerInterface {
      */
     function engageIssuance(uint256 issuanceId, bytes memory takerData) public override returns (uint256) {
         IssuanceInterface issuance = _issuances[issuanceId].issuance;
-        (uint256 engagementId, bytes memory transfersData) = issuance.engage(msg.sender, takerData);
+        (uint256 engagementId, Transfers.Transfer[] memory transfers) = issuance.engage(msg.sender, takerData);
 
-        processTransfers(issuanceId, transfersData);
+        processTransfers(issuanceId, transfers);
 
         return engagementId;
     }
@@ -155,8 +156,8 @@ contract InstrumentManager is InstrumentManagerInterface {
      */
     function processEvent(uint256 issuanceId, uint256 engagementId, bytes32 eventName, bytes memory eventData) public override {
         IssuanceInterface issuance = _issuances[issuanceId].issuance;
-        bytes memory transfersData = issuance.processEvent(engagementId, msg.sender, eventName, eventData);
-        processTransfers(issuanceId, transfersData);
+        Transfers.Transfer[] memory transfers = issuance.processEvent(engagementId, msg.sender, eventName, eventData);
+        processTransfers(issuanceId, transfers);
     }
 
     /**
@@ -221,29 +222,28 @@ contract InstrumentManager is InstrumentManagerInterface {
      * @dev Processes the transfers for an issuance.
      * @param issuanceId The ID of the issuance to process transfers.
      */
-    function processTransfers(uint256 issuanceId, bytes memory transfersData) private {
+    function processTransfers(uint256 issuanceId, Transfers.Transfer[] memory transfers) private {
         IssuanceEscrowInterface issuanceEscrow = _issuances[issuanceId].issuanceEscrow;
-        Transfers.Data memory transfers = Transfers.decode(transfersData);
-        for (uint256 i = 0; i < transfers.actions.length; i++) {
+        for (uint256 i = 0; i < transfers.length; i++) {
             // (Transfers.TransferType transferType, address fromAddress, address toAddress, address tokenAddress,
             //     uint256 amount, bytes32 action) = issuance.getTransfer(i);
-            Transfer.Data memory transfer = transfers.actions[i];
+            Transfers.Transfer memory transfer = transfers[i];
 
-            if (transfer.transferType == Transfer.TransferType.Inbound) {
+            if (transfer.transferType == Transfers.TransferType.Inbound) {
                 // Withdraw ERC20 token from Instrument Escrow
                 _instrumentEscrow.withdrawByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
                 // IMPORTANT: Set allowance before deposit
                 IERC20(transfer.tokenAddress).safeApprove(address(issuanceEscrow), transfer.amount);
                 // Deposit ERC20 token to Issuance Escrow
                 issuanceEscrow.depositByAdmin(transfer.toAddress, transfer.tokenAddress, transfer.amount);
-            } else if (transfer.transferType == Transfer.TransferType.Outbound) {
+            } else if (transfer.transferType == Transfers.TransferType.Outbound) {
                 // First withdraw ERC20 token from Issuance Escrow to owner
                 issuanceEscrow.withdrawByAdmin(transfer.fromAddress, transfer.tokenAddress, transfer.amount);
                 // (Important!!!)Then set allowance for Instrument Escrow
                 IERC20(transfer.tokenAddress).safeApprove(address(_instrumentEscrow), transfer.amount);
                 // Then deposit the ERC20 token from owner to Instrument Escrow
                 _instrumentEscrow.depositByAdmin(transfer.toAddress, transfer.tokenAddress, transfer.amount);
-            } else if (transfer.transferType == Transfer.TransferType.IntraInstrument) {
+            } else if (transfer.transferType == Transfers.TransferType.IntraInstrument) {
                 _instrumentEscrow.transferByAdmin(transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount);
             } else {
                 issuanceEscrow.transferByAdmin(transfer.fromAddress, transfer.toAddress, transfer.tokenAddress, transfer.amount);

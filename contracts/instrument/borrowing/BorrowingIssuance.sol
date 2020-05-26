@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "../../lib/protobuf/Transfers.sol";
+import "../../lib/data/Transfers.sol";
 import "../../lib/protobuf/IssuanceData.sol";
 import "../../lib/protobuf/BorrowingData.sol";
 import "../../lib/priceoracle/PriceOracleInterface.sol";
@@ -45,11 +46,11 @@ contract BorrowingIssuance is IssuanceBase {
      * @param issuanceEscrowAddress Address of the issuance escrow.
      * @param makerAddress Address of the maker who creates the issuance.
      * @param makerData Custom property of issuance.
-     * @return transfersData Transfer actions for the issuance.
+     * @return transfers Transfer actions for the issuance.
      */
     function initialize(address instrumentManagerAddress, address instrumentAddress, uint256 issuanceId,
         address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
-        public override returns (bytes memory transfersData) {
+        public override returns (Transfers.Transfer[] memory transfers) {
 
         require(BorrowingInstrument(instrumentAddress).isMakerAllowed(makerAddress), "BorrowingIssuance: Maker not allowed.");
         IssuanceBase._initialize(instrumentManagerAddress, instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress);
@@ -92,12 +93,11 @@ contract BorrowingIssuance is IssuanceBase {
 
         // Transfers principal token
         // Collateral token inbound transfer: Maker --> Maker
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.Inbound, makerAddress,
+        transfers = new Transfers.Transfer[](1);
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.Inbound, makerAddress,
             makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Inbound, makerAddress,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Inbound, makerAddress,
             makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral in");
-        transfersData = Transfers.encode(transfers);
 
         // Create payable 1: Custodian --> Maker
         _createPayable(1, 0, address(_issuanceEscrow), makerAddress, _bip.collateralTokenAddress,
@@ -108,10 +108,10 @@ contract BorrowingIssuance is IssuanceBase {
      * @dev Creates a new engagement for the issuance. Only admin(Instrument Manager) can call this method.
      * @param takerAddress Address of the user who engages the issuance.
      * @return engagementId ID of the engagement.
-     * @return transfersData Asset transfer actions.
+     * @return transfers Asset transfer actions.
      */
     function engage(address takerAddress, bytes memory /** takerData */)
-        public override onlyAdmin returns (uint256 engagementId, bytes memory transfersData) {
+        public override onlyAdmin returns (uint256 engagementId, Transfers.Transfer[] memory transfers) {
         require(BorrowingInstrument(_instrumentAddress).isTakerAllowed(takerAddress), "BorrowingIssuance: Taker not allowed.");
         require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Issuance not Engageable");
         require(now <= _issuanceProperty.issuanceDueTimestamp, "Issuance due");
@@ -146,13 +146,12 @@ contract BorrowingIssuance is IssuanceBase {
         emit EventTimeScheduled(_issuanceProperty.issuanceId, ENGAGEMENT_ID, engagement.engagementDueTimestamp,
             ENGAGEMENT_DUE_EVENT, "");
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
+        transfers = new Transfers.Transfer[](1);
         // Borrowing token intra-instrument transfer: Taker -> Maker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, takerAddress, _issuanceProperty.makerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.IntraInstrument, takerAddress, _issuanceProperty.makerAddress,
             _bip.borrowingTokenAddress, _bip.borrowingAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument, takerAddress,
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.IntraInstrument, takerAddress,
             _issuanceProperty.makerAddress, _bip.borrowingTokenAddress, _bip.borrowingAmount, "Principal transfer");
-        transfersData = Transfers.encode(transfers);
 
         // Create payable 2: Maker --> Taker
         _createPayable(2, ENGAGEMENT_ID, _issuanceProperty.makerAddress, takerAddress, _bip.borrowingTokenAddress,
@@ -168,10 +167,10 @@ contract BorrowingIssuance is IssuanceBase {
      * Only admin(Instrument Manager) can call this method.
      * @param notifierAddress Address that notifies the custom event.
      * @param eventName Name of the custom event.
-     * @return transfersData Asset transfer actions.
+     * @return transfers Asset transfer actions.
      */
     function processEvent(uint256 /** engagementId */, address notifierAddress, bytes32 eventName, bytes memory /** eventData */)
-        public override onlyAdmin returns (bytes memory transfersData) {
+        public override onlyAdmin returns (Transfers.Transfer[] memory transfers) {
          if (eventName == ISSUANCE_DUE_EVENT) {
             return _processIssuanceDue();
         } else if (eventName == ENGAGEMENT_DUE_EVENT) {
@@ -188,25 +187,24 @@ contract BorrowingIssuance is IssuanceBase {
     /**
      * @dev Processes the Issuance Due event.
      */
-    function _processIssuanceDue() private returns (bytes memory transfersData) {
+    function _processIssuanceDue() private returns (Transfers.Transfer[] memory transfers) {
         // Engagement Due will be processed only when:
         // 1. Issuance is in Engageable state, which means there is no Engagement. Otherwise the issuance is in Complete state.
         // 2. Issuance due timestamp is passed
         if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Engageable
-            || now < _issuanceProperty.issuanceDueTimestamp) return new bytes(0);
+            || now < _issuanceProperty.issuanceDueTimestamp) return new Transfers.Transfer[](0);
 
         // The issuance is now complete
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.issuanceCompleteTimestamp = now;
         emit IssuanceComplete(_issuanceProperty.issuanceId, 0);
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
+        transfers = new Transfers.Transfer[](1);
         // Collateral token outbound transfer: Maker --> Maker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _bip.collateralTokenAddress, _bip.collateralAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
-        transfersData = Transfers.encode(transfers);
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -215,17 +213,19 @@ contract BorrowingIssuance is IssuanceBase {
     /**
      * @dev Processes the Engagement Due event.
      */
-    function _processEngagementDue() private returns (bytes memory transfersData) {
+    function _processEngagementDue() private returns (Transfers.Transfer[] memory transfers) {
         // Borrowing Engagement Due will be processed only when:
         // 1. Borrowing Issuance is in Complete state
         // 2. Borrowing Engagement is in Active State
         // 3. Borrowing Engegement loan is in Unpaid State
         // 2. Borrowing engegement due timestamp has passed
-        if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Complete)  return new bytes(0);
+        if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Complete)  return new Transfers.Transfer[](0);
         EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
         if (engagement.engagementState != EngagementProperty.EngagementState.Active ||
             _bep.loanState != BorrowingEngagementProperty.LoanState.Unpaid ||
-            now < engagement.engagementDueTimestamp) return new bytes(0);
+            now < engagement.engagementDueTimestamp) {
+          return new Transfers.Transfer[](0);
+        }
 
         // The engagement is now complete
         engagement.engagementState = EngagementProperty.EngagementState.Complete;
@@ -233,13 +233,12 @@ contract BorrowingIssuance is IssuanceBase {
         _bep.loanState = BorrowingEngagementProperty.LoanState.Delinquent;
         emit EngagementComplete(_issuanceProperty.issuanceId, ENGAGEMENT_ID);
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
+        transfers = new Transfers.Transfer[](1);
         // Collateral token outbound transfer: Maker --> Taker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, engagement.takerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, engagement.takerAddress,
             _bip.collateralTokenAddress, _bip.collateralAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, engagement.takerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
-        transfersData = Transfers.encode(transfers);
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -252,7 +251,7 @@ contract BorrowingIssuance is IssuanceBase {
      * @dev Cancels the borrowing issuance.
      * @param notifierAddress Address of the caller who cancels the issuance.
      */
-    function _cancelIssuance(address notifierAddress) private returns (bytes memory transfersData) {
+    function _cancelIssuance(address notifierAddress) private returns (Transfers.Transfer[] memory transfers) {
         // Cancel Issuance must be processed in Engageable state
         require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Cancel issuance not engageable");
         // Only maker can cancel issuance
@@ -263,13 +262,12 @@ contract BorrowingIssuance is IssuanceBase {
         _issuanceProperty.issuanceCancelTimestamp = now;
         emit IssuanceCancelled(_issuanceProperty.issuanceId);
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](1));
+        transfers = new Transfers.Transfer[](1);
         // Collateral token outbound transfer: Maker --> Maker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _bip.collateralTokenAddress, _bip.collateralAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
-        transfersData = Transfers.encode(transfers);
 
         // Mark payable 1 as paid
         _markPayableAsPaid(1);
@@ -279,7 +277,7 @@ contract BorrowingIssuance is IssuanceBase {
      * @dev Repays the issuance in full.
      * @param notifierAddress Address of the caller who repays the issuance.
      */
-    function _repayBorrowingEngagement(address notifierAddress) private returns (bytes memory transfersData) {
+    function _repayBorrowingEngagement(address notifierAddress) private returns (Transfers.Transfer[] memory transfers) {
         // Borrowing Engagement Due will be processed only when:
         // 1. Borrowing Issuance is in Complete state
         // 2. Borrowing Engagement is in Active State
@@ -306,20 +304,19 @@ contract BorrowingIssuance is IssuanceBase {
         // Emits Borrowing-specific Engagement property
         _bep.loanState = BorrowingEngagementProperty.LoanState.Repaid;
 
-        Transfers.Data memory transfers = Transfers.Data(new Transfer.Data[](2));
+        transfers = new Transfers.Transfer[](2);
         // Pricipal + Interest intra-instrument transfer: Maker -> Taker
-        transfers.actions[0] = Transfer.Data(Transfer.TransferType.IntraInstrument, _issuanceProperty.makerAddress, engagement.takerAddress,
+        transfers[0] = Transfers.Transfer(Transfers.TransferType.IntraInstrument, _issuanceProperty.makerAddress, engagement.takerAddress,
             _bip.borrowingTokenAddress, repayAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument,
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.IntraInstrument,
             _issuanceProperty.makerAddress, engagement.takerAddress, _bip.borrowingTokenAddress, _bip.borrowingAmount, "Principal transfer");
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.IntraInstrument,
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.IntraInstrument,
             _issuanceProperty.makerAddress, engagement.takerAddress, _bip.borrowingTokenAddress, _bip.interestAmount, "Interest transfer");
         // Collateral outbound transfer: Maker --> Maker
-        transfers.actions[1] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
+        transfers[1] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _bip.collateralTokenAddress, _bip.collateralAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
-        transfersData = Transfers.encode(transfers);
 
         // Mark payable 2 as paid
         _markPayableAsPaid(1);

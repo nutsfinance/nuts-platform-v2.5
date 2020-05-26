@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.6.8;
+pragma experimental ABIEncoderV2;
 
+import "../lib/data/Transfers.sol";
 import "../lib/proxy/UpgradeabilityProxy.sol";
 import "./InstrumentBase.sol";
 
@@ -23,14 +25,14 @@ contract ProxyBasedInstrument is InstrumentBase {
      * @param makerAddress Address of the user who creates the issuance.
      * @param makerData Custom properties of the issuance.
      * @return issuance The created issuance instance.
-     * @return transfersData Initial token transfer actions.
+     * @return transfers Initial token transfer actions.
      */
     function createIssuance(uint256 issuanceId, address issuanceEscrowAddress, address makerAddress,
-        bytes memory makerData) public override virtual returns (IssuanceInterface issuance, bytes memory transfersData) {
+        bytes memory makerData) public override virtual returns (IssuanceInterface issuance, Transfers.Transfer[] memory transfers) {
 
         UpgradeabilityProxy proxy = new UpgradeabilityProxy(_issuanceAddress);
         issuance = IssuanceInterface(address(proxy));
-        transfersData = issuance.initialize(msg.sender, address(this), issuanceId, issuanceEscrowAddress, makerAddress, makerData);
+        transfers = issuance.initialize(msg.sender, address(this), issuanceId, issuanceEscrowAddress, makerAddress, makerData);
     }
 }
 

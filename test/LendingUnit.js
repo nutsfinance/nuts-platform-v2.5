@@ -176,7 +176,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '0',
-      transferType: '1',
+      transferType: '0',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -184,7 +184,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     });
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '1',
+      transferType: '0',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -282,7 +282,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '1',
+      transferType: '0',
       fromAddress: taker1,
       toAddress: taker1,
       tokenAddress: collateralToken.address,
@@ -291,7 +291,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: taker1,
       tokenAddress: lendingToken.address,
@@ -300,7 +300,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '1',
+      transferType: '0',
       fromAddress: taker1,
       toAddress: taker1,
       tokenAddress: collateralToken.address,
@@ -308,7 +308,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     });
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: taker1,
       tokenAddress: lendingToken.address,
@@ -402,7 +402,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '0',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -411,7 +411,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -512,7 +512,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '4',
+      transferType: '3',
       fromAddress: taker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -521,7 +521,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '4',
+      transferType: '3',
       fromAddress: taker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -530,7 +530,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: taker1,
       toAddress: taker1,
       tokenAddress: collateralToken.address,
@@ -552,7 +552,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '4',
+      transferType: '3',
       fromAddress: taker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -560,7 +560,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     });
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: taker1,
       toAddress: taker1,
       tokenAddress: collateralToken.address,
@@ -658,7 +658,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '0',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -673,7 +673,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: lendingToken.address,
@@ -761,7 +761,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: taker1,
       toAddress: maker1,
       tokenAddress: collateralToken.address,
@@ -783,7 +783,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: taker1,
       toAddress: maker1,
       tokenAddress: collateralToken.address,

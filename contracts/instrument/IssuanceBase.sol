@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
 import "../escrow/IssuanceEscrowInterface.sol";
 import "../lib/access/AdminAccess.sol";
-import "../lib/protobuf/Transfers.sol";
 import "../lib/protobuf/Payables.sol";
 import "../lib/protobuf/IssuanceData.sol";
 

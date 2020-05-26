@@ -61,6 +61,7 @@ const deployNutsPlatform = async function(deployer, [owner, maker, taker]) {
   const lendingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
     [lendingToken.address, collateralToken.address, '20000', '20', '15000', '10000']);
   const createdIssuance = await lendingInstrumentManager.createIssuance(lendingMakerParameters, {from: maker});
+  console.log(createdIssuance);
 
   await collateralToken.transfer(taker, 4000000);
   await collateralToken.approve(lendingInstrumentEscrowAddress, 4000000, {from: taker});
@@ -68,26 +69,26 @@ const deployNutsPlatform = async function(deployer, [owner, maker, taker]) {
   const engageIssuance = await lendingInstrumentManager.engageIssuance(1, '0x0', {from: taker});
   console.log(engageIssuance);
   
-  // // Deploy Borrowing Instrument.
-  // const borrowingIssuance = await deployer.deploy(BorrowingIssuance);
-  // const borrowingInstrument = await deployer.deploy(BorrowingInstrument, false, false, priceOracle.address, borrowingIssuance.address);
-  // console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
-  // await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), borrowingInstrument.address,
-  //   web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  // Deploy Borrowing Instrument.
+  const borrowingIssuance = await deployer.deploy(BorrowingIssuance);
+  const borrowingInstrument = await deployer.deploy(BorrowingInstrument, false, false, priceOracle.address, borrowingIssuance.address);
+  console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), borrowingInstrument.address,
+    web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
 
-  // // Deploy Swap Instrument.
-  // const swapIssuance = await deployer.deploy(SwapIssuance);
-  // const swapInstrument = await deployer.deploy(SwapInstrument, false, false, swapIssuance.address);
-  // console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
-  // await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), swapInstrument.address,
-  //   web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  // Deploy Swap Instrument.
+  const swapIssuance = await deployer.deploy(SwapIssuance);
+  const swapInstrument = await deployer.deploy(SwapInstrument, false, false, swapIssuance.address);
+  console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), swapInstrument.address,
+    web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
   
-  // // Deploy Multi-Swap Instrument.
-  // const multiSwapIssuance = await deployer.deploy(MultiSwapIssuance);
-  // const multiSwapInstrument = await deployer.deploy(MultiSwapInstrument, false, false, multiSwapIssuance.address);
-  // console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
-  // await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), multiSwapInstrument.address,
-  //   web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  // Deploy Multi-Swap Instrument.
+  const multiSwapIssuance = await deployer.deploy(MultiSwapIssuance);
+  const multiSwapInstrument = await deployer.deploy(MultiSwapInstrument, false, false, multiSwapIssuance.address);
+  console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), multiSwapInstrument.address,
+    web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
 }
 
 module.exports = function(deployer, network, accounts) {

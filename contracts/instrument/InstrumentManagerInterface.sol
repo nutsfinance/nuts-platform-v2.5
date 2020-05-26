@@ -3,7 +3,7 @@ pragma solidity 0.6.8;
 
 import "../escrow/InstrumentEscrowInterface.sol";
 import "../escrow/IssuanceEscrowInterface.sol";
-import "../lib/protobuf/Transfers.sol";
+import "../lib/data/Transfers.sol";
 import "./IssuanceInterface.sol";
 
 /**
@@ -30,7 +30,7 @@ abstract contract InstrumentManagerInterface {
     /**
      * @dev Token is transferred.
      */
-    event TokenTransferred(uint256 indexed issuanceId, Transfer.TransferType transferType, address fromAddress,
+    event TokenTransferred(uint256 indexed issuanceId, Transfers.TransferType transferType, address fromAddress,
         address toAddress, address tokenAddress, uint256 amount);
 
     /**

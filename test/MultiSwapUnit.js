@@ -141,7 +141,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '0',
-      transferType: '1',
+      transferType: '0',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
@@ -149,7 +149,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     });
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '1',
+      transferType: '0',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
@@ -234,7 +234,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '4',
+      transferType: '3',
       fromAddress: taker1,
       toAddress: maker1,
       tokenAddress: outputToken.address,
@@ -243,7 +243,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: taker1,
       tokenAddress: inputToken.address,
@@ -252,7 +252,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '4',
+      transferType: '3',
       fromAddress: taker1,
       toAddress: maker1,
       tokenAddress: outputToken.address,
@@ -260,7 +260,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     });
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: taker1,
       tokenAddress: inputToken.address,
@@ -331,7 +331,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '2',
-      transferType: '4',
+      transferType: '3',
       fromAddress: taker2,
       toAddress: maker1,
       tokenAddress: outputToken.address,
@@ -340,7 +340,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '2',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: taker2,
       tokenAddress: inputToken.address,
@@ -349,7 +349,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '4',
+      transferType: '3',
       fromAddress: taker2,
       toAddress: maker1,
       tokenAddress: outputToken.address,
@@ -357,7 +357,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     });
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: taker2,
       tokenAddress: inputToken.address,
@@ -451,7 +451,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
@@ -461,7 +461,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '0',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
@@ -523,7 +523,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
@@ -533,7 +533,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '0',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
@@ -580,7 +580,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
 
     expectEvent(receipt, 'TokenTransferred', {
       issuanceId: '1',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
@@ -590,7 +590,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     expectEvent(receipt, 'AssetTransferred', {
       issuanceId: '1',
       engagementId: '0',
-      transferType: '2',
+      transferType: '1',
       fromAddress: maker1,
       toAddress: maker1,
       tokenAddress: inputToken.address,
