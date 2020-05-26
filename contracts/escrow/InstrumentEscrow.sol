@@ -11,9 +11,6 @@ import "./InstrumentEscrowInterface.sol";
  * @title Instrument Escrow that keeps assets that are not yet locked by issuances.
  */
 contract InstrumentEscrow is EscrowBase, InstrumentEscrowInterface {
-    receive() payable external {
-
-    }
 
     function initialize(address owner, address wethAddress) public {
         EscrowBase._initialize(owner, wethAddress);
@@ -22,6 +19,13 @@ contract InstrumentEscrow is EscrowBase, InstrumentEscrowInterface {
     /**********************************************
      * APIs to deposit and withdraw Ether
      ***********************************************/
+
+    /**
+     * @dev The receive function is used to accept ETH transfer from WETH9 contract only.
+     * IMPORTANT: Users should never transfer ETH to Instrument Escrow using send() or transfer(),
+     * but should use the deposit() method below. Otherwise, their fund will be locked forever!
+     */
+    receive() payable external {}
 
     /**
      * @dev Deposits ETHs into the instrument escrow
