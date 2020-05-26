@@ -194,7 +194,6 @@ contract BorrowingIssuance is IssuanceBase {
         if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Engageable
             || now < _issuanceProperty.issuanceDueTimestamp) return new Transfers.Transfer[](0);
 
-        // The issuance is now complete
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Complete;
         _issuanceProperty.issuanceCompleteTimestamp = now;
         emit IssuanceComplete(_issuanceProperty.issuanceId, 0);
@@ -318,11 +317,11 @@ contract BorrowingIssuance is IssuanceBase {
         emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
 
-        // Mark payable 2 as paid
+        // Mark payable 1 as paid
         _markPayableAsPaid(1);
-        // Mark payable 3 as paid
+        // Mark payable 2 as paid
         _markPayableAsPaid(2);
-        // Mark payable 4 as paid
+        // Mark payable 3 as paid
         _markPayableAsPaid(3);
     }
 
