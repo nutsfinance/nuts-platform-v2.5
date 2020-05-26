@@ -25,7 +25,6 @@ contract InstrumentManager is InstrumentManagerInterface {
     struct IssuanceProperty {
         IssuanceInterface issuance;
         IssuanceEscrowInterface issuanceEscrow;
-        uint256 creationTimestamp;
     }
 
     address private _wethAddress;
@@ -118,8 +117,7 @@ contract InstrumentManager is InstrumentManagerInterface {
             address(issuanceEscrow), msg.sender, makerData);
         _issuances[newIssuanceId] = IssuanceProperty({
             issuance: issuance,
-            issuanceEscrow: issuanceEscrow,
-            creationTimestamp: now
+            issuanceEscrow: issuanceEscrow
         });
         // If the instrument supports issuance escrow transaction, grant the admin role of issuance escrow to issuance
         if (instrument.supportsIssuanceTransaction()) {
