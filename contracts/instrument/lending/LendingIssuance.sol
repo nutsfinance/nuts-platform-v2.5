@@ -236,7 +236,7 @@ contract LendingIssuance is IssuanceBase {
         if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Complete)  return new bytes(0);
         EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
         if (engagement.engagementState != EngagementProperty.EngagementState.Active ||
-            _lep.loanState == LendingEngagementProperty.LoanState.Unpaid ||
+            _lep.loanState != LendingEngagementProperty.LoanState.Unpaid ||
             now < engagement.engagementDueTimestamp) return new bytes(0);
 
         // The engagement is now complete

@@ -167,7 +167,7 @@ contract SwapIssuance is IssuanceBase {
         // Input token outbound transfer: Maker --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _sip.inputTokenAddress, _sip.inputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _sip.inputTokenAddress, _sip.inputAmount, "Input out");
         transfersData = Transfers.encode(transfers);
 
@@ -194,7 +194,7 @@ contract SwapIssuance is IssuanceBase {
         // Input token outbound transfer: Maker --> Maker
         transfers.actions[0] = Transfer.Data(Transfer.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _sip.inputTokenAddress, _sip.inputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfer.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfer.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _sip.inputTokenAddress, _sip.inputAmount, "Input out");
         transfersData = Transfers.encode(transfers);
 
