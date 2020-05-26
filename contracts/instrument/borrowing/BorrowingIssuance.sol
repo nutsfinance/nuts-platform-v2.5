@@ -222,8 +222,10 @@ contract BorrowingIssuance is IssuanceBase {
         if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Complete)  return new Transfers.Transfer[](0);
         EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
         if (engagement.engagementState != EngagementProperty.EngagementState.Active ||
-            _bep.loanState == BorrowingEngagementProperty.LoanState.Unpaid ||
-            now < engagement.engagementDueTimestamp) return new Transfers.Transfer[](0);
+            _bep.loanState != BorrowingEngagementProperty.LoanState.Unpaid ||
+            now < engagement.engagementDueTimestamp) {
+          return new Transfers.Transfer[](0);
+        }
 
         // The engagement is now complete
         engagement.engagementState = EngagementProperty.EngagementState.Complete;
@@ -317,11 +319,11 @@ contract BorrowingIssuance is IssuanceBase {
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _bip.collateralTokenAddress, _bip.collateralAmount, "Collateral out");
 
         // Mark payable 2 as paid
-        _markPayableAsPaid(2);
+        _markPayableAsPaid(1);
         // Mark payable 3 as paid
-        _markPayableAsPaid(3);
+        _markPayableAsPaid(2);
         // Mark payable 4 as paid
-        _markPayableAsPaid(4);
+        _markPayableAsPaid(3);
     }
 
     /**

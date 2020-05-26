@@ -234,8 +234,10 @@ contract LendingIssuance is IssuanceBase {
         if (_issuanceProperty.issuanceState != IssuanceProperty.IssuanceState.Complete)  return new Transfers.Transfer[](0);
         EngagementProperty.Data storage engagement = _engagements[ENGAGEMENT_ID];
         if (engagement.engagementState != EngagementProperty.EngagementState.Active ||
-            _lep.loanState == LendingEngagementProperty.LoanState.Unpaid ||
-            now < engagement.engagementDueTimestamp) return new Transfers.Transfer[](0);
+            _lep.loanState != LendingEngagementProperty.LoanState.Unpaid ||
+            now < engagement.engagementDueTimestamp) {
+          return new Transfers.Transfer[](0);
+        }
 
         // The engagement is now complete
         engagement.engagementState = EngagementProperty.EngagementState.Complete;

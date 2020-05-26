@@ -166,7 +166,7 @@ contract SwapIssuance is IssuanceBase {
         // Input token outbound transfer: Maker --> Maker
         transfers[0] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _sip.inputTokenAddress, _sip.inputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _sip.inputTokenAddress, _sip.inputAmount, "Input out");
 
         // Mark payable 1 as paid
@@ -192,7 +192,7 @@ contract SwapIssuance is IssuanceBase {
         // Input token outbound transfer: Maker --> Maker
         transfers[0] = Transfers.Transfer(Transfers.TransferType.Outbound, _issuanceProperty.makerAddress, _issuanceProperty.makerAddress,
             _sip.inputTokenAddress, _sip.inputAmount);
-        emit AssetTransferred(_issuanceProperty.issuanceId, ENGAGEMENT_ID, Transfers.TransferType.Outbound,
+        emit AssetTransferred(_issuanceProperty.issuanceId, 0, Transfers.TransferType.Outbound,
             _issuanceProperty.makerAddress, _issuanceProperty.makerAddress, _sip.inputTokenAddress, _sip.inputAmount, "Input out");
 
         // Mark payable 1 as paid

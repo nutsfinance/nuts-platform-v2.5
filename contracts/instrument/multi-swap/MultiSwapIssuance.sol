@@ -110,6 +110,7 @@ contract MultiSwapIssuance is IssuanceBase {
 
         _engagementIds.increment();
         engagementId = _engagementIds.current();
+        _engagementSet.add(engagementId);
 
         // Set multi-swap engagement property
         _mip.remainingInputAmount = _mip.remainingInputAmount.sub(inputAmount);
@@ -244,7 +245,7 @@ contract MultiSwapIssuance is IssuanceBase {
     /**
      * @dev Returns the issuance-specific data about the engagement.
      */
-    function _getEngagementCustomProperty(uint256 /** engagementId */) internal override view returns (bytes memory) {
-        return new bytes(0);
+    function _getEngagementCustomProperty(uint256 engagementId) internal override view returns (bytes memory) {
+        return MultiSwapEngagementProperty.encode(_meps[engagementId]);
     }
 }

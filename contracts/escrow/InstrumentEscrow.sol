@@ -11,6 +11,9 @@ import "./InstrumentEscrowInterface.sol";
  * @title Instrument Escrow that keeps assets that are not yet locked by issuances.
  */
 contract InstrumentEscrow is EscrowBase, InstrumentEscrowInterface {
+    receive() payable external {
+
+    }
 
     function initialize(address owner, address wethAddress) public {
         EscrowBase._initialize(owner, wethAddress);
