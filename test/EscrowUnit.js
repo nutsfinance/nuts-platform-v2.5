@@ -12,7 +12,7 @@ const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000';
 let weth9;
 contract('Escrow', ([owner, account1, account2]) => {
     beforeEach(async () => {
-        tokenInstance = await Token.new(18);
+        tokenInstance = await Token.new(2);
         escrowInstance = await InstrumentEscrow.new();
         weth9 = await WETH9.new();
         await escrowInstance.initialize(owner, weth9.address);

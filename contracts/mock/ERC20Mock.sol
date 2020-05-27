@@ -8,7 +8,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
  */
 contract ERC20Mock is ERC20 {
     constructor(uint8 decimals) ERC20("Test Token", "Test") public {
-        _mint(msg.sender, 1000000000000);
+        uint256 wad = 10**uint256(decimals);
+        _mint(msg.sender, 1000000000000 * wad);
         _setupDecimals(decimals);
     }
 }
