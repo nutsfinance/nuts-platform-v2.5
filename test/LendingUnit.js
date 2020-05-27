@@ -57,8 +57,8 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), lendingInstrument.address,
       web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
 
-    lendingToken = await ERC20Mock.new();
-    collateralToken = await ERC20Mock.new();
+    lendingToken = await ERC20Mock.new(18);
+    collateralToken = await ERC20Mock.new(18);
     console.log("Lending token address:" + lendingToken.address);
     console.log("Collateral token address:" + collateralToken.address);
     await priceOracle.setRate(lendingToken.address, collateralToken.address, 1, 100);

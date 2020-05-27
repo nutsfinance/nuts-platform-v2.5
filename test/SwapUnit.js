@@ -54,8 +54,8 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), swapInstrument.address,
       web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
 
-    inputToken = await ERC20Mock.new();
-    outputToken = await ERC20Mock.new();
+    inputToken = await ERC20Mock.new(18);
+    outputToken = await ERC20Mock.new(18);
     console.log("Input token address:" + inputToken.address);
     console.log("Output token address:" + outputToken.address);
     instrumentManagerAddress = await instrumentRegistry.getInstrumentManager(1);
