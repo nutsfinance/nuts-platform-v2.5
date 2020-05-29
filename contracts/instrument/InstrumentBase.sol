@@ -41,6 +41,13 @@ abstract contract InstrumentBase is AdminAccess {
     }
 
     /**
+     * @dev Returns a unique type ID for the instrument.
+     * Instrument Type ID is used to identify the type of the instrument. Instrument ID is instead assigned by
+     * Instrument Manager and used to identify an instance of the instrument.
+     */
+    function getInstrumentTypeID() public pure virtual returns (bytes4);
+
+    /**
      * @dev Creates a new issuance instance.
      * Note: This method is expected to be invoked by Instrument Manager so that the Instrument Manager
      * is the owner of the created Issuance.

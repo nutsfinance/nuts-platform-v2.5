@@ -9,7 +9,7 @@ import "./InstrumentBase.sol";
 /**
  * @title Instrument that uses Proxy to create new issuance.
  */
-contract ProxyBasedInstrument is InstrumentBase {
+abstract contract ProxyBasedInstrument is InstrumentBase {
 
     address internal _issuanceAddress;
 

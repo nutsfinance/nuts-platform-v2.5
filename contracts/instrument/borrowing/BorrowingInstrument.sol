@@ -20,6 +20,15 @@ contract BorrowingInstrument is WhitelistInstrument, ProxyBasedInstrument {
         _priceOracle = PriceOracleInterface(priceOracleAddress);
     }
 
+    /**
+     * @dev Returns a unique type ID for the instrument.
+     * Instrument Type ID is used to identify the type of the instrument. Instrument ID is instead assigned by
+     * Instrument Manager and used to identify an instance of the instrument.
+     */
+    function getInstrumentTypeID() public pure override returns (bytes4) {
+        return bytes4(keccak256('nuts.finance.borrowing-v1'));
+    }
+
     function getPriceOracle() public view returns (PriceOracleInterface) {
         return _priceOracle;
     }
