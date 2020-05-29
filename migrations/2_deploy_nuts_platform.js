@@ -11,10 +11,10 @@ const InstrumentRegistry = artifacts.require("InstrumentRegistry");
 // const BorrowingIssuance = artifacts.require("BorrowingIssuance");
 // const SwapInstrument = artifacts.require("SwapInstrument");
 // const SwapIssuance = artifacts.require("SwapIssuance");
-// const MultiSwapInstrument = artifacts.require("MultiSwapInstrument");
-// const MultiSwapIssuance = artifacts.require("MultiSwapIssuance");
-// const ERC20Mock = artifacts.require("ERC20Mock");
-// const InstrumentManager = artifacts.require("InstrumentManager");
+const MultiSwapInstrument = artifacts.require("MultiSwapInstrument");
+const MultiSwapIssuance = artifacts.require("MultiSwapIssuance");
+const ERC20Mock = artifacts.require("ERC20Mock");
+const InstrumentManager = artifacts.require("InstrumentManager");
 // const InstrumentEscrow = artifacts.require("InstrumentEscrow");
 
 const deployNutsPlatform = async function(deployer, [owner, maker, taker]) {
@@ -83,12 +83,26 @@ const deployNutsPlatform = async function(deployer, [owner, maker, taker]) {
   // await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), swapInstrument.address,
   //   web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
   
-  // // Deploy Multi-Swap Instrument.
-  // const multiSwapIssuance = await deployer.deploy(MultiSwapIssuance);
-  // const multiSwapInstrument = await deployer.deploy(MultiSwapInstrument, false, false, multiSwapIssuance.address);
-  // console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
-  // await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), multiSwapInstrument.address,
-  //   web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  // Deploy Multi-Swap Instrument.
+  const multiSwapIssuance = await deployer.deploy(MultiSwapIssuance);
+  const multiSwapInstrument = await deployer.deploy(MultiSwapInstrument, false, false, multiSwapIssuance.address);
+  console.log(web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  await instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), multiSwapInstrument.address,
+    web3.eth.abi.encodeParameters(['uint256', 'uint256'], ['9590280014', '9590280014']));
+  
+  const mockUSDC = await ERC20Mock.new(6);
+  const mockUSDT = await ERC20Mock.new(6);
+  const mockDAI = await ERC20Mock.new(18);
+  console.log('WETH: ' + weth9.address);
+  console.log('Mock USDC : ' + mockUSDC.address);
+  console.log('Mock USDT: ' + mockUSDT.address);
+  console.log('Mock DAI: ' + mockDAI.address);
+  console.log('Instrument Registry: ' + instrumentRegistry.address);
+  const multiSwapInstrumentManagerAddress = await instrumentRegistry.getInstrumentManager(1);
+  console.log('MultiSwap Instrument Manager: ' + multiSwapInstrumentManagerAddress);
+  const multiSwapInstrumentManager = await InstrumentManager.at(multiSwapInstrumentManagerAddress);
+  const multiSwapInstrumentEscrowAddress = await multiSwapInstrumentManager.getInstrumentEscrow();
+  console.log('MultiSwap Instrument Escrow: ' + multiSwapInstrumentEscrowAddress);
 }
 
 module.exports = function(deployer, network, accounts) {
