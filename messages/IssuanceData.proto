@@ -16,15 +16,17 @@ message IssuanceProperty {
     .solidity.uint256 issuanceId = 1;
     .solidity.uint256 instrumentId = 2;
     .solidity.address makerAddress = 3;
-    .solidity.uint256 issuanceCreationTimestamp = 4;    // Timestamp when issuance is created
-    .solidity.uint256 issuanceDueTimestamp = 5;         // Timestamp when issuance is due (closed for new engagement)
-    .solidity.uint256 issuanceCancelTimestamp = 6;      // Timestamp when issuance is cancelled
-    .solidity.uint256 issuanceCompleteTimestamp = 7;    // Timestamp when issuance is complete
-    .solidity.uint256 completionRatio = 8;              // [0, 10000]
-    IssuanceState issuanceState = 9;
-    bytes issuanceCustomProperty = 10;
-    repeated EngagementProperty engagements = 11;
-    repeated Payable payables = 12;
+    .solidity.address issuanceAddress = 4;
+    .solidity.address issuanceEscrowAddress = 5;
+    .solidity.uint256 issuanceCreationTimestamp = 6;    // Timestamp when issuance is created
+    .solidity.uint256 issuanceDueTimestamp = 7;         // Timestamp when issuance is due (closed for new engagement)
+    .solidity.uint256 issuanceCancelTimestamp = 8;      // Timestamp when issuance is cancelled
+    .solidity.uint256 issuanceCompleteTimestamp = 9;    // Timestamp when issuance is complete
+    .solidity.uint256 completionRatio = 10;             // [0, 10000]
+    IssuanceState issuanceState = 11;
+    bytes issuanceCustomProperty = 12;
+    repeated EngagementProperty engagements = 13;
+    repeated Payable payables = 14;
 }
 
 message EngagementProperty {

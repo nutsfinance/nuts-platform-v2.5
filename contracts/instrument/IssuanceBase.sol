@@ -82,6 +82,8 @@ abstract contract IssuanceBase is IssuanceInterface, AdminAccess {
     function getIssuanceProperty() public view returns (bytes memory) {
         // Construct issuance data
         IssuanceProperty.Data memory issuanceProperty = _issuanceProperty;
+        issuanceProperty.issuanceAddress = address(this);
+        issuanceProperty.issuanceEscrowAddress = address(_issuanceEscrow);
         issuanceProperty.issuanceCustomProperty = _getIssuanceCustomProperty();
 
         // Construct paybles data

@@ -74,6 +74,8 @@ library IssuanceProperty {
     uint256 issuanceId;
     uint256 instrumentId;
     address makerAddress;
+    address issuanceAddress;
+    address issuanceEscrowAddress;
     uint256 issuanceCreationTimestamp;
     uint256 issuanceDueTimestamp;
     uint256 issuanceCancelTimestamp;
@@ -122,7 +124,7 @@ library IssuanceProperty {
     returns (Data memory, uint)
   {
     Data memory r;
-    uint[13] memory counters;
+    uint[15] memory counters;
     uint256 fieldId;
     ProtoBufRuntime.WireType wireType;
     uint256 bytesRead;
@@ -141,30 +143,36 @@ library IssuanceProperty {
         pointer += _read_makerAddress(pointer, bs, r, counters);
       }
       else if (fieldId == 4) {
-        pointer += _read_issuanceCreationTimestamp(pointer, bs, r, counters);
+        pointer += _read_issuanceAddress(pointer, bs, r, counters);
       }
       else if (fieldId == 5) {
-        pointer += _read_issuanceDueTimestamp(pointer, bs, r, counters);
+        pointer += _read_issuanceEscrowAddress(pointer, bs, r, counters);
       }
       else if (fieldId == 6) {
-        pointer += _read_issuanceCancelTimestamp(pointer, bs, r, counters);
+        pointer += _read_issuanceCreationTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 7) {
-        pointer += _read_issuanceCompleteTimestamp(pointer, bs, r, counters);
+        pointer += _read_issuanceDueTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 8) {
-        pointer += _read_completionRatio(pointer, bs, r, counters);
+        pointer += _read_issuanceCancelTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 9) {
-        pointer += _read_issuanceState(pointer, bs, r, counters);
+        pointer += _read_issuanceCompleteTimestamp(pointer, bs, r, counters);
       }
       else if (fieldId == 10) {
-        pointer += _read_issuanceCustomProperty(pointer, bs, r, counters);
+        pointer += _read_completionRatio(pointer, bs, r, counters);
       }
       else if (fieldId == 11) {
-        pointer += _read_engagements(pointer, bs, nil(), counters);
+        pointer += _read_issuanceState(pointer, bs, r, counters);
       }
       else if (fieldId == 12) {
+        pointer += _read_issuanceCustomProperty(pointer, bs, r, counters);
+      }
+      else if (fieldId == 13) {
+        pointer += _read_engagements(pointer, bs, nil(), counters);
+      }
+      else if (fieldId == 14) {
         pointer += _read_payables(pointer, bs, nil(), counters);
       }
       
@@ -193,8 +201,8 @@ library IssuanceProperty {
 
     }
     pointer = offset;
-    r.engagements = new EngagementProperty.Data[](counters[11]);
-    r.payables = new Payable.Data[](counters[12]);
+    r.engagements = new EngagementProperty.Data[](counters[13]);
+    r.payables = new Payable.Data[](counters[14]);
 
     while (pointer < offset + sz) {
       (fieldId, wireType, bytesRead) = ProtoBufRuntime._decode_key(pointer, bs);
@@ -209,30 +217,36 @@ library IssuanceProperty {
         pointer += _read_makerAddress(pointer, bs, nil(), counters);
       }
       else if (fieldId == 4) {
-        pointer += _read_issuanceCreationTimestamp(pointer, bs, nil(), counters);
+        pointer += _read_issuanceAddress(pointer, bs, nil(), counters);
       }
       else if (fieldId == 5) {
-        pointer += _read_issuanceDueTimestamp(pointer, bs, nil(), counters);
+        pointer += _read_issuanceEscrowAddress(pointer, bs, nil(), counters);
       }
       else if (fieldId == 6) {
-        pointer += _read_issuanceCancelTimestamp(pointer, bs, nil(), counters);
+        pointer += _read_issuanceCreationTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 7) {
-        pointer += _read_issuanceCompleteTimestamp(pointer, bs, nil(), counters);
+        pointer += _read_issuanceDueTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 8) {
-        pointer += _read_completionRatio(pointer, bs, nil(), counters);
+        pointer += _read_issuanceCancelTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 9) {
-        pointer += _read_issuanceState(pointer, bs, nil(), counters);
+        pointer += _read_issuanceCompleteTimestamp(pointer, bs, nil(), counters);
       }
       else if (fieldId == 10) {
-        pointer += _read_issuanceCustomProperty(pointer, bs, nil(), counters);
+        pointer += _read_completionRatio(pointer, bs, nil(), counters);
       }
       else if (fieldId == 11) {
-        pointer += _read_engagements(pointer, bs, r, counters);
+        pointer += _read_issuanceState(pointer, bs, nil(), counters);
       }
       else if (fieldId == 12) {
+        pointer += _read_issuanceCustomProperty(pointer, bs, nil(), counters);
+      }
+      else if (fieldId == 13) {
+        pointer += _read_engagements(pointer, bs, r, counters);
+      }
+      else if (fieldId == 14) {
         pointer += _read_payables(pointer, bs, r, counters);
       }
       else {
@@ -275,7 +289,7 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -302,7 +316,7 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -329,7 +343,7 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -352,21 +366,75 @@ library IssuanceProperty {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
+  function _read_issuanceAddress(
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
+    uint[15] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (address x, uint256 sz) = ProtoBufRuntime._decode_sol_address(p, bs);
+    if (isNil(r)) {
+      counters[4] += 1;
+    } else {
+      r.issuanceAddress = x;
+      if (counters[4] > 0) counters[4] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
+  function _read_issuanceEscrowAddress(
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
+    uint[15] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (address x, uint256 sz) = ProtoBufRuntime._decode_sol_address(p, bs);
+    if (isNil(r)) {
+      counters[5] += 1;
+    } else {
+      r.issuanceEscrowAddress = x;
+      if (counters[5] > 0) counters[5] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
   function _read_issuanceCreationTimestamp(
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
     if (isNil(r)) {
-      counters[4] += 1;
+      counters[6] += 1;
     } else {
       r.issuanceCreationTimestamp = x;
-      if (counters[4] > 0) counters[4] -= 1;
+      if (counters[6] > 0) counters[6] -= 1;
     }
     return sz;
   }
@@ -383,17 +451,17 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
     if (isNil(r)) {
-      counters[5] += 1;
+      counters[7] += 1;
     } else {
       r.issuanceDueTimestamp = x;
-      if (counters[5] > 0) counters[5] -= 1;
+      if (counters[7] > 0) counters[7] -= 1;
     }
     return sz;
   }
@@ -410,17 +478,17 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
     if (isNil(r)) {
-      counters[6] += 1;
+      counters[8] += 1;
     } else {
       r.issuanceCancelTimestamp = x;
-      if (counters[6] > 0) counters[6] -= 1;
+      if (counters[8] > 0) counters[8] -= 1;
     }
     return sz;
   }
@@ -437,17 +505,17 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
     if (isNil(r)) {
-      counters[7] += 1;
+      counters[9] += 1;
     } else {
       r.issuanceCompleteTimestamp = x;
-      if (counters[7] > 0) counters[7] -= 1;
+      if (counters[9] > 0) counters[9] -= 1;
     }
     return sz;
   }
@@ -464,17 +532,17 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
     if (isNil(r)) {
-      counters[8] += 1;
+      counters[10] += 1;
     } else {
       r.completionRatio = x;
-      if (counters[8] > 0) counters[8] -= 1;
+      if (counters[10] > 0) counters[10] -= 1;
     }
     return sz;
   }
@@ -491,7 +559,7 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -499,10 +567,10 @@ library IssuanceProperty {
     (int64 tmp, uint256 sz) = ProtoBufRuntime._decode_enum(p, bs);
     IssuanceProperty.IssuanceState x = decode_IssuanceState(tmp);
     if (isNil(r)) {
-      counters[9] += 1;
+      counters[11] += 1;
     } else {
       r.issuanceState = x;
-      if(counters[9] > 0) counters[9] -= 1;
+      if(counters[11] > 0) counters[11] -= 1;
     }
     return sz;
   }
@@ -519,17 +587,17 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (bytes memory x, uint256 sz) = ProtoBufRuntime._decode_bytes(p, bs);
     if (isNil(r)) {
-      counters[10] += 1;
+      counters[12] += 1;
     } else {
       r.issuanceCustomProperty = x;
-      if (counters[10] > 0) counters[10] -= 1;
+      if (counters[12] > 0) counters[12] -= 1;
     }
     return sz;
   }
@@ -546,17 +614,17 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (EngagementProperty.Data memory x, uint256 sz) = _decode_EngagementProperty(p, bs);
     if (isNil(r)) {
-      counters[11] += 1;
+      counters[13] += 1;
     } else {
-      r.engagements[r.engagements.length - counters[11]] = x;
-      if (counters[11] > 0) counters[11] -= 1;
+      r.engagements[r.engagements.length - counters[13]] = x;
+      if (counters[13] > 0) counters[13] -= 1;
     }
     return sz;
   }
@@ -573,17 +641,17 @@ library IssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[13] memory counters
+    uint[15] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (Payable.Data memory x, uint256 sz) = _decode_Payable(p, bs);
     if (isNil(r)) {
-      counters[12] += 1;
+      counters[14] += 1;
     } else {
-      r.payables[r.payables.length - counters[12]] = x;
-      if (counters[12] > 0) counters[12] -= 1;
+      r.payables[r.payables.length - counters[14]] = x;
+      if (counters[14] > 0) counters[14] -= 1;
     }
     return sz;
   }
@@ -687,37 +755,51 @@ library IssuanceProperty {
       pointer,
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCreationTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_address(r.issuanceAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       5,
       ProtoBufRuntime.WireType.LengthDelim,
       pointer,
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceDueTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_address(r.issuanceEscrowAddress, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       6,
       ProtoBufRuntime.WireType.LengthDelim,
       pointer,
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCancelTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCreationTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       7,
       ProtoBufRuntime.WireType.LengthDelim,
       pointer,
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCompleteTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceDueTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       8,
       ProtoBufRuntime.WireType.LengthDelim,
       pointer,
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.completionRatio, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCancelTimestamp, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       9,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.issuanceCompleteTimestamp, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      10,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.completionRatio, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      11,
       ProtoBufRuntime.WireType.Varint,
       pointer,
       bs
@@ -725,7 +807,7 @@ library IssuanceProperty {
     int64 _enum_issuanceState = encode_IssuanceState(r.issuanceState);
     pointer += ProtoBufRuntime._encode_enum(_enum_issuanceState, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
-      10,
+      12,
       ProtoBufRuntime.WireType.LengthDelim,
       pointer,
       bs
@@ -733,7 +815,7 @@ library IssuanceProperty {
     pointer += ProtoBufRuntime._encode_bytes(r.issuanceCustomProperty, pointer, bs);
     for(i = 0; i < r.engagements.length; i++) {
       pointer += ProtoBufRuntime._encode_key(
-        11,
+        13,
         ProtoBufRuntime.WireType.LengthDelim,
         pointer,
         bs)
@@ -742,7 +824,7 @@ library IssuanceProperty {
     }
     for(i = 0; i < r.payables.length; i++) {
       pointer += ProtoBufRuntime._encode_key(
-        12,
+        14,
         ProtoBufRuntime.WireType.LengthDelim,
         pointer,
         bs)
@@ -795,6 +877,8 @@ library IssuanceProperty {
     e += 1 + 35;
     e += 1 + 35;
     e += 1 + 23;
+    e += 1 + 23;
+    e += 1 + 23;
     e += 1 + 35;
     e += 1 + 35;
     e += 1 + 35;
@@ -821,6 +905,8 @@ library IssuanceProperty {
     output.issuanceId = input.issuanceId;
     output.instrumentId = input.instrumentId;
     output.makerAddress = input.makerAddress;
+    output.issuanceAddress = input.issuanceAddress;
+    output.issuanceEscrowAddress = input.issuanceEscrowAddress;
     output.issuanceCreationTimestamp = input.issuanceCreationTimestamp;
     output.issuanceDueTimestamp = input.issuanceDueTimestamp;
     output.issuanceCancelTimestamp = input.issuanceCancelTimestamp;
@@ -829,13 +915,13 @@ library IssuanceProperty {
     output.issuanceState = input.issuanceState;
     output.issuanceCustomProperty = input.issuanceCustomProperty;
 
-    for(uint256 i11 = 0; i11 < input.engagements.length; i11++) {
-      output.engagements.push(input.engagements[i11]);
+    for(uint256 i13 = 0; i13 < input.engagements.length; i13++) {
+      output.engagements.push(input.engagements[i13]);
     }
     
 
-    for(uint256 i12 = 0; i12 < input.payables.length; i12++) {
-      output.payables.push(input.payables[i12]);
+    for(uint256 i14 = 0; i14 < input.payables.length; i14++) {
+      output.payables.push(input.payables[i14]);
     }
     
 
