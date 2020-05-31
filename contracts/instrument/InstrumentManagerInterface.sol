@@ -13,8 +13,8 @@ abstract contract InstrumentManagerInterface {
     /**
      * @dev The instrument is activated.
      */
-    event InstrumentActivated(uint256 indexed instrumentId, address indexed instrumentAddress,
-        address fspAddress, address instrumentEscrowAddress);
+    event InstrumentActivated(uint256 indexed instrumentId, address indexed fspAddress, address indexed instrumentAddress,
+        address instrumentEscrowAddress);
 
     /**
      * @dev The instrument is deactivated.

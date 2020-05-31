@@ -68,6 +68,7 @@ contract InstrumentManager is InstrumentManagerInterface {
 
         // Creates the Instrument Escrow
         _instrumentEscrow = EscrowFactoryInterface(_escrowFactoryAddress).createInstrumentEscrow(_wethAddress);
+        emit InstrumentActivated(_instrumentId, _fspAddress, _instrumentAddress, address(_instrumentEscrow));
     }
 
     /**

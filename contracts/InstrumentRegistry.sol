@@ -18,7 +18,7 @@ contract InstrumentRegistry {
      * @dev The instrument is activated.
      */
     event InstrumentActivated(uint256 indexed instrumentId, address indexed fspAddress,
-        address indexed instrumentAddress, address instrumentEscrowAddress);
+        address indexed instrumentAddress, address instrumentManagerAddress, address instrumentEscrowAddress);
 
     Counters.Counter private _instrumentIds;
     Config private _config;
@@ -49,7 +49,7 @@ contract InstrumentRegistry {
             instrumentAddress, instrumentId, msg.sender, address(_config), instrumentData);
 
         _instrumentManagers[instrumentId] = address(instrumentManager);
-        emit InstrumentActivated(instrumentId, msg.sender, address(instrumentManager),
+        emit InstrumentActivated(instrumentId, msg.sender, instrumentAddress, address(instrumentManager),
             address(instrumentManager.getInstrumentEscrow()));
 
         if (_config.getDepositAmount() > 0) {
