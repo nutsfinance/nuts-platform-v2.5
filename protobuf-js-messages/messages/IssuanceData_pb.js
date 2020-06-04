@@ -67,7 +67,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.IssuanceProperty.repeatedFields_ = [11,12];
+proto.IssuanceProperty.repeatedFields_ = [13,14];
 
 
 
@@ -101,12 +101,14 @@ proto.IssuanceProperty.toObject = function(includeInstance, msg) {
     issuanceid: (f = msg.getIssuanceid()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     instrumentid: (f = msg.getInstrumentid()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     makeraddress: (f = msg.getMakeraddress()) && SolidityTypes_pb.address.toObject(includeInstance, f),
+    issuanceaddress: (f = msg.getIssuanceaddress()) && SolidityTypes_pb.address.toObject(includeInstance, f),
+    issuanceescrowaddress: (f = msg.getIssuanceescrowaddress()) && SolidityTypes_pb.address.toObject(includeInstance, f),
     issuancecreationtimestamp: (f = msg.getIssuancecreationtimestamp()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     issuanceduetimestamp: (f = msg.getIssuanceduetimestamp()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     issuancecanceltimestamp: (f = msg.getIssuancecanceltimestamp()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     issuancecompletetimestamp: (f = msg.getIssuancecompletetimestamp()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     completionratio: (f = msg.getCompletionratio()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
-    issuancestate: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    issuancestate: jspb.Message.getFieldWithDefault(msg, 11, 0),
     issuancecustomproperty: msg.getIssuancecustomproperty_asB64(),
     engagementsList: jspb.Message.toObjectList(msg.getEngagementsList(),
     proto.EngagementProperty.toObject, includeInstance),
@@ -164,44 +166,54 @@ proto.IssuanceProperty.deserializeBinaryFromReader = function(msg, reader) {
       msg.setMakeraddress(value);
       break;
     case 4:
-      var value = new SolidityTypes_pb.uint256;
-      reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
-      msg.setIssuancecreationtimestamp(value);
+      var value = new SolidityTypes_pb.address;
+      reader.readMessage(value,SolidityTypes_pb.address.deserializeBinaryFromReader);
+      msg.setIssuanceaddress(value);
       break;
     case 5:
-      var value = new SolidityTypes_pb.uint256;
-      reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
-      msg.setIssuanceduetimestamp(value);
+      var value = new SolidityTypes_pb.address;
+      reader.readMessage(value,SolidityTypes_pb.address.deserializeBinaryFromReader);
+      msg.setIssuanceescrowaddress(value);
       break;
     case 6:
       var value = new SolidityTypes_pb.uint256;
       reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
-      msg.setIssuancecanceltimestamp(value);
+      msg.setIssuancecreationtimestamp(value);
       break;
     case 7:
       var value = new SolidityTypes_pb.uint256;
       reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
-      msg.setIssuancecompletetimestamp(value);
+      msg.setIssuanceduetimestamp(value);
       break;
     case 8:
       var value = new SolidityTypes_pb.uint256;
       reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
-      msg.setCompletionratio(value);
+      msg.setIssuancecanceltimestamp(value);
       break;
     case 9:
+      var value = new SolidityTypes_pb.uint256;
+      reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
+      msg.setIssuancecompletetimestamp(value);
+      break;
+    case 10:
+      var value = new SolidityTypes_pb.uint256;
+      reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
+      msg.setCompletionratio(value);
+      break;
+    case 11:
       var value = /** @type {!proto.IssuanceProperty.IssuanceState} */ (reader.readEnum());
       msg.setIssuancestate(value);
       break;
-    case 10:
+    case 12:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setIssuancecustomproperty(value);
       break;
-    case 11:
+    case 13:
       var value = new proto.EngagementProperty;
       reader.readMessage(value,proto.EngagementProperty.deserializeBinaryFromReader);
       msg.addEngagements(value);
       break;
-    case 12:
+    case 14:
       var value = new Payables_pb.Payable;
       reader.readMessage(value,Payables_pb.Payable.deserializeBinaryFromReader);
       msg.addPayables(value);
@@ -259,23 +271,23 @@ proto.IssuanceProperty.serializeBinaryToWriter = function(message, writer) {
       SolidityTypes_pb.address.serializeBinaryToWriter
     );
   }
-  f = message.getIssuancecreationtimestamp();
+  f = message.getIssuanceaddress();
   if (f != null) {
     writer.writeMessage(
       4,
       f,
-      SolidityTypes_pb.uint256.serializeBinaryToWriter
+      SolidityTypes_pb.address.serializeBinaryToWriter
     );
   }
-  f = message.getIssuanceduetimestamp();
+  f = message.getIssuanceescrowaddress();
   if (f != null) {
     writer.writeMessage(
       5,
       f,
-      SolidityTypes_pb.uint256.serializeBinaryToWriter
+      SolidityTypes_pb.address.serializeBinaryToWriter
     );
   }
-  f = message.getIssuancecanceltimestamp();
+  f = message.getIssuancecreationtimestamp();
   if (f != null) {
     writer.writeMessage(
       6,
@@ -283,7 +295,7 @@ proto.IssuanceProperty.serializeBinaryToWriter = function(message, writer) {
       SolidityTypes_pb.uint256.serializeBinaryToWriter
     );
   }
-  f = message.getIssuancecompletetimestamp();
+  f = message.getIssuanceduetimestamp();
   if (f != null) {
     writer.writeMessage(
       7,
@@ -291,7 +303,7 @@ proto.IssuanceProperty.serializeBinaryToWriter = function(message, writer) {
       SolidityTypes_pb.uint256.serializeBinaryToWriter
     );
   }
-  f = message.getCompletionratio();
+  f = message.getIssuancecanceltimestamp();
   if (f != null) {
     writer.writeMessage(
       8,
@@ -299,24 +311,40 @@ proto.IssuanceProperty.serializeBinaryToWriter = function(message, writer) {
       SolidityTypes_pb.uint256.serializeBinaryToWriter
     );
   }
+  f = message.getIssuancecompletetimestamp();
+  if (f != null) {
+    writer.writeMessage(
+      9,
+      f,
+      SolidityTypes_pb.uint256.serializeBinaryToWriter
+    );
+  }
+  f = message.getCompletionratio();
+  if (f != null) {
+    writer.writeMessage(
+      10,
+      f,
+      SolidityTypes_pb.uint256.serializeBinaryToWriter
+    );
+  }
   f = message.getIssuancestate();
   if (f !== 0.0) {
     writer.writeEnum(
-      9,
+      11,
       f
     );
   }
   f = message.getIssuancecustomproperty_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      10,
+      12,
       f
     );
   }
   f = message.getEngagementsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      11,
+      13,
       f,
       proto.EngagementProperty.serializeBinaryToWriter
     );
@@ -324,7 +352,7 @@ proto.IssuanceProperty.serializeBinaryToWriter = function(message, writer) {
   f = message.getPayablesList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      12,
+      14,
       f,
       Payables_pb.Payable.serializeBinaryToWriter
     );
@@ -443,18 +471,84 @@ proto.IssuanceProperty.prototype.hasMakeraddress = function() {
 
 
 /**
- * optional solidity.uint256 issuanceCreationTimestamp = 4;
+ * optional solidity.address issuanceAddress = 4;
+ * @return {?proto.solidity.address}
+ */
+proto.IssuanceProperty.prototype.getIssuanceaddress = function() {
+  return /** @type{?proto.solidity.address} */ (
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.address, 4));
+};
+
+
+/** @param {?proto.solidity.address|undefined} value */
+proto.IssuanceProperty.prototype.setIssuanceaddress = function(value) {
+  jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ */
+proto.IssuanceProperty.prototype.clearIssuanceaddress = function() {
+  this.setIssuanceaddress(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.IssuanceProperty.prototype.hasIssuanceaddress = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional solidity.address issuanceEscrowAddress = 5;
+ * @return {?proto.solidity.address}
+ */
+proto.IssuanceProperty.prototype.getIssuanceescrowaddress = function() {
+  return /** @type{?proto.solidity.address} */ (
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.address, 5));
+};
+
+
+/** @param {?proto.solidity.address|undefined} value */
+proto.IssuanceProperty.prototype.setIssuanceescrowaddress = function(value) {
+  jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ */
+proto.IssuanceProperty.prototype.clearIssuanceescrowaddress = function() {
+  this.setIssuanceescrowaddress(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.IssuanceProperty.prototype.hasIssuanceescrowaddress = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional solidity.uint256 issuanceCreationTimestamp = 6;
  * @return {?proto.solidity.uint256}
  */
 proto.IssuanceProperty.prototype.getIssuancecreationtimestamp = function() {
   return /** @type{?proto.solidity.uint256} */ (
-    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 4));
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 6));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
 proto.IssuanceProperty.prototype.setIssuancecreationtimestamp = function(value) {
-  jspb.Message.setWrapperField(this, 4, value);
+  jspb.Message.setWrapperField(this, 6, value);
 };
 
 
@@ -471,23 +565,23 @@ proto.IssuanceProperty.prototype.clearIssuancecreationtimestamp = function() {
  * @return {boolean}
  */
 proto.IssuanceProperty.prototype.hasIssuancecreationtimestamp = function() {
-  return jspb.Message.getField(this, 4) != null;
+  return jspb.Message.getField(this, 6) != null;
 };
 
 
 /**
- * optional solidity.uint256 issuanceDueTimestamp = 5;
+ * optional solidity.uint256 issuanceDueTimestamp = 7;
  * @return {?proto.solidity.uint256}
  */
 proto.IssuanceProperty.prototype.getIssuanceduetimestamp = function() {
   return /** @type{?proto.solidity.uint256} */ (
-    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 5));
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 7));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
 proto.IssuanceProperty.prototype.setIssuanceduetimestamp = function(value) {
-  jspb.Message.setWrapperField(this, 5, value);
+  jspb.Message.setWrapperField(this, 7, value);
 };
 
 
@@ -504,23 +598,23 @@ proto.IssuanceProperty.prototype.clearIssuanceduetimestamp = function() {
  * @return {boolean}
  */
 proto.IssuanceProperty.prototype.hasIssuanceduetimestamp = function() {
-  return jspb.Message.getField(this, 5) != null;
+  return jspb.Message.getField(this, 7) != null;
 };
 
 
 /**
- * optional solidity.uint256 issuanceCancelTimestamp = 6;
+ * optional solidity.uint256 issuanceCancelTimestamp = 8;
  * @return {?proto.solidity.uint256}
  */
 proto.IssuanceProperty.prototype.getIssuancecanceltimestamp = function() {
   return /** @type{?proto.solidity.uint256} */ (
-    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 6));
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 8));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
 proto.IssuanceProperty.prototype.setIssuancecanceltimestamp = function(value) {
-  jspb.Message.setWrapperField(this, 6, value);
+  jspb.Message.setWrapperField(this, 8, value);
 };
 
 
@@ -537,23 +631,23 @@ proto.IssuanceProperty.prototype.clearIssuancecanceltimestamp = function() {
  * @return {boolean}
  */
 proto.IssuanceProperty.prototype.hasIssuancecanceltimestamp = function() {
-  return jspb.Message.getField(this, 6) != null;
+  return jspb.Message.getField(this, 8) != null;
 };
 
 
 /**
- * optional solidity.uint256 issuanceCompleteTimestamp = 7;
+ * optional solidity.uint256 issuanceCompleteTimestamp = 9;
  * @return {?proto.solidity.uint256}
  */
 proto.IssuanceProperty.prototype.getIssuancecompletetimestamp = function() {
   return /** @type{?proto.solidity.uint256} */ (
-    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 7));
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 9));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
 proto.IssuanceProperty.prototype.setIssuancecompletetimestamp = function(value) {
-  jspb.Message.setWrapperField(this, 7, value);
+  jspb.Message.setWrapperField(this, 9, value);
 };
 
 
@@ -570,23 +664,23 @@ proto.IssuanceProperty.prototype.clearIssuancecompletetimestamp = function() {
  * @return {boolean}
  */
 proto.IssuanceProperty.prototype.hasIssuancecompletetimestamp = function() {
-  return jspb.Message.getField(this, 7) != null;
+  return jspb.Message.getField(this, 9) != null;
 };
 
 
 /**
- * optional solidity.uint256 completionRatio = 8;
+ * optional solidity.uint256 completionRatio = 10;
  * @return {?proto.solidity.uint256}
  */
 proto.IssuanceProperty.prototype.getCompletionratio = function() {
   return /** @type{?proto.solidity.uint256} */ (
-    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 8));
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 10));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
 proto.IssuanceProperty.prototype.setCompletionratio = function(value) {
-  jspb.Message.setWrapperField(this, 8, value);
+  jspb.Message.setWrapperField(this, 10, value);
 };
 
 
@@ -603,36 +697,36 @@ proto.IssuanceProperty.prototype.clearCompletionratio = function() {
  * @return {boolean}
  */
 proto.IssuanceProperty.prototype.hasCompletionratio = function() {
-  return jspb.Message.getField(this, 8) != null;
+  return jspb.Message.getField(this, 10) != null;
 };
 
 
 /**
- * optional IssuanceState issuanceState = 9;
+ * optional IssuanceState issuanceState = 11;
  * @return {!proto.IssuanceProperty.IssuanceState}
  */
 proto.IssuanceProperty.prototype.getIssuancestate = function() {
-  return /** @type {!proto.IssuanceProperty.IssuanceState} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+  return /** @type {!proto.IssuanceProperty.IssuanceState} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
 };
 
 
 /** @param {!proto.IssuanceProperty.IssuanceState} value */
 proto.IssuanceProperty.prototype.setIssuancestate = function(value) {
-  jspb.Message.setProto3EnumField(this, 9, value);
+  jspb.Message.setProto3EnumField(this, 11, value);
 };
 
 
 /**
- * optional bytes issuanceCustomProperty = 10;
+ * optional bytes issuanceCustomProperty = 12;
  * @return {!(string|Uint8Array)}
  */
 proto.IssuanceProperty.prototype.getIssuancecustomproperty = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
 };
 
 
 /**
- * optional bytes issuanceCustomProperty = 10;
+ * optional bytes issuanceCustomProperty = 12;
  * This is a type-conversion wrapper around `getIssuancecustomproperty()`
  * @return {string}
  */
@@ -643,7 +737,7 @@ proto.IssuanceProperty.prototype.getIssuancecustomproperty_asB64 = function() {
 
 
 /**
- * optional bytes issuanceCustomProperty = 10;
+ * optional bytes issuanceCustomProperty = 12;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getIssuancecustomproperty()`
@@ -657,23 +751,23 @@ proto.IssuanceProperty.prototype.getIssuancecustomproperty_asU8 = function() {
 
 /** @param {!(string|Uint8Array)} value */
 proto.IssuanceProperty.prototype.setIssuancecustomproperty = function(value) {
-  jspb.Message.setProto3BytesField(this, 10, value);
+  jspb.Message.setProto3BytesField(this, 12, value);
 };
 
 
 /**
- * repeated EngagementProperty engagements = 11;
+ * repeated EngagementProperty engagements = 13;
  * @return {!Array<!proto.EngagementProperty>}
  */
 proto.IssuanceProperty.prototype.getEngagementsList = function() {
   return /** @type{!Array<!proto.EngagementProperty>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.EngagementProperty, 11));
+    jspb.Message.getRepeatedWrapperField(this, proto.EngagementProperty, 13));
 };
 
 
 /** @param {!Array<!proto.EngagementProperty>} value */
 proto.IssuanceProperty.prototype.setEngagementsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 11, value);
+  jspb.Message.setRepeatedWrapperField(this, 13, value);
 };
 
 
@@ -683,7 +777,7 @@ proto.IssuanceProperty.prototype.setEngagementsList = function(value) {
  * @return {!proto.EngagementProperty}
  */
 proto.IssuanceProperty.prototype.addEngagements = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 11, opt_value, proto.EngagementProperty, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 13, opt_value, proto.EngagementProperty, opt_index);
 };
 
 
@@ -696,18 +790,18 @@ proto.IssuanceProperty.prototype.clearEngagementsList = function() {
 
 
 /**
- * repeated Payable payables = 12;
+ * repeated Payable payables = 14;
  * @return {!Array<!proto.Payable>}
  */
 proto.IssuanceProperty.prototype.getPayablesList = function() {
   return /** @type{!Array<!proto.Payable>} */ (
-    jspb.Message.getRepeatedWrapperField(this, Payables_pb.Payable, 12));
+    jspb.Message.getRepeatedWrapperField(this, Payables_pb.Payable, 14));
 };
 
 
 /** @param {!Array<!proto.Payable>} value */
 proto.IssuanceProperty.prototype.setPayablesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 12, value);
+  jspb.Message.setRepeatedWrapperField(this, 14, value);
 };
 
 
@@ -717,7 +811,7 @@ proto.IssuanceProperty.prototype.setPayablesList = function(value) {
  * @return {!proto.Payable}
  */
 proto.IssuanceProperty.prototype.addPayables = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 12, opt_value, proto.Payable, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 14, opt_value, proto.Payable, opt_index);
 };
 
 
