@@ -28,6 +28,13 @@ contract PriceOracleMock is PriceOracleInterface {
         return inputAmount.mul(denominator).div(numerator);
     }
 
+    function getInputAmount(address inputTokenAddress, address outputTokenAddress, uint256 outputAmount)
+        public view override returns (uint256) {
+        (uint256 numerator, uint256 denominator) = getRate(inputTokenAddress, outputTokenAddress);
+
+        return outputAmount.mul(numerator).div(denominator);
+    }
+
     function setRate(address inputTokenAddress, address outputTokenAddress, uint256 numerator, uint256 denominator) public {
         _rates[inputTokenAddress][outputTokenAddress].numerator = numerator;
         _rates[inputTokenAddress][outputTokenAddress].denominator = denominator;

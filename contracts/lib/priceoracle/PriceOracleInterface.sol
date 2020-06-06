@@ -26,4 +26,15 @@ interface PriceOracleInterface {
      */
     function getOutputAmount(address inputTokenAddress, address outputTokenAddress, uint256 inputAmount)
         external view returns (uint256);
+
+    /**
+     * @dev Returns the input token amount.
+     * Note: Input amount = Output amount * iutput token price / (Output token price)
+     * @param inputTokenAddress The address of base ERC20 token. ETH should use the WETH address.
+     * @param outputTokenAddress The address of quote ERC20 token. ETH should use the WETH address.
+     * @param outputAmount Amount of output token.
+     * @return The input token amount.
+     */
+    function getInputAmount(address inputTokenAddress, address outputTokenAddress, uint256 outputAmount)
+        external view returns (uint256);
 }

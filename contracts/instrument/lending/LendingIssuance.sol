@@ -19,15 +19,8 @@ contract LendingIssuance is IssuanceBase {
 
     // Constants
     uint256 internal constant ENGAGEMENT_ID = 1; // Since it's 1 to 1, we use a constant engagement id 1
-    uint256 internal constant ISSUANCE_DUE_DAYS = 14 days; // Time available for taker to engage
-    uint256 internal constant TENOR_DAYS_MIN = 2; // Minimum tenor is 2 days
-    uint256 internal constant TENOR_DAYS_MAX = 90; // Maximum tenor is 90 days
     uint256 internal constant COLLATERAL_RATIO_DECIMALS = 10**4; // 0.01%
-    uint256 internal constant COLLATERAL_RATIO_MIN = 5000; // Minimum collateral is 50%
-    uint256 internal constant COLLATERAL_RATIO_MAX = 20000; // Maximum collateral is 200%
     uint256 internal constant INTEREST_RATE_DECIMALS = 10**6; // 0.0001%
-    uint256 internal constant INTEREST_RATE_MIN = 10; // Mimimum interest rate is 0.0010%
-    uint256 internal constant INTEREST_RATE_MAX = 50000; // Maximum interest rate is 5.0000%
 
     // Lending issuance properties
     LendingIssuanceProperty.Data private _lip;
@@ -52,31 +45,29 @@ contract LendingIssuance is IssuanceBase {
         address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
         public override returns (Transfers.Transfer[] memory transfers) {
 
-        require(LendingInstrument(instrumentAddress).isMakerAllowed(makerAddress), "LendingIssuance: Maker not allowed.");
+        LendingInstrument lendingInstrument = LendingInstrument(instrumentAddress);
+        require(lendingInstrument.isMakerAllowed(makerAddress), "LendingIssuance: Maker not allowed.");
         IssuanceBase._initialize(instrumentManagerAddress, instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress);
 
-        (_lip.lendingTokenAddress, _lip.collateralTokenAddress, _lip.lendingAmount,
-            _lip.tenorDays, _lip.collateralRatio, _lip.interestRate) = abi
-            .decode(makerData, (address, address, uint256, uint256, uint256, uint256));
+        uint256 issuanceDuration;
+        (issuanceDuration, _lip.lendingTokenAddress, _lip.collateralTokenAddress, _lip.lendingAmount, _lip.tenorDays,
+            _lip.collateralRatio, _lip.interestRate) = abi.decode(makerData, (uint256, address, address, uint256, uint256, uint256, uint256));
 
         // Validates parameters
         require(_lip.collateralTokenAddress != address(0x0), "LendingIssuance: Collateral token not set.");
         require(_lip.lendingTokenAddress != address(0x0), "LendingIssuance: Lending token not set.");
         require(_lip.lendingAmount > 0, "Lending amount not set");
-        require(_lip.tenorDays >= TENOR_DAYS_MIN && _lip.tenorDays <= TENOR_DAYS_MAX,
-            "LendingIssuance: Invalid tenor days.");
-        require(_lip.collateralRatio >= COLLATERAL_RATIO_MIN &&
-            _lip.collateralRatio <= COLLATERAL_RATIO_MAX,
-            "LendingIssuance: Invalid collateral ratio.");
-        require(_lip.interestRate >= INTEREST_RATE_MIN && _lip.interestRate <= INTEREST_RATE_MAX,
-            "LendingIssuance: Invalid interest rate.");
+        require(lendingInstrument.isIssuanceDurationValid(issuanceDuration), "LendingIssuance: Invalid duration.");
+        require(lendingInstrument.isTenorDaysValid(_lip.tenorDays), "LendingIssuance: Invalid tenor days.");
+        require(lendingInstrument.isCollateralRatioValid(_lip.collateralRatio), "LendingIssuance: Invalid collateral ratio.");
+        require(lendingInstrument.isInterestRateValid(_lip.interestRate), "LendingIssuance: Invalid interest rate.");
 
         // Validate principal token balance
         uint256 principalBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(makerAddress, _lip.lendingTokenAddress);
         require(principalBalance >= _lip.lendingAmount, "LendingIssuance: Insufficient principal balance.");
 
         // Sets common properties
-        _issuanceProperty.issuanceDueTimestamp = now.add(ISSUANCE_DUE_DAYS);
+        _issuanceProperty.issuanceDueTimestamp = now.add(issuanceDuration);
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
         emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
