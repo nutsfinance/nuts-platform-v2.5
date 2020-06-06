@@ -57,6 +57,7 @@ contract LendingIssuance is IssuanceBase {
         require(_lip.collateralTokenAddress != address(0x0), "LendingIssuance: Collateral token not set.");
         require(_lip.lendingTokenAddress != address(0x0), "LendingIssuance: Lending token not set.");
         require(_lip.lendingAmount > 0, "Lending amount not set");
+        
         require(lendingInstrument.isIssuanceDurationValid(issuanceDuration), "LendingIssuance: Invalid duration.");
         require(lendingInstrument.isTenorDaysValid(_lip.tenorDays), "LendingIssuance: Invalid tenor days.");
         require(lendingInstrument.isCollateralRatioValid(_lip.collateralRatio), "LendingIssuance: Invalid collateral ratio.");

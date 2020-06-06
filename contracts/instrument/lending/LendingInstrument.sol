@@ -37,6 +37,10 @@ contract LendingInstrument is WhitelistInstrument, ProxyBasedInstrument {
         return bytes4(keccak256('nuts.finance.lending-v1'));
     }
 
+    function setPriceOracle(PriceOracleInterface priceOracle) public onlyAdmin {
+        _priceOracle = priceOracle;
+    }
+
     function getPriceOracle() public view returns (PriceOracleInterface) {
         return _priceOracle;
     }

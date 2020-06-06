@@ -77,46 +77,50 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      ['0x0000000000000000000000000000000000000000', collateralToken.address, 0, 15000, 20, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, '0x0000000000000000000000000000000000000000', collateralToken.address, 0, 15000, 20, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Borrowing token not set.');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'], [borrowingToken.address,
-        '0x0000000000000000000000000000000000000000', 20000, 15000, 1, 10000]);
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, '0x0000000000000000000000000000000000000000', 20000, 15000, 1, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Collateral token not set.');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [collateralToken.address,
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [1296000, borrowingToken.address, collateralToken.address, 20000, 15000, 1, 10000]);
+    await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Invalid duration.');
+
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, collateralToken.address,
         borrowingToken.address, 0, 15000, 20, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'Borrowing amount not set');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [collateralToken.address,
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, collateralToken.address,
         borrowingToken.address, 20000, 1, 15000, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Invalid tenor days.');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [collateralToken.address,
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, collateralToken.address,
         borrowingToken.address, 20000, 91, 15000, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Invalid tenor days.');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [collateralToken.address,
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, collateralToken.address,
         borrowingToken.address, 20000, 20, 4999, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Invalid collateral ratio.');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [collateralToken.address,
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, collateralToken.address,
         borrowingToken.address, 20000, 20, 20001, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Invalid collateral ratio.');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [collateralToken.address,
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, collateralToken.address,
         borrowingToken.address, 20000, 20, 15000, 9]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Invalid interest rate.');
 
-    borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [collateralToken.address,
+    borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, collateralToken.address,
         borrowingToken.address, 20000, 20, 15000, 50001]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'BorrowingIssuance: Invalid interest rate.');
   }),
@@ -125,8 +129,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 1000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 1000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     await expectRevert(instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1}), 'Insufficient collateral balance');
   }),
   it('valid parameters', async () => {
@@ -136,8 +140,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
     assert.equal(2000000, await instrumentEscrow.getTokenBalance(maker1, collateralToken.address));
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let events = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
 
@@ -207,8 +211,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let createdIssuanceEvents = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -318,8 +322,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.transfer(maker1, 2000000);
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     await instrumentManager.processEvent(1, 0, web3.utils.fromAscii("cancel_issuance"), web3.utils.fromAscii(""), {from: maker1});
     await expectRevert(instrumentManager.engageIssuance(1, [], {from: taker1}), "Issuance not Engageable");
@@ -332,8 +336,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let events = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -388,8 +392,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let events = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -410,8 +414,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     await expectRevert(instrumentManager.processEvent(1, 0, web3.utils.fromAscii("cancel_issuance"), web3.utils.fromAscii(""), {from: maker2}), 'Only maker can cancel issuance');
   }),
@@ -422,8 +426,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let createdIssuanceEvents = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -534,8 +538,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
     let abis = getAbis();
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let createdIssuanceEvents = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -551,8 +555,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
     let abis = getAbis();
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let createdIssuanceEvents = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -571,8 +575,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await instrumentEscrow.depositToken(collateralToken.address, 2200000, {from: maker1});
     let abis = getAbis();
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let createdIssuanceEvents = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -592,8 +596,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let events = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -648,8 +652,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
 
     await borrowingToken.transfer(taker1, 20000);
@@ -668,8 +672,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let notifyEngagementDue = await instrumentManager.processEvent(1, 0, web3.utils.fromAscii("engagement_due"), web3.utils.fromAscii(""), {from: maker1});
     let issuance = await BorrowingIssuance.at(await instrumentManager.getIssuance(1));
@@ -684,8 +688,8 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     await collateralToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(collateralToken.address, 2000000, {from: maker1});
 
-    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
-      [borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
+    let borrowingMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'],
+      [100000, borrowingToken.address, collateralToken.address, 10000, 20, 20000, 10000]);
     let createdIssuance = await instrumentManager.createIssuance(borrowingMakerParameters, {from: maker1});
     let createdIssuanceEvents = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
