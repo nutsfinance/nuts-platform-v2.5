@@ -69,22 +69,19 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     console.log("taker1: " + taker1);
   }),
   it('invalid parameters', async () => {
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], ['0x0000000000000000000000000000000000000000', outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, '0x0000000000000000000000000000000000000000', outputToken.address, 2000000, 40000]);
     await expectRevert(instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1}), 'Input token not set');
 
-    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, '0x0000000000000000000000000000000000000000', 2000000, 40000, 20]);
+    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, '0x0000000000000000000000000000000000000000', 2000000, 40000]);
     await expectRevert(instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1}), 'Output token not set');
 
-    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 0, 40000, 20]);
+    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 0, 40000]);
     await expectRevert(instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1}), 'Input amount not set');
 
-    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 0, 20]);
+    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 0]);
     await expectRevert(instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1}), 'Output amount not set');
 
-    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 0]);
-    await expectRevert(instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1}), 'Invalid duration');
-
-    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 91]);
+    spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [1296000, inputToken.address, outputToken.address, 2000000, 40000]);
     await expectRevert(instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1}), 'Invalid duration');
   }),
   it('valid parameters but insufficient fund', async () => {
@@ -92,7 +89,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.approve(instrumentEscrowAddress, 1500000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 1500000, {from: maker1});
 
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     await expectRevert(instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1}), 'Insufficient input balance');
   }),
   it('valid parameters', async () => {
@@ -103,7 +100,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
     assert.equal(2000000, await instrumentEscrow.getTokenBalance(maker1, inputToken.address));
 
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
 
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -173,7 +170,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.transfer(maker1, 2000000);
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
     let events = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -261,7 +258,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
     let abis = getAbis();
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
 
     await outputToken.transfer(taker1, 39999);
@@ -276,7 +273,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
     let abis = getAbis();
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
 
     await outputToken.transfer(taker1, 40000);
@@ -292,7 +289,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
     let abis = getAbis();
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
 
     await expectRevert(instrumentManager.processEvent(1, 0, web3.utils.fromAscii("cancel_issuance"), web3.utils.fromAscii(""), {from: maker2}), 'Only maker can cancel issuance');
@@ -301,7 +298,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.transfer(maker1, 2000000);
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
     await instrumentManager.processEvent(1, 0, web3.utils.fromAscii("cancel_issuance"), web3.utils.fromAscii(""), {from: maker1});
     await expectRevert(instrumentManager.engageIssuance(1, [], {from: taker1}), "Issuance not Engageable");
@@ -312,7 +309,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.transfer(maker1, 2000000);
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
     let events = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -366,7 +363,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.transfer(maker1, 2000000);
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
     let events = LogParser.logParser(createdIssuance.receipt.rawLogs, abis);
     let issuanceEscrowAddress = await instrumentManager.getIssuanceEscrow(1);
@@ -418,7 +415,7 @@ contract('Swap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker2, 
     await inputToken.approve(instrumentEscrowAddress, 2000000, {from: maker1});
     await instrumentEscrow.depositToken(inputToken.address, 2000000, {from: maker1});
     let abis = getAbis();
-    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['address', 'address', 'uint256', 'uint256', 'uint256'], [inputToken.address, outputToken.address, 2000000, 40000, 20]);
+    let spotSwapMakerParameters = web3.eth.abi.encodeParameters(['uint256', 'address', 'address', 'uint256', 'uint256'], [20000, inputToken.address, outputToken.address, 2000000, 40000]);
     let createdIssuance = await instrumentManager.createIssuance(spotSwapMakerParameters, {from: maker1});
     let notifyDue = await instrumentManager.processEvent(1, 0, web3.utils.fromAscii("issuance_due"), web3.utils.fromAscii(""), {from: maker1});
 

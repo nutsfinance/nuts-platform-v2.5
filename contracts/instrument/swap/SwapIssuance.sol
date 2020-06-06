@@ -18,8 +18,6 @@ contract SwapIssuance is IssuanceBase {
 
     // Constants
     uint256 internal constant ENGAGEMENT_ID = 1; // Since it's 1 to 1, we use a constant engagement id 1
-    uint256 internal constant DURATION_MIN = 1; // Minimum duration is 1 day
-    uint256 internal constant DURATION_MAX = 90; // Maximum duration is 90 days
 
     // Swap issuance properties
     SwapIssuanceProperty.Data private _sip;
@@ -38,25 +36,28 @@ contract SwapIssuance is IssuanceBase {
         address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
         public override returns (Transfers.Transfer[] memory transfers) {
 
-        require(SwapInstrument(instrumentAddress).isMakerAllowed(makerAddress), "SwapIssuance: Maker not allowed.");
+        SwapInstrument swapInstrument = SwapInstrument(instrumentAddress);
+        require(swapInstrument.isMakerAllowed(makerAddress), "SwapIssuance: Maker not allowed.");
         IssuanceBase._initialize(instrumentManagerAddress, instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress);
 
-        (_sip.inputTokenAddress, _sip.outputTokenAddress, _sip.inputAmount, _sip.outputAmount, _sip.duration) = abi
-            .decode(makerData, (address, address, uint256, uint256, uint256));
+        uint256 issuanceDuration;
+        (issuanceDuration, _sip.inputTokenAddress, _sip.outputTokenAddress, _sip.inputAmount, _sip.outputAmount) = abi
+            .decode(makerData, (uint256, address, address, uint256, uint256));
 
         // Validates parameters.
-        require(_sip.inputTokenAddress != address(0x0), "Input token not set");
-        require(_sip.outputTokenAddress != address(0x0), "Output token not set");
-        require(_sip.inputAmount > 0, "Input amount not set");
-        require(_sip.outputAmount > 0, "Output amount not set");
-        require(_sip.duration >= DURATION_MIN && _sip.duration <= DURATION_MAX, "Invalid duration");
+        require(_sip.inputTokenAddress != address(0x0), "SwapIssuance: Input token not set");
+        require(_sip.outputTokenAddress != address(0x0), "SwapIssuance: Output token not set");
+        require(_sip.inputAmount > 0, "SwapIssuance: Input amount not set");
+        require(_sip.outputAmount > 0, "SwapIssuance: Output amount not set");
+    
+        require(swapInstrument.isIssuanceDurationValid(issuanceDuration), "SwapIssuance: Invalid duration");
 
         // Validate input token balance
         uint256 inputTokenBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(makerAddress, _sip.inputTokenAddress);
-        require(inputTokenBalance >= _sip.inputAmount, "Insufficient input balance");
+        require(inputTokenBalance >= _sip.inputAmount, "SwapIssuance: Insufficient input balance");
 
         // Sets common properties
-        _issuanceProperty.issuanceDueTimestamp = now.add(1 days * _sip.duration);
+        _issuanceProperty.issuanceDueTimestamp = now.add(issuanceDuration);
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
         emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
@@ -85,13 +86,13 @@ contract SwapIssuance is IssuanceBase {
     function engage(address takerAddress, bytes memory /** takerData */)
         public override onlyAdmin returns (uint256 engagementId, Transfers.Transfer[] memory transfers) {
         require(SwapInstrument(_instrumentAddress).isTakerAllowed(takerAddress), "SwapIssuance: Taker not allowed.");
-        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Issuance not Engageable");
-        require(now <= _issuanceProperty.issuanceDueTimestamp, "Issuance due");
-        require(_engagementSet.length() == 0, "Already engaged");
+        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "SwapIssuance: Issuance not Engageable");
+        require(now <= _issuanceProperty.issuanceDueTimestamp, "SwapIssuance: Issuance due");
+        require(_engagementSet.length() == 0, "SwapIssuance: Already engaged");
 
         // Validates output balance
         uint256 outputTokenBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(takerAddress, _sip.outputTokenAddress);
-        require(outputTokenBalance >= _sip.outputAmount, "Insufficient output balance");
+        require(outputTokenBalance >= _sip.outputAmount, "SwapIssuance: Insufficient output balance");
 
         engagementId = ENGAGEMENT_ID;
         _engagementSet.add(ENGAGEMENT_ID);
@@ -179,9 +180,9 @@ contract SwapIssuance is IssuanceBase {
      */
     function _cancelIssuance(address notifierAddress) private returns (Transfers.Transfer[] memory transfers) {
         // Cancel Issuance must be processed in Engageable state
-        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Cancel issuance not engageable");
+        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "SwapIssuance: Cancel issuance not engageable");
         // Only maker can cancel issuance
-        require(notifierAddress == _issuanceProperty.makerAddress, "Only maker can cancel issuance");
+        require(notifierAddress == _issuanceProperty.makerAddress, "SwapIssuance: Only maker can cancel issuance");
 
         // The issuance is now cancelled
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Cancelled;

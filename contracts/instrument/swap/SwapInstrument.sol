@@ -10,6 +10,9 @@ import "../WhitelistInstrument.sol";
  */
 contract SwapInstrument is WhitelistInstrument, ProxyBasedInstrument {
 
+    uint256 private _minIssuanceDuration = 0;
+    uint256 private _maxIssuanceDuration = 14 days;
+
     constructor(bool makerWhitelistEnabled, bool takerWhitelistEnabled, address issuanceAddress)
         WhitelistInstrument(makerWhitelistEnabled, takerWhitelistEnabled) ProxyBasedInstrument(issuanceAddress) public {
     }
@@ -21,5 +24,17 @@ contract SwapInstrument is WhitelistInstrument, ProxyBasedInstrument {
      */
     function getInstrumentTypeID() public pure override returns (bytes4) {
         return bytes4(keccak256('nuts.finance.swap-v1'));
+    }
+
+    function setMinIssuanceDuration(uint256 minIssuanceDuration) public onlyAdmin {
+        _minIssuanceDuration = minIssuanceDuration;
+    }
+
+    function setMaxIssuanceDuration(uint256 maxIssuanceDuration) public onlyAdmin {
+        _maxIssuanceDuration = maxIssuanceDuration;
+    }
+
+    function isIssuanceDurationValid(uint256 issuanceDuration) public view returns (bool) {
+        return issuanceDuration >= _minIssuanceDuration && issuanceDuration <= _maxIssuanceDuration;
     }
 }
