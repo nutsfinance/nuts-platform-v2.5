@@ -12,7 +12,8 @@ library MultiSwapIssuanceProperty {
     address outputTokenAddress;
     uint256 inputAmount;
     uint256 outputAmount;
-    uint256 duration;
+    uint256 minEngagementOutputAmount;
+    uint256 maxEngagementOutputAmount;
     uint256 remainingInputAmount;
   }
 
@@ -53,7 +54,7 @@ library MultiSwapIssuanceProperty {
     returns (Data memory, uint)
   {
     Data memory r;
-    uint[7] memory counters;
+    uint[8] memory counters;
     uint256 fieldId;
     ProtoBufRuntime.WireType wireType;
     uint256 bytesRead;
@@ -75,9 +76,12 @@ library MultiSwapIssuanceProperty {
         pointer += _read_outputAmount(pointer, bs, r, counters);
       }
       else if (fieldId == 5) {
-        pointer += _read_duration(pointer, bs, r, counters);
+        pointer += _read_minEngagementOutputAmount(pointer, bs, r, counters);
       }
       else if (fieldId == 6) {
+        pointer += _read_maxEngagementOutputAmount(pointer, bs, r, counters);
+      }
+      else if (fieldId == 7) {
         pointer += _read_remainingInputAmount(pointer, bs, r, counters);
       }
       
@@ -122,7 +126,7 @@ library MultiSwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[7] memory counters
+    uint[8] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -149,7 +153,7 @@ library MultiSwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[7] memory counters
+    uint[8] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -176,7 +180,7 @@ library MultiSwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[7] memory counters
+    uint[8] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -203,7 +207,7 @@ library MultiSwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[7] memory counters
+    uint[8] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -226,11 +230,11 @@ library MultiSwapIssuanceProperty {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_duration(
+  function _read_minEngagementOutputAmount(
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[7] memory counters
+    uint[8] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -239,8 +243,35 @@ library MultiSwapIssuanceProperty {
     if (isNil(r)) {
       counters[5] += 1;
     } else {
-      r.duration = x;
+      r.minEngagementOutputAmount = x;
       if (counters[5] > 0) counters[5] -= 1;
+    }
+    return sz;
+  }
+
+  /**
+   * @dev The decoder for reading a field
+   * @param p The offset of bytes array to start decode
+   * @param bs The bytes array to be decoded
+   * @param r The in-memory struct
+   * @param counters The counters for repeated fields
+   * @return The number of bytes decoded
+   */
+  function _read_maxEngagementOutputAmount(
+    uint256 p,
+    bytes memory bs,
+    Data memory r,
+    uint[8] memory counters
+  ) internal pure returns (uint) {
+    /**
+     * if `r` is NULL, then only counting the number of fields.
+     */
+    (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
+    if (isNil(r)) {
+      counters[6] += 1;
+    } else {
+      r.maxEngagementOutputAmount = x;
+      if (counters[6] > 0) counters[6] -= 1;
     }
     return sz;
   }
@@ -257,17 +288,17 @@ library MultiSwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[7] memory counters
+    uint[8] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
      */
     (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
     if (isNil(r)) {
-      counters[6] += 1;
+      counters[7] += 1;
     } else {
       r.remainingInputAmount = x;
-      if (counters[6] > 0) counters[6] -= 1;
+      if (counters[7] > 0) counters[7] -= 1;
     }
     return sz;
   }
@@ -339,9 +370,16 @@ library MultiSwapIssuanceProperty {
       pointer,
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.duration, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.minEngagementOutputAmount, pointer, bs);
     pointer += ProtoBufRuntime._encode_key(
       6,
+      ProtoBufRuntime.WireType.LengthDelim,
+      pointer,
+      bs
+    );
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.maxEngagementOutputAmount, pointer, bs);
+    pointer += ProtoBufRuntime._encode_key(
+      7,
       ProtoBufRuntime.WireType.LengthDelim,
       pointer,
       bs
@@ -395,6 +433,7 @@ library MultiSwapIssuanceProperty {
     e += 1 + 35;
     e += 1 + 35;
     e += 1 + 35;
+    e += 1 + 35;
     return e;
   }
 
@@ -409,7 +448,8 @@ library MultiSwapIssuanceProperty {
     output.outputTokenAddress = input.outputTokenAddress;
     output.inputAmount = input.inputAmount;
     output.outputAmount = input.outputAmount;
-    output.duration = input.duration;
+    output.minEngagementOutputAmount = input.minEngagementOutputAmount;
+    output.maxEngagementOutputAmount = input.maxEngagementOutputAmount;
     output.remainingInputAmount = input.remainingInputAmount;
 
   }
@@ -445,7 +485,7 @@ library MultiSwapEngagementProperty {
 
   //struct definition
   struct Data {
-    uint256 outputAmount;
+    uint256 engagementOutputAmount;
   }
 
   // Decoder section
@@ -495,7 +535,7 @@ library MultiSwapEngagementProperty {
       (fieldId, wireType, bytesRead) = ProtoBufRuntime._decode_key(pointer, bs);
       pointer += bytesRead;
       if (fieldId == 1) {
-        pointer += _read_outputAmount(pointer, bs, r, counters);
+        pointer += _read_engagementOutputAmount(pointer, bs, r, counters);
       }
       
       else {
@@ -535,7 +575,7 @@ library MultiSwapEngagementProperty {
    * @param counters The counters for repeated fields
    * @return The number of bytes decoded
    */
-  function _read_outputAmount(
+  function _read_engagementOutputAmount(
     uint256 p,
     bytes memory bs,
     Data memory r,
@@ -548,7 +588,7 @@ library MultiSwapEngagementProperty {
     if (isNil(r)) {
       counters[1] += 1;
     } else {
-      r.outputAmount = x;
+      r.engagementOutputAmount = x;
       if (counters[1] > 0) counters[1] -= 1;
     }
     return sz;
@@ -593,7 +633,7 @@ library MultiSwapEngagementProperty {
       pointer,
       bs
     );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.outputAmount, pointer, bs);
+    pointer += ProtoBufRuntime._encode_sol_uint256(r.engagementOutputAmount, pointer, bs);
     return pointer - offset;
   }
   // nested encoder
@@ -647,7 +687,7 @@ library MultiSwapEngagementProperty {
    * @param output The in-storage struct
    */
   function store(Data memory input, Data storage output) internal {
-    output.outputAmount = input.outputAmount;
+    output.engagementOutputAmount = input.engagementOutputAmount;
 
   }
 

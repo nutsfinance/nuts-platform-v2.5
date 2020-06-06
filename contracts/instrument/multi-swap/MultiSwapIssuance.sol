@@ -18,10 +18,6 @@ contract MultiSwapIssuance is IssuanceBase {
     using Counters for Counters.Counter;
     using SafeMath for uint256;
 
-    // Constants
-    uint256 internal constant DURATION_MIN = 1; // Minimum duration is 1 day
-    uint256 internal constant DURATION_MAX = 90; // Maximum duration is 90 days
-
     Counters.Counter private _engagementIds;
     Counters.Counter private _payableIds;
 
@@ -45,25 +41,29 @@ contract MultiSwapIssuance is IssuanceBase {
         address issuanceEscrowAddress, address makerAddress, bytes memory makerData)
         public override returns (Transfers.Transfer[] memory transfers) {
 
-        require(MultiSwapInstrument(instrumentAddress).isMakerAllowed(makerAddress), "SwapIssuance: Maker not allowed.");
+        MultiSwapInstrument multiSwapInstrument = MultiSwapInstrument(instrumentAddress);
+        require(multiSwapInstrument.isMakerAllowed(makerAddress), "SwapIssuance: Maker not allowed.");
         IssuanceBase._initialize(instrumentManagerAddress, instrumentAddress, issuanceId, issuanceEscrowAddress, makerAddress);
 
-        (_mip.inputTokenAddress, _mip.outputTokenAddress, _mip.inputAmount, _mip.outputAmount, _mip.duration) = abi
-            .decode(makerData, (address, address, uint256, uint256, uint256));
+        uint256 issuanceDuration;
+        (issuanceDuration, _mip.inputTokenAddress, _mip.outputTokenAddress, _mip.inputAmount, _mip.outputAmount, _mip.minEngagementOutputAmount,
+            _mip.maxEngagementOutputAmount) = abi.decode(makerData, (uint256, address, address, uint256, uint256, uint256, uint256));
 
         // Validates parameters.
-        require(_mip.inputTokenAddress != address(0x0), "Input token not set");
-        require(_mip.outputTokenAddress != address(0x0), "Output token not set");
-        require(_mip.inputAmount > 0, "Input amount not set");
-        require(_mip.outputAmount > 0, "Output amount not set");
-        require(_mip.duration >= DURATION_MIN && _mip.duration <= DURATION_MAX, "Invalid duration");
+        require(_mip.inputTokenAddress != address(0x0), "MultiSwapIssuance: Input token not set");
+        require(_mip.outputTokenAddress != address(0x0), "MultiSwapIssuance: Output token not set");
+        require(_mip.inputAmount > 0, "MultiSwapIssuance: Input amount not set");
+        require(_mip.outputAmount > 0, "MultiSwapIssuance: Output amount not set");
+        require(_mip.outputAmount >= _mip.minEngagementOutputAmount && _mip.minEngagementOutputAmount <= _mip.maxEngagementOutputAmount,
+            "MultiSwapIssuance: Invalid engagement output range");
+        require(multiSwapInstrument.isIssuanceDurationValid(issuanceDuration), "MultiSwapIssuance: Invalid duration");
 
         // Validate input token balance
         uint256 inputTokenBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(makerAddress, _mip.inputTokenAddress);
-        require(inputTokenBalance >= _mip.inputAmount, "Insufficient input balance");
+        require(inputTokenBalance >= _mip.inputAmount, "MultiSwapIssuance: Insufficient input balance");
 
         // Sets common properties
-        _issuanceProperty.issuanceDueTimestamp = now.add(1 days * _mip.duration);
+        _issuanceProperty.issuanceDueTimestamp = now.add(issuanceDuration);
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Engageable;
         emit IssuanceCreated(_issuanceProperty.issuanceId, makerAddress, _issuanceProperty.issuanceDueTimestamp);
 
@@ -96,17 +96,19 @@ contract MultiSwapIssuance is IssuanceBase {
      */
     function engage(address takerAddress, bytes memory takerData)
         public override onlyAdmin returns (uint256 engagementId, Transfers.Transfer[] memory transfers) {
-        require(MultiSwapInstrument(_instrumentAddress).isTakerAllowed(takerAddress), "SwapIssuance: Taker not allowed.");
-        require(now <= _issuanceProperty.issuanceDueTimestamp, "Issuance due");
-        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Issuance not Engageable");
+        require(MultiSwapInstrument(_instrumentAddress).isTakerAllowed(takerAddress), "MultiSwapIssuance: Taker not allowed.");
+        require(now <= _issuanceProperty.issuanceDueTimestamp, "MultiSwapIssuance: Issuance due");
+        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "MultiSwapIssuance: Issuance not Engageable");
 
         uint256 outputAmount = abi.decode(takerData, (uint256));
         uint256 inputAmount = outputAmount.mul(_mip.inputAmount).div(_mip.outputAmount);
-        require(_mip.remainingInputAmount >= inputAmount, "Input exceeded");
+        require(_mip.remainingInputAmount >= inputAmount, "MultiSwapIssuance: Input exceeded");
+        require(outputAmount >= _mip.minEngagementOutputAmount && outputAmount <= _mip.maxEngagementOutputAmount,
+            "MultiSwapIssuance: Invalid engagement output");
 
         // Validates output balance
         uint256 outputTokenBalance = _instrumentManager.getInstrumentEscrow().getTokenBalance(takerAddress, _mip.outputTokenAddress);
-        require(outputTokenBalance >= outputAmount, "Insufficient output balance");
+        require(outputTokenBalance >= outputAmount, "MultiSwapIssuance: Insufficient output balance");
 
         _engagementIds.increment();
         engagementId = _engagementIds.current();
@@ -116,7 +118,7 @@ contract MultiSwapIssuance is IssuanceBase {
         _mip.remainingInputAmount = _mip.remainingInputAmount.sub(inputAmount);
 
         // Set multi-swap issuance property
-        _meps[engagementId].outputAmount = outputAmount;
+        _meps[engagementId].engagementOutputAmount = outputAmount;
 
         // Set common engagement property
         EngagementProperty.Data storage engagement = _engagements[engagementId];
@@ -213,11 +215,11 @@ contract MultiSwapIssuance is IssuanceBase {
      */
     function _cancelIssuance(address notifierAddress) private returns (Transfers.Transfer[] memory transfers) {
         // Cancel Issuance must be processed in Engageable state
-        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "Cancel issuance not engageable");
+        require(_issuanceProperty.issuanceState == IssuanceProperty.IssuanceState.Engageable, "MultiSwapIssuance: Cancel issuance not engageable");
         // Only maker can cancel issuance
-        require(notifierAddress == _issuanceProperty.makerAddress, "Only maker can cancel issuance");
+        require(notifierAddress == _issuanceProperty.makerAddress, "MultiSwapIssuance: Only maker can cancel issuance");
         // Only cancel when there is no engagement
-        require(_engagementSet.length() == 0, "Already engaged");
+        require(_engagementSet.length() == 0, "MultiSwapIssuance: Already engaged");
 
         // The issuance is now cancelled
         _issuanceProperty.issuanceState = IssuanceProperty.IssuanceState.Cancelled;

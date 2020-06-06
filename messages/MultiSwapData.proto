@@ -7,10 +7,11 @@ message MultiSwapIssuanceProperty {
     .solidity.address outputTokenAddress = 2;
     .solidity.uint256 inputAmount = 3;
     .solidity.uint256 outputAmount = 4;
-    .solidity.uint256 duration = 5;
-    .solidity.uint256 remainingInputAmount = 6;    // How many input token left
+    .solidity.uint256 minEngagementOutputAmount= 5; // The minimum output token to engage
+    .solidity.uint256 maxEngagementOutputAmount = 6;    // The maximum output token to engage
+    .solidity.uint256 remainingInputAmount = 7;    // How many input token left
 }
 
 message MultiSwapEngagementProperty {
-    .solidity.uint256 outputAmount = 1;
+    .solidity.uint256 engagementOutputAmount = 1;
 }
