@@ -12,7 +12,7 @@ const NUTSToken = artifacts.require("NUTSToken");
 const Config = artifacts.require("Config");
 const InstrumentManagerFactory = artifacts.require("InstrumentManagerFactory");
 const InstrumentRegistry = artifacts.require("InstrumentRegistry");
-const PriceOracleMock = artifacts.require("PriceOracleMock");
+const PriceOracle = artifacts.require("PriceOracle");
 const LendingInstrument = artifacts.require("LendingInstrument");
 const LendingIssuance = artifacts.require("LendingIssuance");
 const ERC20Mock = artifacts.require("ERC20Mock");
@@ -48,7 +48,7 @@ contract('Lending', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, maker
     await config.setInstrumentManagerFactory(web3.utils.fromAscii("v2.5"), instrumentManagerFactory.address);
 
     // Deploy the Price Oracle.
-    const priceOracle = await PriceOracleMock.new();
+    const priceOracle = await PriceOracle.new();
 
     // Deploy Lending Instrument.
     const lendingIssuance = await LendingIssuance.new();

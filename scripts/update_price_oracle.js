@@ -1,5 +1,5 @@
 const ERC20 = artifacts.require('ERC20');
-const PriceOracle = artifacts.require('PriceOracleMock');
+const PriceOracle = artifacts.require('PriceOracle');
 
 module.exports = async function (callback) {
     try {
