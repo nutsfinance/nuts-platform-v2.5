@@ -1,3 +1,4 @@
+// source: MultiSwapData.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -62,13 +63,15 @@ if (goog.DEBUG && !COMPILED) {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.MultiSwapIssuanceProperty.prototype.toObject = function(opt_includeInstance) {
@@ -78,8 +81,8 @@ proto.MultiSwapIssuanceProperty.prototype.toObject = function(opt_includeInstanc
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.MultiSwapIssuanceProperty} msg The msg instance to transform.
  * @return {!Object}
@@ -91,7 +94,8 @@ proto.MultiSwapIssuanceProperty.toObject = function(includeInstance, msg) {
     outputtokenaddress: (f = msg.getOutputtokenaddress()) && SolidityTypes_pb.address.toObject(includeInstance, f),
     inputamount: (f = msg.getInputamount()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     outputamount: (f = msg.getOutputamount()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
-    duration: (f = msg.getDuration()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
+    minengagementoutputamount: (f = msg.getMinengagementoutputamount()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
+    maxengagementoutputamount: (f = msg.getMaxengagementoutputamount()) && SolidityTypes_pb.uint256.toObject(includeInstance, f),
     remaininginputamount: (f = msg.getRemaininginputamount()) && SolidityTypes_pb.uint256.toObject(includeInstance, f)
   };
 
@@ -152,9 +156,14 @@ proto.MultiSwapIssuanceProperty.deserializeBinaryFromReader = function(msg, read
     case 5:
       var value = new SolidityTypes_pb.uint256;
       reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
-      msg.setDuration(value);
+      msg.setMinengagementoutputamount(value);
       break;
     case 6:
+      var value = new SolidityTypes_pb.uint256;
+      reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
+      msg.setMaxengagementoutputamount(value);
+      break;
+    case 7:
       var value = new SolidityTypes_pb.uint256;
       reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
       msg.setRemaininginputamount(value);
@@ -220,7 +229,7 @@ proto.MultiSwapIssuanceProperty.serializeBinaryToWriter = function(message, writ
       SolidityTypes_pb.uint256.serializeBinaryToWriter
     );
   }
-  f = message.getDuration();
+  f = message.getMinengagementoutputamount();
   if (f != null) {
     writer.writeMessage(
       5,
@@ -228,10 +237,18 @@ proto.MultiSwapIssuanceProperty.serializeBinaryToWriter = function(message, writ
       SolidityTypes_pb.uint256.serializeBinaryToWriter
     );
   }
-  f = message.getRemaininginputamount();
+  f = message.getMaxengagementoutputamount();
   if (f != null) {
     writer.writeMessage(
       6,
+      f,
+      SolidityTypes_pb.uint256.serializeBinaryToWriter
+    );
+  }
+  f = message.getRemaininginputamount();
+  if (f != null) {
+    writer.writeMessage(
+      7,
       f,
       SolidityTypes_pb.uint256.serializeBinaryToWriter
     );
@@ -372,17 +389,17 @@ proto.MultiSwapIssuanceProperty.prototype.hasOutputamount = function() {
 
 
 /**
- * optional solidity.uint256 duration = 5;
+ * optional solidity.uint256 minEngagementOutputAmount = 5;
  * @return {?proto.solidity.uint256}
  */
-proto.MultiSwapIssuanceProperty.prototype.getDuration = function() {
+proto.MultiSwapIssuanceProperty.prototype.getMinengagementoutputamount = function() {
   return /** @type{?proto.solidity.uint256} */ (
     jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 5));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
-proto.MultiSwapIssuanceProperty.prototype.setDuration = function(value) {
+proto.MultiSwapIssuanceProperty.prototype.setMinengagementoutputamount = function(value) {
   jspb.Message.setWrapperField(this, 5, value);
 };
 
@@ -390,8 +407,8 @@ proto.MultiSwapIssuanceProperty.prototype.setDuration = function(value) {
 /**
  * Clears the message field making it undefined.
  */
-proto.MultiSwapIssuanceProperty.prototype.clearDuration = function() {
-  this.setDuration(undefined);
+proto.MultiSwapIssuanceProperty.prototype.clearMinengagementoutputamount = function() {
+  this.setMinengagementoutputamount(undefined);
 };
 
 
@@ -399,24 +416,57 @@ proto.MultiSwapIssuanceProperty.prototype.clearDuration = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.MultiSwapIssuanceProperty.prototype.hasDuration = function() {
+proto.MultiSwapIssuanceProperty.prototype.hasMinengagementoutputamount = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
 
 /**
- * optional solidity.uint256 remainingInputAmount = 6;
+ * optional solidity.uint256 maxEngagementOutputAmount = 6;
  * @return {?proto.solidity.uint256}
  */
-proto.MultiSwapIssuanceProperty.prototype.getRemaininginputamount = function() {
+proto.MultiSwapIssuanceProperty.prototype.getMaxengagementoutputamount = function() {
   return /** @type{?proto.solidity.uint256} */ (
     jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 6));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
-proto.MultiSwapIssuanceProperty.prototype.setRemaininginputamount = function(value) {
+proto.MultiSwapIssuanceProperty.prototype.setMaxengagementoutputamount = function(value) {
   jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ */
+proto.MultiSwapIssuanceProperty.prototype.clearMaxengagementoutputamount = function() {
+  this.setMaxengagementoutputamount(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.MultiSwapIssuanceProperty.prototype.hasMaxengagementoutputamount = function() {
+  return jspb.Message.getField(this, 6) != null;
+};
+
+
+/**
+ * optional solidity.uint256 remainingInputAmount = 7;
+ * @return {?proto.solidity.uint256}
+ */
+proto.MultiSwapIssuanceProperty.prototype.getRemaininginputamount = function() {
+  return /** @type{?proto.solidity.uint256} */ (
+    jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 7));
+};
+
+
+/** @param {?proto.solidity.uint256|undefined} value */
+proto.MultiSwapIssuanceProperty.prototype.setRemaininginputamount = function(value) {
+  jspb.Message.setWrapperField(this, 7, value);
 };
 
 
@@ -433,7 +483,7 @@ proto.MultiSwapIssuanceProperty.prototype.clearRemaininginputamount = function()
  * @return {boolean}
  */
 proto.MultiSwapIssuanceProperty.prototype.hasRemaininginputamount = function() {
-  return jspb.Message.getField(this, 6) != null;
+  return jspb.Message.getField(this, 7) != null;
 };
 
 
@@ -442,13 +492,15 @@ proto.MultiSwapIssuanceProperty.prototype.hasRemaininginputamount = function() {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.MultiSwapEngagementProperty.prototype.toObject = function(opt_includeInstance) {
@@ -458,8 +510,8 @@ proto.MultiSwapEngagementProperty.prototype.toObject = function(opt_includeInsta
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.MultiSwapEngagementProperty} msg The msg instance to transform.
  * @return {!Object}
@@ -467,7 +519,7 @@ proto.MultiSwapEngagementProperty.prototype.toObject = function(opt_includeInsta
  */
 proto.MultiSwapEngagementProperty.toObject = function(includeInstance, msg) {
   var f, obj = {
-    outputamount: (f = msg.getOutputamount()) && SolidityTypes_pb.uint256.toObject(includeInstance, f)
+    engagementoutputamount: (f = msg.getEngagementoutputamount()) && SolidityTypes_pb.uint256.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -507,7 +559,7 @@ proto.MultiSwapEngagementProperty.deserializeBinaryFromReader = function(msg, re
     case 1:
       var value = new SolidityTypes_pb.uint256;
       reader.readMessage(value,SolidityTypes_pb.uint256.deserializeBinaryFromReader);
-      msg.setOutputamount(value);
+      msg.setEngagementoutputamount(value);
       break;
     default:
       reader.skipField();
@@ -538,7 +590,7 @@ proto.MultiSwapEngagementProperty.prototype.serializeBinary = function() {
  */
 proto.MultiSwapEngagementProperty.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getOutputamount();
+  f = message.getEngagementoutputamount();
   if (f != null) {
     writer.writeMessage(
       1,
@@ -550,17 +602,17 @@ proto.MultiSwapEngagementProperty.serializeBinaryToWriter = function(message, wr
 
 
 /**
- * optional solidity.uint256 outputAmount = 1;
+ * optional solidity.uint256 engagementOutputAmount = 1;
  * @return {?proto.solidity.uint256}
  */
-proto.MultiSwapEngagementProperty.prototype.getOutputamount = function() {
+proto.MultiSwapEngagementProperty.prototype.getEngagementoutputamount = function() {
   return /** @type{?proto.solidity.uint256} */ (
     jspb.Message.getWrapperField(this, SolidityTypes_pb.uint256, 1));
 };
 
 
 /** @param {?proto.solidity.uint256|undefined} value */
-proto.MultiSwapEngagementProperty.prototype.setOutputamount = function(value) {
+proto.MultiSwapEngagementProperty.prototype.setEngagementoutputamount = function(value) {
   jspb.Message.setWrapperField(this, 1, value);
 };
 
@@ -568,8 +620,8 @@ proto.MultiSwapEngagementProperty.prototype.setOutputamount = function(value) {
 /**
  * Clears the message field making it undefined.
  */
-proto.MultiSwapEngagementProperty.prototype.clearOutputamount = function() {
-  this.setOutputamount(undefined);
+proto.MultiSwapEngagementProperty.prototype.clearEngagementoutputamount = function() {
+  this.setEngagementoutputamount(undefined);
 };
 
 
@@ -577,7 +629,7 @@ proto.MultiSwapEngagementProperty.prototype.clearOutputamount = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.MultiSwapEngagementProperty.prototype.hasOutputamount = function() {
+proto.MultiSwapEngagementProperty.prototype.hasEngagementoutputamount = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 

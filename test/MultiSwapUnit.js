@@ -221,7 +221,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     assert.equal(1, payables.length);
     assert.equal(1, engagementLists.length);
     let customProperty = protobuf.MultiSwapData.MultiSwapEngagementProperty.deserializeBinary(Uint8Array.from(Buffer.from(engagementLists[0].getEngagementcustomproperty_asB64(), 'base64')));
-    assert.equal(20000, customProperty.getOutputamount().toNumber());
+    assert.equal(20000, customProperty.getEngagementoutputamount().toNumber());
     assert.equal(2, properties.getIssuancestate());
     payablesJson.forEach((json) => assert.ok(Payables.searchPayables(payables, json).length > 0));
     assert.equal(0, await instrumentEscrow.getTokenBalance(taker1, outputToken.address));
@@ -317,7 +317,7 @@ contract('MultiSwap', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
     assert.equal(0, payables.length);
     assert.equal(2, engagementLists.length);
     let customProperty = protobuf.MultiSwapData.MultiSwapEngagementProperty.deserializeBinary(Uint8Array.from(Buffer.from(engagementLists[1].getEngagementcustomproperty_asB64(), 'base64')));
-    assert.equal(20000, customProperty.getOutputamount().toNumber());
+    assert.equal(20000, customProperty.getEngagementoutputamount().toNumber());
     assert.equal(4, properties.getIssuancestate());
     assert.equal(0, await instrumentEscrow.getTokenBalance(taker2, outputToken.address));
     assert.equal(1000000, await instrumentEscrow.getTokenBalance(taker2, inputToken.address));
