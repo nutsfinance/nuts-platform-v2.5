@@ -20,7 +20,7 @@ contract('InstrumentManager', ([owner, account1, account2, account3, account4, a
     beforeEach(async () => {
       let weth9 = await WETH9.new();
       let instrumentManagerFactory = await InstrumentManagerFactory.new();
-      let nutsToken = await NUTSTokenMock.new(20000);
+      let nutsToken = await NUTSTokenMock.new(web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000);
       let priceOracle = await PriceOracle.new();
       let escrowFactory = await EscrowFactory.new();
       config = await Config.new(weth9.address, escrowFactory.address, nutsToken.address, 0);

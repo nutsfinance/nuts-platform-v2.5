@@ -10,7 +10,7 @@ const deployNutsPlatform = async function(deployer, [owner, maker, taker]) {
   // Deploy Instrument Registry.
   const weth9 = await deployer.deploy(WETH9);
   const escrowFactory = await deployer.deploy(EscrowFactory);
-  const nutsToken = await deployer.deploy(NUTSToken, 20000);
+  const nutsToken = await deployer.deploy(NUTSToken, web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000);
   const config = await deployer.deploy(Config, weth9.address, escrowFactory.address, nutsToken.address, 0);
   const instrumentRegistry = await deployer.deploy(InstrumentRegistry, config.address);
 

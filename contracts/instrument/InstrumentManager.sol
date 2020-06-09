@@ -2,7 +2,6 @@
 pragma solidity 0.6.8;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -81,11 +80,11 @@ contract InstrumentManager is InstrumentManagerInterface {
             "InstrumentManager: Cannot deactivate.");
 
         // Checks whether this instrument has any deposit.
-        ERC20Burnable depositToken = ERC20Burnable(_depositTokenAddress);
+        IERC20 depositToken = IERC20(_depositTokenAddress);
         uint256 depositAmount = depositToken.balanceOf(address(this));
         if (depositAmount > 0) {
-            // Burns the deposited token.
-            depositToken.burn(depositAmount);
+            // Sends back the deposited token to FSP.
+            depositToken.safeTransfer(_fspAddress, depositAmount);
         }
 
         _active = false;

@@ -28,7 +28,7 @@ contract('InstrumentRegistry', ([owner, proxyAdmin, timerOracle, fsp, maker1, ta
   it('invalid activate instrument', async () => {
     let weth9 = await WETH9.new();
     let escrowFactory = await EscrowFactory.new();
-    let nutsToken = await NUTSTokenMock.new(20000);
+    let nutsToken = await NUTSTokenMock.new(web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000);
     let config = await Config.new(weth9.address, escrowFactory.address, nutsToken.address, 0);
     let instrumentRegistry = await InstrumentRegistry.new(config.address);
     await expectRevert(instrumentRegistry.activateInstrument(web3.utils.fromAscii("v2.5"), EMPTY_ADDRESS, web3.utils.fromAscii(""), {from: fsp}), 'InstrumentRegistry: Instrument not set.');
@@ -37,7 +37,7 @@ contract('InstrumentRegistry', ([owner, proxyAdmin, timerOracle, fsp, maker1, ta
   it('new instrument deposit cost', async () => {
     weth9 = await WETH9.new();
     const escrowFactory = await EscrowFactory.new();
-    const nutsToken = await NUTSTokenMock.new(20000, {from: owner});
+    const nutsToken = await NUTSTokenMock.new(web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000, {from: owner});
     await nutsToken.setMinter(owner, 10000);
     await nutsToken.mint(fsp, 200, {from: owner});
     const config = await Config.new(weth9.address, escrowFactory.address, nutsToken.address, 1);
@@ -65,10 +65,10 @@ contract('InstrumentRegistry', ([owner, proxyAdmin, timerOracle, fsp, maker1, ta
       value: '1'
     });
   }),
-  it('issuance terminated token burned', async () => {
+  it('issuance terminated token returned', async () => {
     weth9 = await WETH9.new();
     const escrowFactory = await EscrowFactory.new();
-    const nutsToken = await NUTSTokenMock.new(20000, {from: owner});
+    const nutsToken = await NUTSTokenMock.new(web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000, {from: owner});
     await nutsToken.setMinter(owner, 10000);
     await nutsToken.mint(fsp, 200, {from: owner});
     const config = await Config.new(weth9.address, escrowFactory.address, nutsToken.address, 1);
@@ -95,7 +95,7 @@ contract('InstrumentRegistry', ([owner, proxyAdmin, timerOracle, fsp, maker1, ta
     let receipt = {logs: events};
     expectEvent(receipt, 'Transfer', {
       from: instrumentManagerAddress,
-      to: '0x0000000000000000000000000000000000000000',
+      to: fsp,
       value: '1'
     });
   })

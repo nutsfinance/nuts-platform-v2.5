@@ -38,7 +38,7 @@ contract('Borrowing', ([owner, proxyAdmin, timerOracle, fsp, maker1, taker1, mak
   beforeEach(async () => {
     weth9 = await WETH9.new();
     const escrowFactory = await EscrowFactory.new();
-    const nutsToken = await NUTSToken.new(20000);
+    const nutsToken = await NUTSToken.new(web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000);
     const config = await Config.new(weth9.address, escrowFactory.address, nutsToken.address, 0);
     const instrumentRegistry = await InstrumentRegistry.new(config.address);
 

@@ -20,15 +20,12 @@ contract NUTSToken is ERC20Capped, ERC20Burnable, ERC20Pausable, AccessControl {
     // Creates a new role identifier for the minter role
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    string public constant NAME = "NUTS Token";
-    string public constant SYMBOL = "NUTS";
-
     // Cap for individual minter.
     mapping(address => uint256) private _minterCaps;
     // Number of token minted by individual minter.
     mapping(address => uint256) private _minterAmount;
 
-    constructor(uint256 cap) ERC20(NAME, SYMBOL) ERC20Capped(cap) public {
+    constructor(string memory name, string memory symbol, uint256 cap) ERC20(name, symbol) ERC20Capped(cap) public {
         // Grant the owner role to the contract creator
         _setupRole(OWNER_ROLE, msg.sender);
         // Grant the admin of minter role to the owner role
