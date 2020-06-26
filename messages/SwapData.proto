@@ -7,5 +7,4 @@ message SwapIssuanceProperty {
     .solidity.address outputTokenAddress = 2;
     .solidity.uint256 inputAmount = 3;
     .solidity.uint256 outputAmount = 4;
-    .solidity.uint256 duration = 5;
 }

@@ -12,7 +12,6 @@ library SwapIssuanceProperty {
     address outputTokenAddress;
     uint256 inputAmount;
     uint256 outputAmount;
-    uint256 duration;
   }
 
   // Decoder section
@@ -52,7 +51,7 @@ library SwapIssuanceProperty {
     returns (Data memory, uint)
   {
     Data memory r;
-    uint[6] memory counters;
+    uint[5] memory counters;
     uint256 fieldId;
     ProtoBufRuntime.WireType wireType;
     uint256 bytesRead;
@@ -72,9 +71,6 @@ library SwapIssuanceProperty {
       }
       else if (fieldId == 4) {
         pointer += _read_outputAmount(pointer, bs, r, counters);
-      }
-      else if (fieldId == 5) {
-        pointer += _read_duration(pointer, bs, r, counters);
       }
       
       else {
@@ -118,7 +114,7 @@ library SwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[6] memory counters
+    uint[5] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -145,7 +141,7 @@ library SwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[6] memory counters
+    uint[5] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -172,7 +168,7 @@ library SwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[6] memory counters
+    uint[5] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -199,7 +195,7 @@ library SwapIssuanceProperty {
     uint256 p,
     bytes memory bs,
     Data memory r,
-    uint[6] memory counters
+    uint[5] memory counters
   ) internal pure returns (uint) {
     /**
      * if `r` is NULL, then only counting the number of fields.
@@ -210,33 +206,6 @@ library SwapIssuanceProperty {
     } else {
       r.outputAmount = x;
       if (counters[4] > 0) counters[4] -= 1;
-    }
-    return sz;
-  }
-
-  /**
-   * @dev The decoder for reading a field
-   * @param p The offset of bytes array to start decode
-   * @param bs The bytes array to be decoded
-   * @param r The in-memory struct
-   * @param counters The counters for repeated fields
-   * @return The number of bytes decoded
-   */
-  function _read_duration(
-    uint256 p,
-    bytes memory bs,
-    Data memory r,
-    uint[6] memory counters
-  ) internal pure returns (uint) {
-    /**
-     * if `r` is NULL, then only counting the number of fields.
-     */
-    (uint256 x, uint256 sz) = ProtoBufRuntime._decode_sol_uint256(p, bs);
-    if (isNil(r)) {
-      counters[5] += 1;
-    } else {
-      r.duration = x;
-      if (counters[5] > 0) counters[5] -= 1;
     }
     return sz;
   }
@@ -302,13 +271,6 @@ library SwapIssuanceProperty {
       bs
     );
     pointer += ProtoBufRuntime._encode_sol_uint256(r.outputAmount, pointer, bs);
-    pointer += ProtoBufRuntime._encode_key(
-      5,
-      ProtoBufRuntime.WireType.LengthDelim,
-      pointer,
-      bs
-    );
-    pointer += ProtoBufRuntime._encode_sol_uint256(r.duration, pointer, bs);
     return pointer - offset;
   }
   // nested encoder
@@ -355,7 +317,6 @@ library SwapIssuanceProperty {
     e += 1 + 23;
     e += 1 + 35;
     e += 1 + 35;
-    e += 1 + 35;
     return e;
   }
 
@@ -370,7 +331,6 @@ library SwapIssuanceProperty {
     output.outputTokenAddress = input.outputTokenAddress;
     output.inputAmount = input.inputAmount;
     output.outputAmount = input.outputAmount;
-    output.duration = input.duration;
 
   }
 
