@@ -10,7 +10,7 @@ import "../escrow/InstrumentEscrowInterface.sol";
 import "../escrow/IssuanceEscrowInterface.sol";
 import "../lib/access/AdminAccess.sol";
 import "../lib/data/Transfers.sol";
-import "../lib/token/WETH9.sol";
+import "../token/WETH9.sol";
 import "../Config.sol";
 import "./IssuanceInterface.sol";
 import "./InstrumentManagerInterface.sol";
