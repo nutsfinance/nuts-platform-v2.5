@@ -2,7 +2,7 @@ const InstrumentRegistry = artifacts.require('InstrumentRegistry');
 const MultiSwapIssuance = artifacts.require('MultiSwapIssuance');
 const MultiSwapInstrument = artifacts.require('MultiSwapInstrument');
 const InstrumentManager = artifacts.require('InstrumentManager');
-const NutsToken = artifacts.require('NutsToken');
+const NutsToken = artifacts.require('NUTSToken');
 
 const argv = require('yargs').argv;
 const utils = require('./utils');

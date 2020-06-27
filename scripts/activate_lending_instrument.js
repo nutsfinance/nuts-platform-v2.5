@@ -3,7 +3,7 @@ const LendingIssuance = artifacts.require('LendingIssuance');
 const LendingInstrument = artifacts.require('LendingInstrument');
 const InstrumentManager = artifacts.require('InstrumentManager');
 const PriceOracle = artifacts.require('PriceOracle');
-const NutsToken = artifacts.require('NutsToken');
+const NutsToken = artifacts.require('NUTSToken');
 
 const argv = require('yargs').argv;
 const utils = require('./utils');
