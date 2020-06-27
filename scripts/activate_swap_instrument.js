@@ -2,14 +2,17 @@ const InstrumentRegistry = artifacts.require('InstrumentRegistry');
 const SwapIssuance = artifacts.require('SwapIssuance');
 const SwapInstrument = artifacts.require('SwapInstrument');
 const InstrumentManager = artifacts.require('InstrumentManager');
+const NutsToken = artifacts.require('NutsToken');
 
 const argv = require('yargs').argv;
 const utils = require('./utils');
 
 module.exports = async function (callback) {
     try {
+        const nutsToken = await NutsToken.deployed();
         const instrumentRegistry = await InstrumentRegistry.deployed();
         
+        await nutsToken.approve(instrumentRegistry.address, argv.depositAmount, {from: argv.account});
         const swapIssuance = await SwapIssuance.new({from: argv.account});
         const swapInstrument = await SwapInstrument.new(argv.makerWhitelist, argv.takerWhitelist,
             swapIssuance.address, {from: argv.account});

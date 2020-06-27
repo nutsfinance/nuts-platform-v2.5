@@ -3,15 +3,18 @@ const LendingIssuance = artifacts.require('LendingIssuance');
 const LendingInstrument = artifacts.require('LendingInstrument');
 const InstrumentManager = artifacts.require('InstrumentManager');
 const PriceOracle = artifacts.require('PriceOracle');
+const NutsToken = artifacts.require('NutsToken');
 
 const argv = require('yargs').argv;
 const utils = require('./utils');
 
 module.exports = async function (callback) {
     try {
+        const nutsToken = await NutsToken.deployed();
         const instrumentRegistry = await InstrumentRegistry.deployed();
         const priceOracle = await PriceOracle.deployed();
         
+        await nutsToken.approve(instrumentRegistry.address, argv.depositAmount, {from: argv.account});
         const lendingIssuance = await LendingIssuance.new({from: argv.account});
         const lendingInstrument = await LendingInstrument.new(argv.makerWhitelist, argv.takerWhitelist,
             priceOracle.address, lendingIssuance.address, {from: argv.account});
