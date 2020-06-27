@@ -38,7 +38,6 @@ contract('InstrumentRegistry', ([owner, proxyAdmin, timerOracle, fsp, maker1, ta
     weth9 = await WETH9.new();
     const escrowFactory = await EscrowFactory.new();
     const nutsToken = await NUTSTokenMock.new(web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000, {from: owner});
-    await nutsToken.setMinter(owner, 10000);
     await nutsToken.mint(fsp, 200, {from: owner});
     const config = await Config.new(weth9.address, escrowFactory.address, nutsToken.address, 1);
     const instrumentRegistry = await InstrumentRegistry.new(config.address);
@@ -69,7 +68,6 @@ contract('InstrumentRegistry', ([owner, proxyAdmin, timerOracle, fsp, maker1, ta
     weth9 = await WETH9.new();
     const escrowFactory = await EscrowFactory.new();
     const nutsToken = await NUTSTokenMock.new(web3.utils.fromAscii("NUTS Token Test"), web3.utils.fromAscii("NUTSTEST"), 20000, {from: owner});
-    await nutsToken.setMinter(owner, 10000);
     await nutsToken.mint(fsp, 200, {from: owner});
     const config = await Config.new(weth9.address, escrowFactory.address, nutsToken.address, 1);
     const instrumentRegistry = await InstrumentRegistry.new(config.address);
