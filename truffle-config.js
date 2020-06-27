@@ -52,6 +52,12 @@ module.exports = {
     },
 
     // Another network with more advanced options...
+    main: {
+      provider: () => new HDWalletProvider(process.env.MNENOMIC, "https://kovan.infura.io/v3/" + process.env.INFURA_API_KEY, 0, 10),
+      network_id: 1,          // Main's id
+      gas: 6700000,           // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 35000000000,  // 35 gwei (in wei) (default: 100 gwei)
+    },
     kovan: {
       provider: () => new HDWalletProvider(process.env.MNENOMIC, "https://kovan.infura.io/v3/" + process.env.INFURA_API_KEY, 0, 10),
       network_id: 42,         // Kovan's id
